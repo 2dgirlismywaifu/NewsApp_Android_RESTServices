@@ -20,18 +20,23 @@ import java.util.List;
 public class NewsSourceController {
 
     Connection con = null;
+    private final String GET_ALL_NEWS_SOURCE = "SELECT NEWS_SOURCE.source_id, source_name, information, IMAGE_INFORMATION.[image]  FROM NEWS_SOURCE, IMAGE_INFORMATION WHERE NEWS_SOURCE.source_id = IMAGE_INFORMATION.source_id";
+    public String getGET_ALL_NEWS_SOURCE() {
+        return GET_ALL_NEWS_SOURCE;
+    }
     @RequestMapping(value = "/newssource", method = RequestMethod.GET)
     public ResponseEntity<List<NewsSource>> allNewsSource() {
         con = new AzureSQLConnection().getConnection();
         List<NewsSource> respond = new ArrayList<>();
         try {
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM NEWS_SOURCE");
+            PreparedStatement ps = con.prepareStatement(getGET_ALL_NEWS_SOURCE());
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 NewsSource newsSource = new NewsSource();
                 newsSource.setSource_id(rs.getString("source_id"));
                 newsSource.setSource_name(rs.getString("source_name"));
                 newsSource.setInformation(rs.getString("information"));
+                newsSource.setImgae(rs.getString("image"));
                 respond.add(newsSource);
             }
             con.close();
