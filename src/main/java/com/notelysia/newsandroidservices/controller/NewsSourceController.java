@@ -2,6 +2,7 @@ package com.notelysia.newsandroidservices.controller;
 
 
 import com.notelysia.newsandroidservices.AzureSQLConnection;
+import com.notelysia.newsandroidservices.models.NewsDetails;
 import com.notelysia.newsandroidservices.models.NewsSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +15,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class NewsSourceController {
@@ -25,9 +28,10 @@ public class NewsSourceController {
         return GET_ALL_NEWS_SOURCE;
     }
     @RequestMapping(value = "/newssource", method = RequestMethod.GET)
-    public ResponseEntity<List<NewsSource>> allNewsSource() {
+    public ResponseEntity<Map<String, List<NewsSource>>> allNewsSource() {
         con = new AzureSQLConnection().getConnection();
-        List<NewsSource> respond = new ArrayList<>();
+        Map<String, List<NewsSource>> respond = new HashMap<>();
+        List<NewsSource> sourceList = new ArrayList<>();
         try {
             PreparedStatement ps = con.prepareStatement(getGET_ALL_NEWS_SOURCE());
             ResultSet rs = ps.executeQuery();
@@ -37,12 +41,13 @@ public class NewsSourceController {
                 newsSource.setSource_name(rs.getString("source_name"));
                 newsSource.setInformation(rs.getString("information"));
                 newsSource.setImgae(rs.getString("image"));
-                respond.add(newsSource);
+                sourceList.add(newsSource);
             }
             con.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        respond.put("newsSource", sourceList);
         return new ResponseEntity<>(respond, HttpStatus.OK);
     }
 }
