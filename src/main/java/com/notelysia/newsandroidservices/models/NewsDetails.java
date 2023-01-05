@@ -11,6 +11,8 @@ public class NewsDetails {
         this.url_type = url_type;
         this.url = url;
     }
+    public NewsDetails() {
+    }
 
     public String getSource_id() {
         return source_id;
