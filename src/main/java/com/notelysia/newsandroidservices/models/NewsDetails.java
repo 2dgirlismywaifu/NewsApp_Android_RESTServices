@@ -3,11 +3,13 @@ package com.notelysia.newsandroidservices.models;
 public class NewsDetails {
     //Instance variables
     private String source_id;
+    private String source_name;
     private String url_type;
     private String url;
 
-    public NewsDetails(String source_id, String url_type, String url) {
+    public NewsDetails(String source_id, String sourceName, String url_type, String url) {
         this.source_id = source_id;
+        source_name = sourceName;
         this.url_type = url_type;
         this.url = url;
     }
@@ -36,5 +38,13 @@ public class NewsDetails {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getSource_name() {
+        return source_name;
+    }
+
+    public void setSource_name(String source_name) {
+        this.source_name = source_name;
     }
 }
