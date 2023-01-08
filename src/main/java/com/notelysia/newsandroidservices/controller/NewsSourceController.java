@@ -23,7 +23,7 @@ import java.util.Map;
 public class NewsSourceController {
 
     Connection con = null;
-    private final String GET_ALL_NEWS_SOURCE = "SELECT NEWS_SOURCE.source_id, source_name, information, IMAGE_INFORMATION.[image]  FROM NEWS_SOURCE, IMAGE_INFORMATION WHERE NEWS_SOURCE.source_id = IMAGE_INFORMATION.source_id";
+    private final String GET_ALL_NEWS_SOURCE = "SELECT NEWS_SOURCE.source_id, source_name, urlmain ,information, IMAGE_INFORMATION.[image]  FROM NEWS_SOURCE, IMAGE_INFORMATION WHERE NEWS_SOURCE.source_id = IMAGE_INFORMATION.source_id";
     public String getGET_ALL_NEWS_SOURCE() {
         return GET_ALL_NEWS_SOURCE;
     }
@@ -39,6 +39,7 @@ public class NewsSourceController {
                 NewsSource newsSource = new NewsSource();
                 newsSource.setSource_id(rs.getString("source_id"));
                 newsSource.setSource_name(rs.getString("source_name"));
+                newsSource.setSource_url(rs.getString("urlmain"));
                 newsSource.setInformation(rs.getString("information"));
                 newsSource.setImgae(rs.getString("image"));
                 sourceList.add(newsSource);
