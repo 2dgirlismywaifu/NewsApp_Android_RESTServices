@@ -20,30 +20,33 @@ public class RSS2JSONController {
     @RequestMapping(value = "/rss/convertIntoJson", params = {"url"},
                 method = RequestMethod.GET,
                 produces = "application/json")
-    public String getRssFeedAsJson(@RequestParam(value = "url") String url) throws IOException {
-    InputStream xml = getInputStreamForURLData(url);
-    byte[] byteArray = IOUtils.toByteArray(xml);
-    String xmlString = new String(byteArray);
-    JSONObject xmlToJsonObject = XML.toJSONObject(xmlString);
-    String jsonString = xmlToJsonObject.toString();
-    byte[] jsonStringAsByteArray = jsonString.getBytes(StandardCharsets.UTF_8);
-        return new String(jsonStringAsByteArray, StandardCharsets.UTF_8);
-    }
-
-    public static InputStream getInputStreamForURLData(String Url) {
-        URL url = null;
-        HttpURLConnection httpConnection = null;
-        InputStream content = null;
-        try {
-            url = new URL(Url);
-            System.out.println("URL::" + Url);
-            URLConnection conn = url.openConnection();
-            conn.setRequestProperty("User-Agent", "Mozilla/5.0");
-            httpConnection = (HttpURLConnection) conn;
-            content = httpConnection.getInputStream();
-        } catch (IOException e) {
-            e.printStackTrace();
+        public String getRssFeedAsJson(@RequestParam(value = "url") String url) throws IOException {
+            InputStream xml = getInputStreamForURLData(url);
+            byte[] byteArray = IOUtils.toByteArray(xml);
+            String xmlString = new String(byteArray);
+            JSONObject xmlToJsonObject = XML.toJSONObject(xmlString);
+            //JSON Path
+            xmlToJsonObject = xmlToJsonObject
+                    .getJSONObject("rss")
+                    .getJSONObject("channel");
+            String jsonString = xmlToJsonObject.toString();
+            byte[] jsonStringAsByteArray = jsonString.getBytes(StandardCharsets.UTF_8);
+                return new String(jsonStringAsByteArray, StandardCharsets.UTF_8);
+            }
+        public static InputStream getInputStreamForURLData(String Url) {
+            URL url;
+            HttpURLConnection httpConnection;
+            InputStream content = null;
+            try {
+                url = new URL(Url);
+                System.out.println("URL::" + Url);
+                URLConnection conn = url.openConnection();
+                conn.setRequestProperty("User-Agent", "Mozilla/5.0");
+                httpConnection = (HttpURLConnection) conn;
+                content = httpConnection.getInputStream();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return content;
         }
-        return content;
-    }
 }
