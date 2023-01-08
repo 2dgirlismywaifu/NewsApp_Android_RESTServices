@@ -9,8 +9,10 @@ import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Base64;
 import java.util.Properties;
 import java.util.logging.Logger;
+
 
 public class AzureSQLConnection {
 
@@ -24,11 +26,11 @@ public class AzureSQLConnection {
             props.load(in);
             in.close();
 
-            String server = props.getProperty("server");
+            String server = new String(Base64.getDecoder().decode(props.getProperty("server")));
             String port = props.getProperty("port");
-            String data = props.getProperty("database");
-            String username = props.getProperty("username");
-            String password = props.getProperty("password");
+            String data = new String(Base64.getDecoder().decode(props.getProperty("database")));
+            String username = new String(Base64.getDecoder().decode(props.getProperty("username")));
+            String password = new String(Base64.getDecoder().decode(props.getProperty("password")));
             String dburl = "jdbc:sqlserver://" + server + ":" + port + ";databaseName=" + data
                     + ";username=" + username
                     + ";password=" + password
