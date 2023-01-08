@@ -29,7 +29,7 @@ public class SecurityConfig {
     ApiKeyAuthFilter filter = new ApiKeyAuthFilter(new String(Base64.getDecoder().decode(principalRequestHeader)));
     filter.setAuthenticationManager(
         authentication -> {
-          String principal = (String) authentication.getrincipal();
+          String principal = (String) authentication.getPrincipal();
           if (!Objects.equals(new String(Base64.getDecoder().decode(principalRequestValue)), principal)) {
             throw new BadCredentialsException(
                 "The API key was not found or not the expected value.");
