@@ -17,7 +17,7 @@ public class UserInformationController {
     PreparedStatement ps;
     public final String verify = "false";
     public final String user_id_random = new RandomNumber().generateRandomNumber();
-    private final String CREATE_USER = "INSERT INTO USER_PASSLOGIN (user_id, email, password, nickname, verify) VALUES (?,?,?,?,?)".formatted();
+    private final String CREATE_USER = "INSERT INTO USER_PASSLOGIN (user_id, email, password, nickname, verify) VALUES (?,?,?,?,?)";
     @RequestMapping(value = "/register", params = {"email", "password", "nickname"},method = RequestMethod.POST)
     //Create user account
     public void createUser
