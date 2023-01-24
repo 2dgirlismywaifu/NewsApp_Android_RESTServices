@@ -61,8 +61,14 @@
       <groupId>org.springframework</groupId>  
       <artifactId>spring-core</artifactId>  
       <version>6.0.3</version> 
-    </dependency>  
-    <dependency> 
+    </dependency>
+    <!--BCrypt-->
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-crypto</artifactId>
+      <version>5.5.8</version>
+    </dependency>
+    <dependency>
       <groupId>com.microsoft.azure</groupId>  
       <artifactId>azure-spring-apps-maven-plugin</artifactId>  
       <version>1.13.0</version> 
@@ -71,13 +77,12 @@
       <groupId>com.microsoft.azure</groupId>  
       <artifactId>azure-webapp-maven-plugin</artifactId>  
       <version>2.5.0</version> 
+    </dependency>  
+    <dependency> 
+      <groupId>org.json</groupId>  
+      <artifactId>json</artifactId>  
+      <version>20220924</version> 
     </dependency>
-    <dependency>
-    <groupId>org.json</groupId>
-    <artifactId>json</artifactId>
-    <version>20220924</version>
-</dependency>
-
   </dependencies>  
   <build> 
     <plugins> 
