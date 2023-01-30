@@ -148,7 +148,7 @@ public class UserInformationController {
             ResultSet rs = ps.executeQuery();
             RecoveryCode recoveryCode = new RecoveryCode();
             if (rs.next()) {
-                recoveryCode.setRecoverycode(rs.getString("recovery"));
+                recoveryCode.setRecoverycode(rs.getString(0));
                 recoveryCodeList.add(recoveryCode);
             }
             con.close();
