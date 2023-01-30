@@ -146,9 +146,9 @@ public class UserInformationController {
             ps = con.prepareStatement("SELECT recovery FROM USER_PASSLOGIN WHERE email = ?");
             ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
-            RecoveryCode recoveryCode = new RecoveryCode();
             if (rs.next()) {
-                recoveryCode.setRecoverycode(rs.getString(0));
+                RecoveryCode recoveryCode = new RecoveryCode();
+                recoveryCode.setRecoverycode(rs.getString("recovery"));
                 recoveryCodeList.add(recoveryCode);
             }
             con.close();
