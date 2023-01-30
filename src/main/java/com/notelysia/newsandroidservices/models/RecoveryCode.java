@@ -8,11 +8,11 @@ public class RecoveryCode {
     }
     public RecoveryCode() {
     }
-    public String getRecovery_code() {
+    public String getRecoverycode() {
         return recoverycode;
     }
 
-    public void setRecoverycode(String recovery_code) {
+    public void setRecoverycode(String recoverycode) {
         this.recoverycode = recoverycode;
     }
 }
