@@ -16,6 +16,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -23,35 +24,59 @@ public class UserInformationController {
     Connection con = null;
     PreparedStatement ps;
     public final String verify = "false";
-    public final String user_id_random = new RandomNumber().generateRandomNumber();
-    public final String recovery_code = java.util.UUID.randomUUID().toString();
+    public String date = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date());
     private final String CREATE_USER = "INSERT INTO USER_PASSLOGIN (user_id, email, password, salt, nickname, verify, recovery) VALUES (?,?,?,?,?,?,?)";
+    private final String CREATE_USER_INFORMATION = "INSERT INTO USER_INFORMATION (user_id, name, birthday, avatar) VALUES (?,?,?,?)";
+
     @RequestMapping(value = "/register", params = {"email", "password", "nickname"},method = RequestMethod.POST)
     //Create user account
-    public void createUser
+    public ResponseEntity <HashMap<String, String>> createUser
             (@RequestParam(value = "email") String email,
              @RequestParam(value = "password") String password,
              @RequestParam(value = "nickname") String nickname) {
-        {
-            con = new AzureSQLConnection().getConnection();
-            //Bcrypt password
-            String Salt = BCrypt.gensalt();
-            String password_hash = BCrypt.hashpw(password, Salt);
-            try {
-                PreparedStatement ps = con.prepareStatement(CREATE_USER);
-                ps.setString(1, user_id_random);
-                ps.setString(2, email);
-                ps.setString(3, password_hash);
-                ps.setString(4, Salt);
-                ps.setString(5, nickname);
-                ps.setString(6, verify);
-                ps.setString(7, recovery_code);
-                ps.executeUpdate();
-                con.close();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
+        String user_id_random = new RandomNumber().generateRandomNumber();
+        String recovery_code = java.util.UUID.randomUUID().toString();
+        String status;
+        con = new AzureSQLConnection().getConnection();
+        //Bcrypt password
+        String Salt = BCrypt.gensalt();
+        String password_hash = BCrypt.hashpw(password, Salt);
+        try {
+            PreparedStatement ps = con.prepareStatement(CREATE_USER + ";" + CREATE_USER_INFORMATION);
+            //CREATE USER_PASSLOGIN
+            ps.setString(1, user_id_random);
+            ps.setString(2, email);
+            ps.setString(3, password_hash);
+            ps.setString(4, Salt);
+            ps.setString(5, nickname);
+            ps.setString(6, verify);
+            ps.setString(7, recovery_code);
+            //CREATE USER_INFORMATION
+            ps.setString(8, user_id_random);
+            ps.setString(9, "not_available");
+            ps.setString(10, date);
+            ps.setString(11, "not_available");
+            int rs = ps.executeUpdate();
+            if (rs > 0) {
+                status = "success";
             }
+            else {
+                status = "failed";
+            }
+            con.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
+        return ResponseEntity.ok().body(new HashMap<String, String>() {{
+            put("user_id", user_id_random);
+            put("email", email);
+            put("password", password_hash);
+            put("salt", Salt);
+            put("nickname", nickname);
+            put("verify", verify);
+            put("recovery", recovery_code);
+            put("status", status);
+            }});
     }
     //Verify email from Firebase Authentication, if true, update verify to true
     @RequestMapping(value = "/verify", params = {"email"}, method = RequestMethod.POST)
@@ -161,9 +186,10 @@ public class UserInformationController {
     @RequestMapping(value = "/generaterecoverycode", params = {"nickname"}, method = RequestMethod.POST)
     public void generateRecoveryCode(@RequestParam(value = "nickname") String nickname) {
         con = new AzureSQLConnection().getConnection();
+        String new_recovery_code = java.util.UUID.randomUUID().toString();
         try {
             ps = con.prepareStatement("UPDATE USER_PASSLOGIN SET recovery = ? WHERE nickname = ?");
-            ps.setString(1, recovery_code);
+            ps.setString(1, new_recovery_code);
             ps.setString(2, nickname);
             ps.executeUpdate();
             con.close();
