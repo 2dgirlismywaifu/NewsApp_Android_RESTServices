@@ -26,12 +26,13 @@ public class UserInformationController {
     public final String verify = "false";
     public String date = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date());
     private final String CREATE_USER = "INSERT INTO USER_PASSLOGIN (user_id, email, password, salt, nickname, verify, recovery) VALUES (?,?,?,?,?,?,?)";
-    private final String CREATE_USER_INFORMATION = "INSERT INTO USER_INFORMATION (user_id, name, birthday, avatar) VALUES (?,?,?,?)";
+    private final String CREATE_USER_INFORMATION = "INSERT INTO USER_INFORMATION (user_id, name, gender, birthday, avatar) VALUES (?,?,?,?,?)";
 
-    @RequestMapping(value = "/register", params = {"email", "password", "nickname"},method = RequestMethod.POST)
+    @RequestMapping(value = "/register", params = {"fullname","email", "password", "nickname"},method = RequestMethod.POST)
     //Create user account
     public ResponseEntity <HashMap<String, String>> createUser
-            (@RequestParam(value = "email") String email,
+            (@RequestParam(value = "fullname") String fullname,
+             @RequestParam(value = "email") String email,
              @RequestParam(value = "password") String password,
              @RequestParam(value = "nickname") String nickname) {
         String user_id_random = new RandomNumber().generateRandomNumber();
@@ -53,9 +54,10 @@ public class UserInformationController {
             ps.setString(7, recovery_code);
             //CREATE USER_INFORMATION
             ps.setString(8, user_id_random);
-            ps.setString(9, "not_available");
-            ps.setString(10, date);
-            ps.setString(11, "not_available");
+            ps.setString(9, fullname);
+            ps.setString(10, "not_input");
+            ps.setString(11, date);
+            ps.setString(12, "not_available");
             int rs = ps.executeUpdate();
             if (rs > 0) {
                 status = "success";
@@ -69,6 +71,7 @@ public class UserInformationController {
         }
         return ResponseEntity.ok().body(new HashMap<String, String>() {{
             put("user_id", user_id_random);
+            put("fullname", fullname);
             put("email", email);
             put("password", password_hash);
             put("salt", Salt);
@@ -80,7 +83,7 @@ public class UserInformationController {
     }
     //Verify email from Firebase Authentication, if true, update verify to true
     @RequestMapping(value = "/verify", params = {"email"}, method = RequestMethod.POST)
-    public void verifyEmail(@RequestParam(value = "email") String email) {
+    public ResponseEntity<HashMap<String, String>> verifyEmail(@RequestParam(value = "email") String email) {
         con = new AzureSQLConnection().getConnection();
         try {
             ps = con.prepareStatement("UPDATE USER_PASSLOGIN SET verify = 'true' WHERE email = ?");
@@ -90,21 +93,52 @@ public class UserInformationController {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        return ResponseEntity.ok().body(new HashMap<String, String>() {{
+            put("email", email);
+            put("verify", "true");
+        }});
     }
     //Sign in with user or email account and password
-    @RequestMapping(value = "/signin", params = {"account", "password"}, method = RequestMethod.POST)
-    public void signIn(@RequestParam(value = "account") String account, @RequestParam(value = "password") String password) {
+    @RequestMapping(value = "/signin", params = {"account", "password"}, method = RequestMethod.GET)
+    public ResponseEntity <HashMap<String, String>> signIn(@RequestParam(value = "account") String account, @RequestParam(value = "password") String password) {
+        HashMap<String, String> userFound = new HashMap<>();
         con = new AzureSQLConnection().getConnection();
         try {
-            ps = con.prepareStatement("SELECT * FROM USER_PASSLOGIN WHERE email = ? OR nickname = ? AND password = ?");
+            ps = con.prepareStatement("SELECT * FROM USER_PASSLOGIN, USER_INFORMATION WHERE email = ? OR nickname = ? AND USER_PASSLOGIN.user_id = USER_INFORMATION.user_id");
             ps.setString(1, account);
             ps.setString(2, account);
-            ps.setString(3, password);
-            ps.executeQuery();
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                String password_hash = rs.getString("password");
+                String salt = rs.getString("salt");
+                String password_check = BCrypt.hashpw(password, salt);
+                if (password_check.equals(password_hash)) {
+                    userFound.put("user_id", rs.getString("user_id"));
+                    userFound.put("name", rs.getString("name"));
+                    userFound.put("birthaday", rs.getString("birthday"));
+                    userFound.put("gender", rs.getString("gender"));
+                    userFound.put("avatar", rs.getString("avatar"));
+                    userFound.put("email", rs.getString("email"));
+                    userFound.put("password", rs.getString("password"));
+                    userFound.put("salt", rs.getString("salt"));
+                    userFound.put("nickname", rs.getString("nickname"));
+                    userFound.put("sync_settings", rs.getString("sync_settings"));
+                    userFound.put("verify", rs.getString("verify"));
+                    userFound.put("recovery", rs.getString("recovery"));
+                    userFound.put("status", "pass");
+                }
+                else {
+                    userFound.put("status", "fail");
+                }
+            }
+            else {
+                userFound.put("status", "fail");
+            }
             con.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        return ResponseEntity.ok().body(userFound);
     }
     //Update password form request forgot password
     @RequestMapping(value = "/forgotpassword", params = {"email", "password"}, method = RequestMethod.POST)
@@ -137,50 +171,50 @@ public class UserInformationController {
     }
     //make sure nickname and email is available to use
     @RequestMapping(value = "/checknickname", params = {"nickname", "email"}, method = RequestMethod.GET)
-    public ResponseEntity<List<CheckNickname>> checkNickname(@RequestParam(value = "nickname") String nickname, @RequestParam(value = "email") String email) {
+    public ResponseEntity <HashMap<String, String>> checkNickname(@RequestParam(value = "nickname") String nickname, @RequestParam(value = "email") String email) {
         con = new AzureSQLConnection().getConnection();
-        List<CheckNickname> checkNicknameList = new ArrayList<>();
+        CheckNickname checkNickname = new CheckNickname();
         try {
             ps = con.prepareStatement("SELECT * FROM USER_PASSLOGIN WHERE nickname = ? AND email = ?");
             ps.setString(1, nickname);
             ps.setString(2, email);
             ResultSet rs = ps.executeQuery();
-            CheckNickname checkNickname = new CheckNickname();
             if (rs.next()) {
                 checkNickname.setNickname(rs.getString("nickname"));
                 checkNickname.setEmail(rs.getString("email"));
-                checkNicknameList.add(checkNickname);
             }
             else {
                 checkNickname.setNickname("");
                 checkNickname.setEmail("");
-                checkNicknameList.add(checkNickname);
             }
             con.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return ResponseEntity.ok(checkNicknameList);
+        return ResponseEntity.ok().body(new HashMap<String, String>() {{
+            put("nickname", checkNickname.getNickname());
+            put("email", checkNickname.getEmail());
+            }});
     }
     //Show recovery code to user
     @RequestMapping(value = "/recoverycode", params = {"email"}, method = RequestMethod.GET)
-    public ResponseEntity<List<RecoveryCode>> recoveryCode(@RequestParam(value = "email") String email) {
+    public ResponseEntity<HashMap<String, String>> recoveryCode(@RequestParam(value = "email") String email) {
         con = new AzureSQLConnection().getConnection();
-        List<RecoveryCode> recoveryCodeList = new ArrayList<>();
+        RecoveryCode recoveryCode = new RecoveryCode();
         try {
             ps = con.prepareStatement("SELECT recovery FROM USER_PASSLOGIN WHERE email = ?");
             ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                RecoveryCode recoveryCode = new RecoveryCode();
                 recoveryCode.setRecoverycode(rs.getString("recovery"));
-                recoveryCodeList.add(recoveryCode);
             }
             con.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return ResponseEntity.ok(recoveryCodeList);
+        return ResponseEntity.ok().body(new HashMap<String, String>() {{
+            put("recoverycode", recoveryCode.getRecoverycode());
+        }});
     }
     //Generate recovery code from user
     @RequestMapping(value = "/generaterecoverycode", params = {"nickname"}, method = RequestMethod.POST)

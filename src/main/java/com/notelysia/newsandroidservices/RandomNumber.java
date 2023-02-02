@@ -12,4 +12,15 @@ public class RandomNumber {
         }
         return sb.toString();
     }
+
+    public String generateSSONumber() {
+        int length = 8;
+        String numbers = "0123456789";
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            int index = (int) (numbers.length() * Math.random());
+            sb.append(numbers.charAt(index));
+        }
+        return sb.toString();
+    }
 }
