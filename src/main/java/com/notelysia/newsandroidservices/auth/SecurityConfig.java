@@ -1,5 +1,5 @@
 package com.notelysia.newsandroidservices.auth;
-import java.util.Base64;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
+import java.util.Base64;
 import java.util.Objects;
 
 @Configuration
@@ -37,7 +38,6 @@ public class SecurityConfig {
           authentication.setAuthenticated(true);
           return authentication;
         });
-
     http.authorizeHttpRequests((request -> request.anyRequest().authenticated()))
         .addFilter(filter)
         .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -48,4 +48,5 @@ public class SecurityConfig {
                 sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
     return http.build();
   }
+
 }

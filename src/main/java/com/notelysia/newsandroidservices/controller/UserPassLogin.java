@@ -15,12 +15,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 @RestController
-public class UserInformationController {
+public class UserPassLogin {
     Connection con = null;
     PreparedStatement ps;
     public final String verify = "false";
