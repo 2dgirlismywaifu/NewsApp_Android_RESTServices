@@ -21,8 +21,15 @@ public class UserSSOController {
     public String date = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date());
     private final String CREATE_USER = "INSERT INTO USER_SSO (user_id, email, nickname, verify) VALUES (?,?,?,?)";
     private final String CREATE_USER_INFORMATION = "INSERT INTO USER_SSO_INFORMATION (user_id, name, gender, birthday, avatar) VALUES (?,?,?,?,?)";
+    //only user information
+    private final String UPDATE_USER_AVATAR = "UPDATE USER_SSO_INFORMATION SET avatar =? WHERE user_id = ?";
+    private final String UPDATE_USER_NAME = "UPDATE USER_SSO_INFORMATION SET name =? WHERE user_id = ?";
+    private final String UPDATE_USER_GENDER = "UPDATE USER_SSO_INFORMATION SET gender = ? WHERE user_id = ?";
+    private final String UPDATE_USER_BIRTHDAY = "UPDATE USER_SSO_INFORMATION SET birthday = ? WHERE user_id = ?";
     @RequestMapping(value = "/sso", params = {"fullname","email", "nickname", "avatar"},method = RequestMethod.POST)
     //Create user account
+    //Why gender and birthday not input? Because it is private information about each user.
+    // Firebase do not have function to get the user's gender/birthdate
     public ResponseEntity <HashMap<String, String>> createUser
             (@RequestParam(value = "fullname") String fullname,
              @RequestParam(value = "email") String email,
@@ -81,12 +88,9 @@ public class UserSSOController {
                 userFound.put("gender", rs.getString("gender"));
                 userFound.put("avatar", rs.getString("avatar"));
                 userFound.put("email", rs.getString("email"));
-                userFound.put("password", rs.getString("password"));
-                userFound.put("salt", rs.getString("salt"));
                 userFound.put("nickname", rs.getString("nickname"));
                 userFound.put("sync_settings", rs.getString("sync_settings"));
                 userFound.put("verify", rs.getString("verify"));
-                userFound.put("recovery", rs.getString("recovery"));
                 userFound.put("status", "pass");
             }
             else {
