@@ -1,6 +1,6 @@
 package com.notelysia.newsandroidservices.controller;
 
-import com.notelysia.newsandroidservices.AzureSQLConnection;
+import com.notelysia.newsandroidservices.azure.AzureSQLConnection;
 import com.notelysia.newsandroidservices.RandomNumber;
 import com.notelysia.newsandroidservices.models.CheckNickname;
 import com.notelysia.newsandroidservices.models.RecoveryCode;
@@ -25,6 +25,12 @@ public class UserPassLogin {
     public String date = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date());
     private final String CREATE_USER = "INSERT INTO USER_PASSLOGIN (user_id, email, password, salt, nickname, verify, recovery) VALUES (?,?,?,?,?,?,?)";
     private final String CREATE_USER_INFORMATION = "INSERT INTO USER_INFORMATION (user_id, name, gender, birthday, avatar) VALUES (?,?,?,?,?)";
+    ////////Update information////////////////
+    private final String UPDATE_USER_NAME = "UPDATE USER_PASSLOGIN SET nickname = ? WHERE user_id = ?";
+    private final String UPDATE_USER_AVATAR = "UPDATE USER_INFORMATION SET avatar =? WHERE user_id = ?";
+    private final String UPDATE_USER_FULLNAME = "UPDATE USER_INFORMATION SET name =? WHERE user_id = ?";
+    private final String UPDATE_USER_GENDER = "UPDATE USER_INFORMATION SET gender = ? WHERE user_id = ?";
+    private final String UPDATE_USER_BIRTHDAY = "UPDATE USER_INFORMATION SET birthday = ? WHERE user_id = ?";
 
     @RequestMapping(value = "/register", params = {"fullname","email", "password", "nickname"},method = RequestMethod.POST)
     //Create user account
@@ -216,19 +222,153 @@ public class UserPassLogin {
     }
     //Generate recovery code from user
     @RequestMapping(value = "/generaterecoverycode", params = {"nickname"}, method = RequestMethod.POST)
-    public void generateRecoveryCode(@RequestParam(value = "nickname") String nickname) {
+    public ResponseEntity <HashMap<String, String>> generateRecoveryCode(@RequestParam(value = "nickname") String nickname) {
         con = new AzureSQLConnection().getConnection();
         String new_recovery_code = java.util.UUID.randomUUID().toString();
+        HashMap<String, String> recoverySuccess = new HashMap<>();
         try {
             ps = con.prepareStatement("UPDATE USER_PASSLOGIN SET recovery = ? WHERE nickname = ?");
             ps.setString(1, new_recovery_code);
             ps.setString(2, nickname);
-            ps.executeUpdate();
+            int rs = ps.executeUpdate();
+            if (rs >0 ){
+                recoverySuccess.put("status", "pass");
+                recoverySuccess.put("recoverycode", new_recovery_code);
+            }
+            else
+            {
+                recoverySuccess.put("status", "fail");
+                recoverySuccess.put("recoverycode", "");
+            }
             con.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        return ResponseEntity.ok().body(recoverySuccess);
     }
     //There is another settings form user, but it will write later
-    //Other settings is: Sync Settings, Avatar Account, User Information like real name, birthday, gender, etc
+    //Other settings is: Avatar Account, User Information like real name, birthday, gender, etc
+    //Update user name
+    @RequestMapping (value = "/account/username/update", params = {"userid", "username"}, method = RequestMethod.POST)
+    public ResponseEntity<HashMap<String, String>> updateUserName (@RequestParam(value = "userid") String userid, @RequestParam(value = "username") String username) {
+        con = new AzureSQLConnection().getConnection();
+        HashMap<String, String> updateSuccess = new HashMap<>();
+        try {
+            ps = con.prepareStatement(UPDATE_USER_NAME);
+            ps.setString(1, username);
+            ps.setString(2, userid);
+            int rs = ps.executeUpdate();
+            if (rs >0 ){
+                updateSuccess.put("status", "pass");
+                updateSuccess.put("username", username);
+            }
+            else
+            {
+                updateSuccess.put("status", "fail");
+            }
+            con.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return ResponseEntity.ok().body(updateSuccess);
+    }
+    //Update user fullname
+    @RequestMapping (value = "/account/fullname/update", params = {"userid", "fullname"}, method = RequestMethod.POST)
+    public ResponseEntity<HashMap<String, String>> updateUserFullname (@RequestParam(value = "userid") String userid, @RequestParam(value = "fullname") String fullname) {
+        con = new AzureSQLConnection().getConnection();
+        HashMap<String, String> updateSuccess = new HashMap<>();
+        try {
+            ps = con.prepareStatement(UPDATE_USER_FULLNAME);
+            ps.setString(1, fullname);
+            ps.setString(2, userid);
+            int rs = ps.executeUpdate();
+            if (rs >0 ){
+                updateSuccess.put("status", "pass");
+                updateSuccess.put("fullname", fullname);
+            }
+            else
+            {
+                updateSuccess.put("status", "fail");
+            }
+            con.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return ResponseEntity.ok().body(updateSuccess);
+    }
+    //Update user birthday
+    @RequestMapping (value = "/account/birthday/update", params = {"userid", "birthday"}, method = RequestMethod.POST)
+    public ResponseEntity<HashMap<String, String>> updateUserBirthday (@RequestParam(value = "userid") String userid, @RequestParam(value = "birthday") String birthday) {
+        con = new AzureSQLConnection().getConnection();
+        HashMap<String, String> updateSuccess = new HashMap<>();
+        try {
+            ps = con.prepareStatement(UPDATE_USER_BIRTHDAY);
+            ps.setString(1, birthday);
+            ps.setString(2, userid);
+            int rs = ps.executeUpdate();
+            if (rs >0 ){
+                updateSuccess.put("status", "pass");
+                updateSuccess.put("birthday", birthday);
+            }
+            else
+            {
+                updateSuccess.put("status", "fail");
+            }
+            con.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return ResponseEntity.ok().body(updateSuccess);
+    }
+    //Update user gender
+    @RequestMapping (value = "/account/gender/update", params = {"userid", "gender"}, method = RequestMethod.POST)
+    public ResponseEntity<HashMap<String, String>> updateUserGender (@RequestParam(value = "userid") String userid, @RequestParam(value = "gender") String gender) {
+        con = new AzureSQLConnection().getConnection();
+        HashMap<String, String> updateSuccess = new HashMap<>();
+        try {
+            ps = con.prepareStatement(UPDATE_USER_GENDER);
+            ps.setString(1, gender);
+            ps.setString(2, userid);
+            int rs = ps.executeUpdate();
+            if (rs >0 ){
+                updateSuccess.put("status", "pass");
+                updateSuccess.put("birthday", gender);
+            }
+            else
+            {
+                updateSuccess.put("status", "fail");
+            }
+            con.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return ResponseEntity.ok().body(updateSuccess);
+    }
+    //Update user avatar
+    @RequestMapping (value = "/account/avatar/update", params = {"userid", "avatar"}, method = RequestMethod.POST)
+    public ResponseEntity<HashMap<String, String>> updateUserAvatar (@RequestParam(value = "userid") String userid, @RequestParam(value = "avatar") String avatar) {
+        con = new AzureSQLConnection().getConnection();
+        HashMap<String, String> updateSuccess = new HashMap<>();
+        //First, upload image to Azure Storage Bolb
+        //Then, get the link of image
+        //Finally, update the link to database
+        try {
+            ps = con.prepareStatement(UPDATE_USER_AVATAR);
+            ps.setString(1, avatar);
+            ps.setString(2, userid);
+            int rs = ps.executeUpdate();
+            if (rs >0 ){
+                updateSuccess.put("status", "pass");
+                updateSuccess.put("avatar", avatar);
+            }
+            else
+            {
+                updateSuccess.put("status", "fail");
+            }
+            con.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return ResponseEntity.ok().body(updateSuccess);
+    }
 }

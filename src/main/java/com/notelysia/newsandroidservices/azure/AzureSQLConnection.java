@@ -1,4 +1,4 @@
-package com.notelysia.newsandroidservices;
+package com.notelysia.newsandroidservices.azure;
 
 
 
