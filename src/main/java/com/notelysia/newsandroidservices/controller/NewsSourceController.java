@@ -1,7 +1,7 @@
 package com.notelysia.newsandroidservices.controller;
 
 
-import com.notelysia.newsandroidservices.AzureSQLConnection;
+import com.notelysia.newsandroidservices.azure.AzureSQLConnection;
 import com.notelysia.newsandroidservices.models.NewsSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

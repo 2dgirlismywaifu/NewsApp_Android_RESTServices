@@ -1,6 +1,6 @@
 package com.notelysia.newsandroidservices.controller;
 
-import com.notelysia.newsandroidservices.AzureSQLConnection;
+import com.notelysia.newsandroidservices.azure.AzureSQLConnection;
 import com.notelysia.newsandroidservices.RandomNumber;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +22,8 @@ public class UserSSOController {
     private final String CREATE_USER = "INSERT INTO USER_SSO (user_id, email, nickname, verify) VALUES (?,?,?,?)";
     private final String CREATE_USER_INFORMATION = "INSERT INTO USER_SSO_INFORMATION (user_id, name, gender, birthday, avatar) VALUES (?,?,?,?,?)";
     //only user information
+    //update user when user login with SSO (nickname, name, avatar)
+    private final String UPDATE_USER = "UPDATE USER_SSO SET nickname = ? WHERE user_id = ?";
     private final String UPDATE_USER_AVATAR = "UPDATE USER_SSO_INFORMATION SET avatar =? WHERE user_id = ?";
     private final String UPDATE_USER_NAME = "UPDATE USER_SSO_INFORMATION SET name =? WHERE user_id = ?";
     private final String UPDATE_USER_GENDER = "UPDATE USER_SSO_INFORMATION SET gender = ? WHERE user_id = ?";
@@ -71,7 +73,38 @@ public class UserSSOController {
             put("status", status);
             }});
     }
-
+    //Update user information
+    @RequestMapping(value = "/sso/update", params = {"user_id", "name", "avatar"}, method = RequestMethod.POST)
+    public ResponseEntity <HashMap<String, String>> updateUser(@RequestParam(value = "user_id") String user_id,
+                                                              @RequestParam(value = "name") String name,
+                                                              @RequestParam(value = "avatar") String avatar) {
+        HashMap<String, String> userFound = new HashMap<>();
+       con = new AzureSQLConnection().getConnection();
+        try {
+            ps = con.prepareStatement(UPDATE_USER + ";" + UPDATE_USER_NAME + "; " + UPDATE_USER_AVATAR);
+            ps.setString(1, name);
+            ps.setString(2, user_id);
+            ps.setString(3, name);
+            ps.setString(4, user_id);
+            ps.setString(5, avatar);
+            ps.setString(6, user_id);
+            int rs = ps.executeUpdate();
+            if (rs > 0) {
+                userFound.put("user_id", user_id);
+                userFound.put("name", name);
+                userFound.put("nickname", name);
+                userFound.put("avatar", avatar);
+                userFound.put("status", "pass");
+            }
+            else {
+                userFound.put("status", "fail");
+            }
+            con.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return ResponseEntity.ok().body(userFound);
+    }
     @RequestMapping(value = "/sso/count", params = {"account"}, method = RequestMethod.GET)
     public ResponseEntity <HashMap<String, String>> countUser(@RequestParam(value = "account") String account) {
         HashMap<String, String> userFound = new HashMap<>();
