@@ -19,15 +19,15 @@ public class UserSSOController {
     PreparedStatement ps;
     public final String verify = "true"; //sso always verify
     public String date = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date());
-    private final String CREATE_USER = "INSERT INTO USER_SSO (user_id, email, nickname, verify) VALUES (?,?,?,?)";
-    private final String CREATE_USER_INFORMATION = "INSERT INTO USER_SSO_INFORMATION (user_id, name, gender, birthday, avatar) VALUES (?,?,?,?,?)";
+    public final String CREATE_USER = "INSERT INTO USER_SSO (user_id, email, nickname, verify) VALUES (?,?,?,?)";
+    public final String CREATE_USER_INFORMATION = "INSERT INTO USER_SSO_INFORMATION (user_id, name, gender, birthday, avatar) VALUES (?,?,?,?,?)";
     //only user information
     //update user when user login with SSO (nickname, name, avatar)
-    private final String UPDATE_USER = "UPDATE USER_SSO SET nickname = ? WHERE user_id = ?";
-    private final String UPDATE_USER_AVATAR = "UPDATE USER_SSO_INFORMATION SET avatar =? WHERE user_id = ?";
-    private final String UPDATE_USER_NAME = "UPDATE USER_SSO_INFORMATION SET name =? WHERE user_id = ?";
-    private final String UPDATE_USER_GENDER = "UPDATE USER_SSO_INFORMATION SET gender = ? WHERE user_id = ?";
-    private final String UPDATE_USER_BIRTHDAY = "UPDATE USER_SSO_INFORMATION SET birthday = ? WHERE user_id = ?";
+    public final String UPDATE_USER = "UPDATE USER_SSO SET nickname = ? WHERE user_id = ?";
+    public final String UPDATE_USER_AVATAR = "UPDATE USER_SSO_INFORMATION SET avatar =? WHERE user_id = ?";
+    public final String UPDATE_USER_NAME = "UPDATE USER_SSO_INFORMATION SET name =? WHERE user_id = ?";
+    public final String UPDATE_USER_GENDER = "UPDATE USER_SSO_INFORMATION SET gender = ? WHERE user_id = ?";
+    public final String UPDATE_USER_BIRTHDAY = "UPDATE USER_SSO_INFORMATION SET birthday = ? WHERE user_id = ?";
     @RequestMapping(value = "/sso", params = {"fullname","email", "nickname", "avatar"},method = RequestMethod.POST)
     //Create user account
     //Why gender and birthday not input? Because it is private information about each user.
@@ -134,5 +134,53 @@ public class UserSSOController {
             throw new RuntimeException(e);
         }
         return ResponseEntity.ok().body(userFound);
+    }
+    //Update birthday
+    @RequestMapping (value = "/sso/birthday/update", params = {"userid", "birthday"}, method = RequestMethod.POST)
+    public ResponseEntity<HashMap<String, String>> updateUserBirthday (@RequestParam(value = "userid") String userid, @RequestParam(value = "birthday") String birthday) {
+        con = new AzureSQLConnection().getConnection();
+        HashMap<String, String> updateSuccess = new HashMap<>();
+        try {
+            ps = con.prepareStatement(UPDATE_USER_BIRTHDAY);
+            ps.setString(1, birthday);
+            ps.setString(2, userid);
+            int rs = ps.executeUpdate();
+            if (rs >0 ){
+                updateSuccess.put("status", "pass");
+                updateSuccess.put("birthday", birthday);
+            }
+            else
+            {
+                updateSuccess.put("status", "fail");
+            }
+            con.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return ResponseEntity.ok().body(updateSuccess);
+    }
+
+    @RequestMapping (value = "/sso/gender/update", params = {"userid", "gender"}, method = RequestMethod.POST)
+    public ResponseEntity<HashMap<String, String>> updateUserGender (@RequestParam(value = "userid") String userid, @RequestParam(value = "gender") String gender) {
+        con = new AzureSQLConnection().getConnection();
+        HashMap<String, String> updateSuccess = new HashMap<>();
+        try {
+            ps = con.prepareStatement(UPDATE_USER_GENDER);
+            ps.setString(1, gender);
+            ps.setString(2, userid);
+            int rs = ps.executeUpdate();
+            if (rs >0 ){
+                updateSuccess.put("status", "pass");
+                updateSuccess.put("gender", gender);
+            }
+            else
+            {
+                updateSuccess.put("status", "fail");
+            }
+            con.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return ResponseEntity.ok().body(updateSuccess);
     }
 }
