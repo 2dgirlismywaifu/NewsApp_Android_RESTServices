@@ -77,6 +77,7 @@ public class EmailFavouriteController {
                 respond.put("title", title);
                 respond.put("image_url", image_url);
                 respond.put("source_name", source_name);
+                respond.put("pubdate", pub_date);
                 respond.put("status", "success");
             } else {
                 respond.put("status", "fail");
