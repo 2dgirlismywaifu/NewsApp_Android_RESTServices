@@ -1,12 +1,13 @@
 package com.notelysia.newsandroidservices.models;
 
 public class SourceFavourite {
-    //favorite_id, user_id, url, title, image_url, source_name
+    //favorite_id, user_id, url, title, image_url, pubdate, source_name
     private String favorite_id;
     private String user_id;
     private String url;
     private String title;
     private String image_url;
+    private String pub_date;
     private String source_name;
 
     public SourceFavourite() {
@@ -59,5 +60,13 @@ public class SourceFavourite {
 
     public void setSource_name(String source_name) {
         this.source_name = source_name;
+    }
+
+    public String getPub_date() {
+        return pub_date;
+    }
+
+    public void setPub_date(String pub_date) {
+        this.pub_date = pub_date;
     }
 }
