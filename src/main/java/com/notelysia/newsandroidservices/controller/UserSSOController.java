@@ -105,14 +105,16 @@ public class UserSSOController {
         }
         return ResponseEntity.ok().body(userFound);
     }
-    @RequestMapping(value = "/sso/count", params = {"account"}, method = RequestMethod.GET)
-    public ResponseEntity <HashMap<String, String>> countUser(@RequestParam(value = "account") String account) {
+    @RequestMapping(value = "/sso/count", params = {"email", "nickname"}, method = RequestMethod.GET)
+    public ResponseEntity <HashMap<String, String>> countUser(
+            @RequestParam(value = "email") String email,
+            @RequestParam(value = "nickname") String nickname) {
         HashMap<String, String> userFound = new HashMap<>();
        con = new AzureSQLConnection().getConnection();
         try {
-            ps = con.prepareStatement("SELECT * FROM USER_SSO, USER_SSO_INFORMATION WHERE email = ? OR nickname = ? AND USER_SSO.user_id = USER_SSO_INFORMATION.user_id");
-            ps.setString(1, account);
-            ps.setString(2, account);
+            ps = con.prepareStatement("SELECT * FROM USER_SSO, USER_SSO_INFORMATION WHERE email = ? AND nickname = ? AND USER_SSO.user_id = USER_SSO_INFORMATION.user_id");
+            ps.setString(1, email);
+            ps.setString(2, nickname);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 userFound.put("user_id", rs.getString("user_id"));
@@ -122,7 +124,6 @@ public class UserSSOController {
                 userFound.put("avatar", rs.getString("avatar"));
                 userFound.put("email", rs.getString("email"));
                 userFound.put("nickname", rs.getString("nickname"));
-                userFound.put("sync_settings", rs.getString("sync_settings"));
                 userFound.put("verify", rs.getString("verify"));
                 userFound.put("status", "pass");
             }
