@@ -471,7 +471,6 @@ public class UserPassLogin {
                userFound.put("password", rs.getString("password"));
                userFound.put("salt", rs.getString("salt"));
                userFound.put("nickname", rs.getString("nickname"));
-               userFound.put("sync_settings", rs.getString("sync_settings"));
                userFound.put("verify", rs.getString("verify"));
                userFound.put("recovery", rs.getString("recovery"));
                userFound.put("status", "pass");
