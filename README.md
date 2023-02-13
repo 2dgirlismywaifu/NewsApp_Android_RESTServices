@@ -98,6 +98,11 @@ Notes: You can use Azure App Services with F1 Plan (Free Forever), but performan
    ```sh
    git clone https://github.com/2dgirlismywaifu/NewsApp_Android_RESTServices.git
    ```
+2. Open `application.properties` in `src\main\resources` and edit like this bellow
+    ```
+      newsapp.http.auth-token-header-name=(Your API Header, encode it with  BASE64)
+      newsapp.http.auth-token=(Your API Key, encode it with BASE64)
+    ```
 3. Open pom.xml and delete this section bellow
     ```
       <plugin>
