@@ -178,19 +178,27 @@ public class EmailFavouriteController {
         return new ResponseEntity<>(respond, org.springframework.http.HttpStatus.OK);
     }
     //check source is favourite or not (use params: user_id, source_id)
-@RequestMapping(value = "/account/favourite/news/check", params = {"userid", "sourceid"}, method = RequestMethod.GET)
+@RequestMapping(value = "/account/favourite/news/check", params = {"userid", "url", "title", "imageurl", "sourcename"}, method = RequestMethod.GET)
     public ResponseEntity<HashMap<String, String>> userSourceFavouriteCheck (
-            @RequestParam(value = "userid") String user_id, @RequestParam(value = "sourceid") String source_id) {
+            @RequestParam(value = "userid") String user_id, @RequestParam(value = "url") String url,
+            @RequestParam(value = "title") String title, @RequestParam(value = "imageurl") String image_url,
+            @RequestParam(value = "sourcename") String source_name) {
         con = new AzureSQLConnection().getConnection();
         HashMap<String, String> respond = new HashMap<>();
         try {
             ps = con.prepareStatement("SELECT * FROM SYNC_NEWS_FAVOURITE WHERE user_id = ? AND url = ? AND title = ? AND image_url = ? AND source_name = ? ");
             ps.setString(1, user_id);
-            ps.setString(2, source_id);
+            ps.setString(2, url);
+            ps.setString(3, title);
+            ps.setString(4, image_url);
+            ps.setString(5, source_name);
             rs = ps.executeQuery();
             if (rs.next()) {
                 respond.put("user_id", user_id);
-                respond.put("source_id", source_id);
+                respond.put("url", url);
+                respond.put("title", title);
+                respond.put("image_url", image_url);
+                respond.put("source_name", source_name);
                 respond.put("status", "success");
             } else {
                 respond.put("status", "fail");

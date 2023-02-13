@@ -177,6 +177,38 @@ public class SSOFavouriteController {
         respond.put("NewsFavourite",sourceFavourites);
         return new ResponseEntity<>(respond, org.springframework.http.HttpStatus.OK);
     }
+    @RequestMapping(value = "/sso/favourite/news/check", params = {"userid", "url", "title", "imageurl", "sourcename"}, method = RequestMethod.GET)
+    public ResponseEntity<HashMap<String, String>> userSourceFavouriteCheck (
+            @RequestParam(value = "userid") String user_id, @RequestParam(value = "url") String url,
+            @RequestParam(value = "title") String title, @RequestParam(value = "imageurl") String image_url,
+            @RequestParam(value = "sourcename") String source_name) {
+        con = new AzureSQLConnection().getConnection();
+        HashMap<String, String> respond = new HashMap<>();
+        try {
+            ps = con.prepareStatement("SELECT * FROM SYNC_NEWS_FAVOURITE_SSO WHERE user_id = ? AND url = ? AND title = ? AND image_url = ? AND source_name = ? ");
+            ps.setString(1, user_id);
+            ps.setString(2, url);
+            ps.setString(3, title);
+            ps.setString(4, image_url);
+            ps.setString(5, source_name);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                respond.put("user_id", user_id);
+                respond.put("url", url);
+                respond.put("title", title);
+                respond.put("image_url", image_url);
+                respond.put("source_name", source_name);
+                respond.put("status", "success");
+            } else {
+                respond.put("status", "fail");
+            }
+
+            con.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return new ResponseEntity<>(respond, org.springframework.http.HttpStatus.OK);
+    }
      @RequestMapping(value = "/sso/subscribe/check", params = {"userid","sourceid"}, method = RequestMethod.GET)
     public ResponseEntity<HashMap<String, String>> ssoSourceSubscribeCheck (
             @RequestParam(value = "userid") String user_id, @RequestParam(value = "sourceid") String source_id) {
