@@ -127,7 +127,7 @@ public class UserPassLogin {
         HashMap<String, String> userFound = new HashMap<>();
         con = new AzureSQLConnection().getConnection();
         try {
-            ps = con.prepareStatement("SELECT * FROM USER_PASSLOGIN, USER_INFORMATION WHERE email = ? OR nickname = ? AND USER_PASSLOGIN.user_id = USER_INFORMATION.user_id");
+            ps = con.prepareStatement("SELECT * FROM USER_PASSLOGIN, USER_INFORMATION WHERE USER_PASSLOGIN.user_id = USER_INFORMATION.user_id AND email = ? OR nickname = ?");
             ps.setString(1, account);
             ps.setString(2, account);
             ResultSet rs = ps.executeQuery();
