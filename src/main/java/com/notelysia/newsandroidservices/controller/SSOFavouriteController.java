@@ -174,7 +174,7 @@ public class SSOFavouriteController {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        respond.put("SourceFavourite",sourceFavourites);
+        respond.put("NewsFavourite",sourceFavourites);
         return new ResponseEntity<>(respond, org.springframework.http.HttpStatus.OK);
     }
      @RequestMapping(value = "/sso/subscribe/check", params = {"userid","sourceid"}, method = RequestMethod.GET)

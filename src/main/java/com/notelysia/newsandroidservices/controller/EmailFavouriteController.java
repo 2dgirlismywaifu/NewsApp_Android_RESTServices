@@ -174,17 +174,17 @@ public class EmailFavouriteController {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        respond.put("SourceFavourite",sourceFavourites);
+        respond.put("NewsFavourite",sourceFavourites);
         return new ResponseEntity<>(respond, org.springframework.http.HttpStatus.OK);
     }
     //check source is favourite or not (use params: user_id, source_id)
-@RequestMapping(value = "/account/favourite/source/check", params = {"userid", "sourceid"}, method = RequestMethod.GET)
+@RequestMapping(value = "/account/favourite/news/check", params = {"userid", "sourceid"}, method = RequestMethod.GET)
     public ResponseEntity<HashMap<String, String>> userSourceFavouriteCheck (
             @RequestParam(value = "userid") String user_id, @RequestParam(value = "sourceid") String source_id) {
         con = new AzureSQLConnection().getConnection();
         HashMap<String, String> respond = new HashMap<>();
         try {
-            ps = con.prepareStatement("SELECT * FROM SYNC_SUBSCRIBE WHERE user_id = ? AND source_id = ?");
+            ps = con.prepareStatement("SELECT * FROM SYNC_NEWS_FAVOURITE WHERE user_id = ? AND url = ? AND title = ? AND image_url = ? AND source_name = ? ");
             ps.setString(1, user_id);
             ps.setString(2, source_id);
             rs = ps.executeQuery();
