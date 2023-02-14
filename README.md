@@ -160,8 +160,8 @@ Notes: You can use Azure App Services with F1 Plan (Free Forever), but performan
       • Define value for appName: name for App Service as you like, no spaces
       • Define value for resourceGroup: select Resource Group to store
       • Define value for region: select the region, should choose the area near the living area. Example: Vietnam chooses southeastasia
-      • Define value for pricingTier: select the package for App Services. F1 is in the free service package but the speed is quite slow, it is recommended to choose the B1 package with small REST Service for about 13$ per month
-      • Choose operating system: Linux or Windows are okay
+      • Define value for pricingTier: select the plan for App Services. F1 is in the free service plan but the speed is quite slow, it is recommended to choose the B1 plan for small REST Service. It is only about 13$ per month
+      • Choose operating system: Linux or Windows are okay.
       • Choose the environment: the source code is built using Java 17, so I will choose Java 17 and Java SE
     ```
     Press “y” in your keyboard to confirm and proceed with automatic configuration in pom.xml file.
