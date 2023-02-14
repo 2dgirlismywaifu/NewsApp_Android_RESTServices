@@ -112,6 +112,13 @@ Notes: You can use Azure App Services with F1 Plan (Free Forever), but performan
       newsapp.http.auth-token-header-name=(Your API Header, encode it with  BASE64)
       newsapp.http.auth-token=(Your API Key, encode it with BASE64)
     ```
+    Note: this file is ignored, you need create path like this
+    ```
+      src\main\resources
+        └── static
+        └── templates
+        └── application.properties
+    ```
 3. Open pom.xml and delete this section bellow
     ```
       <plugin>
