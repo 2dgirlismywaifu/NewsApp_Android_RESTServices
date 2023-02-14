@@ -178,6 +178,8 @@ Notes: You can use Azure App Services with F1 Plan (Free Forever), but performan
 
 This is a video demo REST Services
 
+https://user-images.githubusercontent.com/59259855/218605589-bbea246e-4fb9-4f6e-ae1f-12bcd05f6ed7.mp4
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Known Issues
@@ -185,8 +187,6 @@ This is a video demo REST Services
 See the [open issues](https://github.com/2dgirlismywaifu/NewsApp_Android_RESTServices/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 
 <!-- CONTRIBUTING -->
 ## Contributing
