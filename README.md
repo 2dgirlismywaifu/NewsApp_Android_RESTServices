@@ -100,6 +100,15 @@ Notes: You can use Azure App Services with F1 Plan (Free Forever), but performan
    ```
 2. Open `application.properties` in `src\main\resources` and edit like this bellow
     ```
+      #encode it to base64 and paste it here
+      server= (your azure sql server, encode to BASE64)
+      port=1433 (default, do not change)
+      #Enter your database
+      database= (your database name, encode to BASE64)
+      #Enter your username
+      username= (your SQL Server account, encode to BASE64)
+      #Enter your password
+      password= (your password account, encode to BASE64)
       newsapp.http.auth-token-header-name=(Your API Header, encode it with  BASE64)
       newsapp.http.auth-token=(Your API Key, encode it with BASE64)
     ```
