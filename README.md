@@ -151,7 +151,7 @@ Notes: You can use Azure App Services with F1 Plan (Free Forever), but performan
       </plugin>
     ```
 4. Open terminal in root folder project and run this command
-    ```
+    ```sh
       ./mvnw com.microsoft.azure:azure-webapp-maven-plugin:2.5.0:config
     ```
 5. Follow this config bellow
