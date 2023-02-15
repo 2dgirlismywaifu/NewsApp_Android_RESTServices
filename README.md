@@ -175,7 +175,12 @@ Notes: You can use Azure App Services with F1 Plan (Free Forever), but performan
 # **Demo**
 
 This is a video demo REST Services
-
+System Demo Information:
+  - 💻 Device: MSI GF63 Thin10SC
+  - 🪟 Operating System: Windows 11 22H2 Build 22623.1255
+  - 💪 CPU: Intel Core i5-10500H
+  - 🖼️ GPU: Intel UHD Graphics / NVIDIA GTX 1650 With Max-Q Design
+  - 🗃️ RAM: 16GB
 https://user-images.githubusercontent.com/59259855/218605589-bbea246e-4fb9-4f6e-ae1f-12bcd05f6ed7.mp4
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
