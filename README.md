@@ -117,7 +117,7 @@ Notes: You can use Azure App Services with F1 Plan (Free Forever), but performan
       └── application.properties
     ```
 3. Open pom.xml and delete this section bellow
-    ```
+    ```xml
     <plugin>
       <groupId>com.microsoft.azure</groupId>
       <artifactId>azure-webapp-maven-plugin</artifactId>
