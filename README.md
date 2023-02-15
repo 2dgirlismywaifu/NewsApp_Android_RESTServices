@@ -58,11 +58,11 @@
 
   </ol>
 </details>
-
+<br />
 
 
 <!-- ABOUT THE PROJECT -->
-## About The Project
+# **About The Project**
 
 This is REST Services for NewsApp Reader. This service intermediaries between the database server and the application tasks: account login, account registration, account recovery, user information update, and request lists: source news, country providing news (NewsAPI), stored image url from Azure Blob Storage...
 
@@ -71,20 +71,16 @@ Note: The data in the picture is simulation
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## Build with
+## **Build with**
   * [![Next][Spring-boot]][SpringBoot-url]
   * [![Azure][Azure-services]][azure-url]
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- GETTING STARTED -->
-## Getting Started
-
-This project only use for research and purpose. It is NOT available for retail. \
-Follow all instruction to run project in your local devices.
-
-
-### Prerequisites
-
+# **Getting Started**
+- This project only use for research and purpose. It is NOT available for retail. \
+- Follow all instruction to run project in your local devices.
+## **Prerequisites**
 Before use this project, you need have:
 * Java IDE like (Eclipse, IntelliJ IDEA, Apache Netbeans). Recommend JetBrains IntelliJ IDEA
 * If you do not want use IDE, you can use code editor like Visual Studio Code
@@ -93,62 +89,63 @@ Before use this project, you need have:
 * Create App Services B1 Plan (Recomended: 13$/month): [NewsApp Android RESTServices](https://github.com/2dgirlismywaifu/NewsApp_Android_RESTServices)
 * Java Development Kit 17 and add Java to OS environment\
 Notes: You can use Azure App Services with F1 Plan (Free Forever), but performance is very slow.
-### Installation
+## **Installation**
 1. Clone the repo
-   ```sh
-   git clone https://github.com/2dgirlismywaifu/NewsApp_Android_RESTServices.git
+    ```sh
+    git clone https://github.com/2dgirlismywaifu/NewsApp_Android_RESTServices.git
    ```
 2. Open `application.properties` in `src\main\resources` and edit like this bellow
-    ```
-      #encode it to base64 and paste it here
-      server= (your azure sql server, encode to BASE64)
-      port=1433 (default, do not change)
-      #Enter your database
-      database= (your database name, encode to BASE64)
-      #Enter your username
-      username= (your SQL Server account, encode to BASE64)
-      #Enter your password
-      password= (your password account, encode to BASE64)
-      newsapp.http.auth-token-header-name=(Your API Header, encode it with  BASE64)
-      newsapp.http.auth-token=(Your API Key, encode it with BASE64)
+
+    ```properties
+    #encode it to base64 and paste it here
+    server= (your azure sql server, encode to BASE64)
+    port=1433 (default, do not change)
+    #Enter your database
+    database= (your database name, encode to BASE64)
+    #Enter your username
+    username= (your SQL Server account, encode to BASE64)
+    #Enter your password
+    password= (your password account, encode to BASE64)
+    newsapp.http.auth-token-header-name=(Your API Header, encode it with  BASE64)
+    newsapp.http.auth-token=(Your API Key, encode it with BASE64)
     ```
     Note: this file is ignored, you need create path like this
     ```
-      src\main\resources
-        └── static
-        └── templates
-        └── application.properties
+    src\main\resources
+      └── static
+      └── templates
+      └── application.properties
     ```
 3. Open pom.xml and delete this section bellow
     ```
-      <plugin>
-        <groupId>com.microsoft.azure</groupId>
-        <artifactId>azure-webapp-maven-plugin</artifactId>
-        <version>2.5.0</version>
-        <configuration>
-          <schemaVersion>v2</schemaVersion>
-          <subscriptionId>811fb246-eaa3-46ce-8ba1-11992f366ce4</subscriptionId>
-          <resourceGroup>newsapp-android</resourceGroup>
-          <appName>newsandroidrest</appName>
-          <pricingTier>B1</pricingTier>
-          <region>southeastasia</region>
-          <runtime>
-            <os>Linux</os>
-            <javaVersion>Java 17</javaVersion>
-            <webContainer>Java SE</webContainer>
-          </runtime>
-          <deployment>
-            <resources>
-              <resource>
-                <directory>${project.basedir}/target</directory>
-                <includes>
-                  <include>*.jar</include>
-                </includes>
-              </resource>
-            </resources>
-          </deployment>
-        </configuration>
-      </plugin>
+    <plugin>
+      <groupId>com.microsoft.azure</groupId>
+      <artifactId>azure-webapp-maven-plugin</artifactId>
+      <version>2.5.0</version>
+      <configuration>
+        <schemaVersion>v2</schemaVersion>
+        <subscriptionId>811fb246-eaa3-46ce-8ba1-11992f366ce4</subscriptionId>
+        <resourceGroup>newsapp-android</resourceGroup>
+        <appName>newsandroidrest</appName>
+        <pricingTier>B1</pricingTier>
+        <region>southeastasia</region>
+        <runtime>
+          <os>Linux</os>
+          <javaVersion>Java 17</javaVersion>
+          <webContainer>Java SE</webContainer>
+        </runtime>
+         <deployment>
+           <resources>
+             <resource>
+              <directory>${project.basedir}/target</directory>
+               <includes>
+                 <include>*.jar</include>
+               </includes>
+             </resource>
+           </resources>
+         </deployment>
+      </configuration>
+    </plugin>
     ```
 4. Open terminal in root folder project and run this command
     ```sh
@@ -156,25 +153,26 @@ Notes: You can use Azure App Services with F1 Plan (Free Forever), but performan
     ```
 5. Follow this config bellow
     ```
-      • Please choose which part to config: Application
-      • Define value for appName: name for App Service as you like, no spaces
-      • Define value for resourceGroup: select Resource Group to store
-      • Define value for region: select the region, should choose the area near the living area. Example: Vietnam chooses southeastasia
-      • Define value for pricingTier: select the plan for App Services. F1 is in the free service plan but the speed is quite slow, it is recommended to choose the B1 plan for small REST Service. It is only about 13$ per month
-      • Choose operating system: Linux or Windows are okay.
-      • Choose the environment: the source code is built using Java 17, so I will choose Java 17 and Java SE
+    - Please choose which part to config: Application
+    - Define value for appName: name for App Service as you like, no spaces
+    - Define value for resourceGroup: select Resource Group to store
+    - Define value for region: select the region, should choose the area near the   living area. Example: Vietnam chooses southeastasia
+    - Define value for pricingTier: select the plan for App Services. F1 is in the free service plan but the speed is quite slow, it is recommended to choose the B1 plan for small REST Service. It is only about 13$ per month
+    - Choose operating system: Linux or Windows are okay.
+    - Choose the environment: the source code is built using Java 17, so I will choose Java 17 and Java SE
     ```
-    Press “y” in your keyboard to confirm and proceed with automatic configuration in pom.xml file.
+  - Press “y” in your keyboard to confirm and proceed with automatic configuration in pom.xml file.
 6. Open terminal in root folder project and run this command
-    ```
+
+    ```sh
       ./mvnw package azure-webapp:deploy
     ```
-    The library will require login to Azure Portal account via OpenAuth2 to get account information and deploy to App Service configured as above.\
-    Note: No account data is retained in the source code after deployment. Every redeployment will ask to login again.
+  - The library will require login to Azure Portal account via OpenAuth2 to get account information and deploy to App Service configured as above.
+  - Note: No account data is retained in the source code after deployment. Every redeployment will ask to login again.
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
-## Demo
+# **Demo**
 
 This is a video demo REST Services
 
@@ -182,14 +180,14 @@ https://user-images.githubusercontent.com/59259855/218605589-bbea246e-4fb9-4f6e-
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## Known Issues
+# **Known Issues**
 1. You tell me :)\
 See the [open issues](https://github.com/2dgirlismywaifu/NewsApp_Android_RESTServices/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- CONTRIBUTING -->
-## Contributing
+# **Contributing**
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
@@ -198,6 +196,7 @@ Don't forget to give the project a star! Thanks again!
 
 1. Fork this Project
 2. Create your Feature Branch
+
     ```sh
     git checkout -b feature/AmazingFeature
     ```
@@ -216,7 +215,8 @@ Don't forget to give the project a star! Thanks again!
 
 
 <!-- LICENSE -->
-## License
+# **License**
+- **Do NOT delete my header copyright if you fork or clone this project for personal use**
 ```
             Copyright By @2dgirlismywaifu (2023)
 
@@ -237,7 +237,7 @@ Don't forget to give the project a star! Thanks again!
 
 
 <!-- CONTACT -->
-## Contact
+# **Contact**
 [![twitter-shield]][twitter-url] <br >
 My Gmail Workspace: longntworkspace2911@gmail.com <br>
 Project Link: [https://github.com/2dgirlismywaifu/NewsApp_Android_RESTServices](https://github.com/2dgirlismywaifu/NewsApp_Android_RESTServices)
