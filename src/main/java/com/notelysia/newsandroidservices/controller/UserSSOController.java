@@ -122,16 +122,14 @@ public class UserSSOController {
         }
         return ResponseEntity.ok().body(userFound);
     }
-    @RequestMapping(value = "/sso/count", params = {"email", "nickname"}, method = RequestMethod.GET)
+    @RequestMapping(value = "/sso/count", params = {"email"}, method = RequestMethod.GET)
     public ResponseEntity <HashMap<String, String>> countUser(
-            @RequestParam(value = "email") String email,
-            @RequestParam(value = "nickname") String nickname) {
+            @RequestParam(value = "email") String email) {
         HashMap<String, String> userFound = new HashMap<>();
        con = new AzureSQLConnection().getConnection();
         try {
-            ps = con.prepareStatement("SELECT * FROM USER_SSO, USER_SSO_INFORMATION WHERE email = ? AND nickname = ? AND USER_SSO.user_id = USER_SSO_INFORMATION.user_id");
+            ps = con.prepareStatement("SELECT * FROM USER_SSO, USER_SSO_INFORMATION WHERE email = ? AND USER_SSO.user_id = USER_SSO_INFORMATION.user_id");
             ps.setString(1, email);
-            ps.setString(2, nickname);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 userFound.put("user_id", rs.getString("user_id"));
