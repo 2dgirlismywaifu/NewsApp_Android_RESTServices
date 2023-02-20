@@ -250,7 +250,7 @@ Project Link: [https://github.com/2dgirlismywaifu/NewsApp_Android_RESTServices](
 <div align="center">
     <p1 align="center", style="font-size:40px">Follow my account</p1>
     <br />
-    <a href='https://github.com/2dgirlismywaifu' border='0' style='cursor:pointer;display:block'><img src='https://cdn.me-qr.com/qr/49033888.png?v=1676917850' alt='2dgirlismywaifu'></a><a href='https://github.com/2dgirlismywaifu' border='0' style='cursor:default;display:none'>2dgirlismywaifu/a>
+    <a href='https://github.com/2dgirlismywaifu' border='0' style='cursor:pointer;display:block'><img src='https://cdn.me-qr.com/qr/49033888.png?v=1676917850' alt='2dgirlismywaifu'></a><a href='https://github.com/2dgirlismywaifu' border='0' style='cursor:default;display:none'>2dgirlismywaifu</a>
 </div>
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
