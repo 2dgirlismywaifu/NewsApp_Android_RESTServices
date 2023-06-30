@@ -238,7 +238,7 @@ Don't forget to give the project a star! Thanks again!
 # **Contact**
 [![twitter-shield]][twitter-url] <br >
 My Gmail Workspace: longntworkspace2911@gmail.com <br>
-Project Link: [https://github.com/2dgirlismywaifu/NewsApp_Android_RESTServices](https://github.com/2dgirlismywaifu/NewsApp-RESTServices)
+Project Link: [https://github.com/2dgirlismywaifu/NewsApp-RESTServices](https://github.com/2dgirlismywaifu/NewsApp-RESTServices)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
