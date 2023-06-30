@@ -86,7 +86,7 @@ Before use this project, you need have:
 * If you do not want use IDE, you can use code editor like Visual Studio Code
 * Sign up Free Account Microsoft Azure Portal if you do not have any account
 * Create free Azure SQL Database S0: [Free Azure SQL Database](https://learn.microsoft.com/en-us/azure/azure-sql/database/free-sql-db-free-account-how-to-deploy?view=azuresql)
-* Create App Services B1 Plan (Recomended: 13$/month): [NewsApp Android RESTServices](https://github.com/2dgirlismywaifu/NewsApp_Android_RESTServices)
+* Create App Services B1 Plan (13$/month): [NewsApp Android RESTServices](https://github.com/2dgirlismywaifu/NewsApp_Android_RESTServices)
 * Java Development Kit 17 and add Java to OS environment\
 Notes: You can use Azure App Services with F1 Plan (Free Forever), but performance is very slow.
 ## **Installation**
@@ -174,14 +174,6 @@ Notes: You can use Azure App Services with F1 Plan (Free Forever), but performan
 
 # **Demo**
 
-This is a video demo REST Services
-System Demo Information:
-  - 💻 Device: MSI GF63 Thin10SC
-  - 🪟 Operating System: Windows 11 22H2 Build 22623.1255
-  - 💪 CPU: Intel Core i5-10500H
-  - 🖼️ GPU: Intel UHD Graphics / NVIDIA GTX 1650 With Max-Q Design
-  - 🗃️ RAM: 16GB
-
 https://user-images.githubusercontent.com/59259855/218605589-bbea246e-4fb9-4f6e-ae1f-12bcd05f6ed7.mp4
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -247,14 +239,7 @@ Don't forget to give the project a star! Thanks again!
 [![twitter-shield]][twitter-url] <br >
 My Gmail Workspace: longntworkspace2911@gmail.com <br>
 Project Link: [https://github.com/2dgirlismywaifu/NewsApp_Android_RESTServices](https://github.com/2dgirlismywaifu/NewsApp_Android_RESTServices)
-\
-Scan QR code bellow to follow my Github account 💕💕💕
-<div align="center">
-  <br />
-  <a href='https://github.com/2dgirlismywaifu' border='0' style='cursor:pointer;display:block'>
-    <img src='https://cdn.me-qr.com/qr/49033888.png?v=1676917850' alt='2dgirlismywaifu'>
-  </a>
-</div>
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- MARKDOWN LINKS & IMAGES -->
