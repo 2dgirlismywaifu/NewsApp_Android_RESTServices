@@ -7,7 +7,7 @@
     <img src="images/logo.png" alt="Logo" width="200" height="200">
   </a>
 
-<h3 align="center", style="font-size:40px">NewsApp REST Services</h3>
+<h3 align="center", style="font-size:25px">NewsApp REST Services (Curently upgrading to JPA)</h3>
 <p1 align="center", style="font-size:20px">Powered by Microsft Azure Services</p1><br />
   <a href="https://github.com/2dgirlismywaifu/NewsAPP_RSS_NewsAPI_Azure", style="font-size:20px"><strong>REST Services for News App Reader Project</strong></a>
 <hr>
@@ -18,7 +18,6 @@
   ![Reposize][size-shield]
   ![Lastcommit][commit-shield]
   [![Issues][issues-shield]][issues-url]
-  ![Linecount][linecount-shield]
   [![APACHE License][license-shield]][license-url]
 
 </div>
@@ -238,8 +237,15 @@ Don't forget to give the project a star! Thanks again!
 # **Contact**
 [![twitter-shield]][twitter-url] <br >
 My Gmail Workspace: longntworkspace2911@gmail.com <br>
-Project Link: [https://github.com/2dgirlismywaifu/NewsApp-RESTServices](https://github.com/2dgirlismywaifu/NewsApp-RESTServices)
-
+Project Link: [https://github.com/2dgirlismywaifu/NewsApp_Android_RESTServices](https://github.com/2dgirlismywaifu/NewsApp_Android_RESTServices)
+\
+Scan QR code bellow to follow my Github account 💕💕💕
+<div align="center">
+  <br />
+  <a href='https://github.com/2dgirlismywaifu' border='0' style='cursor:pointer;display:block'>
+    <img src='https://cdn.me-qr.com/qr/49033888.png?v=1676917850' alt='2dgirlismywaifu'>
+  </a>
+</div>
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- MARKDOWN LINKS & IMAGES -->

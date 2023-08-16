@@ -15,8 +15,8 @@
  *
  */
 
-package com.notelysia.newsandroidservices.models;
-
+package com.notelysia.newsandroidservices.deprecated;
+@Deprecated
 public class UserInformation {
     private String user_id;
     private String user_name;

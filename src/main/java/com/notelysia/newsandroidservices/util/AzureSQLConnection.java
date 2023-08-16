@@ -15,7 +15,7 @@
  *
  */
 
-package com.notelysia.newsandroidservices.azure;
+package com.notelysia.newsandroidservices.util;
 
 import org.springframework.core.io.ClassPathResource;
 
@@ -28,7 +28,11 @@ import java.util.Base64;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-
+/**
+ * This class is deprecated and will be removed in the future.
+ * Please using Spring Data JPA instead.
+ */
+@Deprecated
 public class AzureSQLConnection {
 
     public Connection getConnection()  {

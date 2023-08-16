@@ -15,8 +15,8 @@
  *
  */
 
-package com.notelysia.newsandroidservices.models;
-
+package com.notelysia.newsandroidservices.deprecated;
+@Deprecated
 public class CheckNickname {
     private String nickname;
     private String email;

@@ -15,64 +15,46 @@
  *
  */
 
-package com.notelysia.newsandroidservices.models;
+package com.notelysia.newsandroidservices.model;
+import jakarta.persistence.*;
+import lombok.Getter;
 
+@Getter
+@Entity
+@Table(name = "USER_SSO")
 public class UserSSO {
-    private String user_id;
+    @Id
+    @Column(name = "user_id")
+    private int user_id;
+    @Column(name = "email")
     private String email;
+    @Column(name = "nickname")
     private String nickname;
-    private String sync_settings;
+    @Column(name = "verify")
     private String verify;
-    private String status;
 
+    public UserSSO(int user_id, String email, String nickname, String verify) {
+        this.user_id = user_id;
+        this.email = email;
+        this.nickname = nickname;
+        this.verify = verify;
+    }
     public UserSSO() {
     }
 
-    public String getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(String user_id) {
+    public void setUser_id(int user_id) {
         this.user_id = user_id;
-    }
-
-    public String getEmail() {
-        return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
     }
 
-    public String getNickname() {
-        return nickname;
-    }
-
     public void setNickname(String nickname) {
         this.nickname = nickname;
     }
 
-    public String getSync_settings() {
-        return sync_settings;
-    }
-
-    public void setSync_settings(String sync_settings) {
-        this.sync_settings = sync_settings;
-    }
-
-    public String getVerify() {
-        return verify;
-    }
-
     public void setVerify(String verify) {
         this.verify = verify;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 }

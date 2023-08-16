@@ -15,40 +15,43 @@
  *
  */
 
-package com.notelysia.newsandroidservices.models;
+package com.notelysia.newsandroidservices.model;
 
-public class RSSList {
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Getter;
+
+@Getter
+@Entity
+@Table(name = "NEWSTYPE_IMAGE")
+public class NewsTypeImage {
+    //Instance variables
+    @Id
+    @Column(name = "url_type")
     private String url_type;
-    private String url;
+    @Column(name = "name_type")
+    private String name_type;
+    @Column(name = "url_image")
     private String url_image;
 
-    public RSSList() {
-    }
-
-    public RSSList(String url_type, String url, String url_image) {
+    public NewsTypeImage(String url_type, String name_type, String url_image) {
         this.url_type = url_type;
-        this.url = url;
+        this.name_type = name_type;
         this.url_image = url_image;
     }
 
-    public String getUrl_type() {
-        return url_type;
+    public NewsTypeImage() {
+
     }
 
     public void setUrl_type(String url_type) {
         this.url_type = url_type;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getUrl_image() {
-        return url_image;
+    public void setName_type(String name_type) {
+        this.name_type = name_type;
     }
 
     public void setUrl_image(String url_image) {

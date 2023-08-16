@@ -15,38 +15,42 @@
  *
  */
 
-package com.notelysia.newsandroidservices.models;
+package com.notelysia.newsandroidservices.model;
 
+import com.notelysia.newsandroidservices.model.CompositeKey.ImageInfoPK;
+import jakarta.persistence.*;
+import lombok.Getter;
+
+@Getter
+@Entity
+@Table(name = "IMAGE_INFORMATION")
+@IdClass(ImageInfoPK.class)
 public class ImageInformation {
     //Instance variables
-    private String image_id;
-    private String source_id;
+    @Id
+    @Column(name = "image_id")
+    private int image_id;
+    @Id
+    @Column(name = "source_id")
+    private int source_id;
+    @Column(name = "image", nullable = false)
     private String image;
 
-    public ImageInformation(String image_id, String source_id, String image) {
+    public ImageInformation(int image_id, int source_id, String image) {
         this.image_id = image_id;
         this.source_id = source_id;
         this.image = image;
     }
 
-    public String getImage_id() {
-        return image_id;
+    public ImageInformation() {
     }
 
-    public void setImage_id(String image_id) {
+    public void setImage_id(int image_id) {
         this.image_id = image_id;
     }
 
-    public String getSource_id() {
-        return source_id;
-    }
-
-    public void setSource_id(String source_id) {
+    public void setSource_id(int source_id) {
         this.source_id = source_id;
-    }
-
-    public String getImage() {
-        return image;
     }
 
     public void setImage(String image) {

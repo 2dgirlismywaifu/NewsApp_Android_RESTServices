@@ -15,8 +15,8 @@
  *
  */
 
-package com.notelysia.newsandroidservices.models;
-
+package com.notelysia.newsandroidservices.deprecated;
+@Deprecated
 public class SourceFavourite {
     //favorite_id, user_id, url, title, image_url, pubdate, source_name
     private String favorite_id;

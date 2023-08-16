@@ -31,6 +31,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import java.util.Base64;
 import java.util.Objects;
 
+import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
+
 @Configuration
 @EnableWebSecurity
 @Order(1)
@@ -55,7 +57,11 @@ public class SecurityConfig {
           authentication.setAuthenticated(true);
           return authentication;
         });
-    http.authorizeHttpRequests((request -> request.anyRequest().authenticated()))
+    //exclude swagger from authentication
+
+    http.authorizeHttpRequests((request -> request
+                    .requestMatchers(antMatcher("/v3/api-docs/**"), antMatcher("/swagger-ui/**"), antMatcher("/swagger-ui.html")).permitAll()
+                    .anyRequest().authenticated()))
         .addFilter(filter)
         .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilter(filter)

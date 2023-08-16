@@ -15,30 +15,20 @@
  *
  */
 
-package com.notelysia.newsandroidservices.models;
-
-public class NewsDetails {
-    //Instance variables
-    private String source_id;
-    private String source_name;
+package com.notelysia.newsandroidservices.deprecated;
+@Deprecated
+public class RSSList {
     private String url_type;
     private String url;
+    private String url_image;
 
-    public NewsDetails(String source_id, String sourceName, String url_type, String url) {
-        this.source_id = source_id;
-        source_name = sourceName;
+    public RSSList() {
+    }
+
+    public RSSList(String url_type, String url, String url_image) {
         this.url_type = url_type;
         this.url = url;
-    }
-    public NewsDetails() {
-    }
-
-    public String getSource_id() {
-        return source_id;
-    }
-
-    public void setSource_id(String source_id) {
-        this.source_id = source_id;
+        this.url_image = url_image;
     }
 
     public String getUrl_type() {
@@ -57,11 +47,11 @@ public class NewsDetails {
         this.url = url;
     }
 
-    public String getSource_name() {
-        return source_name;
+    public String getUrl_image() {
+        return url_image;
     }
 
-    public void setSource_name(String source_name) {
-        this.source_name = source_name;
+    public void setUrl_image(String url_image) {
+        this.url_image = url_image;
     }
 }
