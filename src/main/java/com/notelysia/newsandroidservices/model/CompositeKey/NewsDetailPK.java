@@ -16,25 +16,33 @@
 
 package com.notelysia.newsandroidservices.model.CompositeKey;
 
-import java.io.Serializable;
+import lombok.Getter;
 
+import java.io.Serializable;
+import java.util.Objects;
+
+@Getter
 public class NewsDetailPK implements Serializable {
     private int source_id;
     private String url_type;
-
-    public int getSource_id() {
-        return source_id;
-    }
 
     public void setSource_id(int source_id) {
         this.source_id = source_id;
     }
 
-    public String getUrl_type() {
-        return url_type;
-    }
-
     public void setUrl_type(String url_type) {
         this.url_type = url_type;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof NewsDetailPK that)) return false;
+        return getSource_id() == that.getSource_id() && Objects.equals(getUrl_type(), that.getUrl_type());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getSource_id(), getUrl_type());
     }
 }

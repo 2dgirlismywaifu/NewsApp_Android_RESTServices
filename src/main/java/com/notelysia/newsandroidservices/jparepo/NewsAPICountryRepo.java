@@ -14,10 +14,17 @@
  *  limitations under the License.
  */
 
-package com.notelysia.newsandroidservices.util;
+package com.notelysia.newsandroidservices.jparepo;
 
-import com.notelysia.newsandroidservices.model.ImageInformation;
+import com.notelysia.newsandroidservices.model.NewsAPICountry;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
-public interface ImageInformationRepo extends JpaRepository<ImageInformation, Long> {
+import java.util.List;
+
+public interface NewsAPICountryRepo extends JpaRepository<NewsAPICountry, Long> {
+    @Query(
+            "FROM NewsAPICountry newsapi " +
+            "WHERE newsapi.country_name = ?1")
+    List<NewsAPICountry> findByCountry(String country);
 }

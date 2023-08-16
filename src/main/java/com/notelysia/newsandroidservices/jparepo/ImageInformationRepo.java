@@ -14,10 +14,12 @@
  *  limitations under the License.
  */
 
-package com.notelysia.newsandroidservices.util;
+package com.notelysia.newsandroidservices.jparepo;
 
-import com.notelysia.newsandroidservices.model.SyncNewsFavouriteSSO;
+import com.notelysia.newsandroidservices.model.ImageInformation;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface SyncNewsFavouriteSSORepo extends JpaRepository<SyncNewsFavouriteSSO, Long> {
+public interface ImageInformationRepo extends JpaRepository<ImageInformation, Long> {
+    //This repo will use in the future.
+    //All image url are query from NewsSourceRepo
 }

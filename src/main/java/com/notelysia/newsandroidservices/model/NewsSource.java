@@ -19,7 +19,6 @@ package com.notelysia.newsandroidservices.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-
 @Getter
 @Entity
 @Table(name = "NEWS_SOURCE")
@@ -39,7 +38,6 @@ public class NewsSource {
     private String urlmain;
     @Column(name = "information")
     private String information;
-    @Getter
     @Column(name = "image", table = "IMAGE_INFORMATION")
     private String image;
 
@@ -74,23 +72,4 @@ public class NewsSource {
         this.image = image;
     }
 
-    public int getSource_id() {
-        return source_id;
-    }
-
-    public String getSource_name() {
-        return source_name;
-    }
-
-    public String getUrlmain() {
-        return urlmain;
-    }
-
-    public String getInformation() {
-        return information;
-    }
-
-    public String getImage() {
-        return image;
-    }
 }

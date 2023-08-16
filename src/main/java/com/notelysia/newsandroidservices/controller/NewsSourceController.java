@@ -18,7 +18,7 @@ package com.notelysia.newsandroidservices.controller;
 
 import com.notelysia.newsandroidservices.exception.ResourceNotFound;
 import com.notelysia.newsandroidservices.model.NewsSource;
-import com.notelysia.newsandroidservices.util.NewsSourceRepo;
+import com.notelysia.newsandroidservices.jparepo.NewsSourceRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,7 +53,7 @@ public class NewsSourceController {
     ) throws ResourceNotFound {
         respond = new HashMap<>();
         NewsSource newsSources = newsSourceRepo.findByUserEmailId(userid)
-                .orElseThrow(() -> new ResourceNotFound("User not found for this id :: " + userid));
+                .orElseThrow(() -> new ResourceNotFound("Failed"));
         respond.put("newsSource", newsSources);
         return new ResponseEntity<>(respond, HttpStatus.OK);
     }
@@ -65,7 +65,7 @@ public class NewsSourceController {
     ) throws ResourceNotFound {
         respond = new HashMap<>();
         NewsSource newsSources = newsSourceRepo.findByUserSSOId(userid)
-                .orElseThrow(() -> new ResourceNotFound("User not found for this id :: " + userid));
+                .orElseThrow(() -> new ResourceNotFound("Failed"));
         respond.put("newsSource", newsSources);
         return new ResponseEntity<>(respond, HttpStatus.OK);
     }

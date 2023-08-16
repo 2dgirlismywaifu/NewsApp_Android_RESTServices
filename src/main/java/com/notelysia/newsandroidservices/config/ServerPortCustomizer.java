@@ -14,17 +14,17 @@
  *  limitations under the License.
  */
 
-package com.notelysia.newsandroidservices.util;
+package com.notelysia.newsandroidservices.config;
 
-import com.notelysia.newsandroidservices.model.NewsAPICountry;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.boot.web.server.ConfigurableWebServerFactory;
+import org.springframework.boot.web.server.WebServerFactoryCustomizer;
+import org.springframework.stereotype.Component;
 
-import java.util.List;
-
-public interface NewsAPICountryRepo extends JpaRepository<NewsAPICountry, Long> {
-    @Query(
-            "FROM NewsAPICountry newsapi " +
-            "WHERE newsapi.country_name = ?1")
-    List<NewsAPICountry> findByCountry(String country);
+@Component
+public class ServerPortCustomizer implements WebServerFactoryCustomizer<ConfigurableWebServerFactory> {
+    @Override
+    public void customize(ConfigurableWebServerFactory factory) {
+            //replace 2984 with your desired port number
+            factory.setPort(2984);
+    }
 }

@@ -14,10 +14,14 @@
  *  limitations under the License.
  */
 
-package com.notelysia.newsandroidservices.util;
+package com.notelysia.newsandroidservices.config;
 
-import com.notelysia.newsandroidservices.model.SyncSubscribe;
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.Base64;
 
-public interface SyncSubscribeRepo extends JpaRepository<SyncSubscribe, Long> {
+public class DecodeString {
+
+    //This class will decode base64 byte[] to normal string
+    public String decodeString(byte[] encodedString) {
+        return new String(Base64.getDecoder().decode(encodedString));
+    }
 }

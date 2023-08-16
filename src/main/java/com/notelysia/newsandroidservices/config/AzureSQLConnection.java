@@ -15,7 +15,7 @@
  *
  */
 
-package com.notelysia.newsandroidservices.util;
+package com.notelysia.newsandroidservices.config;
 
 import org.springframework.core.io.ClassPathResource;
 

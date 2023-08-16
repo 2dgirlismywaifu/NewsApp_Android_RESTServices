@@ -14,10 +14,9 @@
  *  limitations under the License.
  */
 
-package com.notelysia.newsandroidservices.util;
+package com.notelysia.newsandroidservices.config;
 
-
-
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -26,6 +25,7 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.Base64;
 @Configuration
@@ -37,6 +37,10 @@ public class SwaggerConfiguration {
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
+                //Edit footer, change /v3/api-docs
+                .externalDocs(new io.swagger.v3.oas.models.ExternalDocumentation()
+                        .description("Open Source Project NewsApp-RESTServices")
+                        .url("https://github.com/2dgirlismywaifu/NewsApp-RESTServices"))
                 .info(new Info().title("NewsApp Reset API").version("2.0.0"))
                 // Components section defines Security Scheme "mySecretHeader"
                 .components(new Components()
@@ -44,9 +48,8 @@ public class SwaggerConfiguration {
                                 .type(SecurityScheme.Type.APIKEY)
                                 .in(SecurityScheme.In.HEADER)
                                 .name(new String(Base64.getDecoder().decode(principalRequestHeader)))))
+
                 // AddSecurityItem section applies created scheme globally
                 .addSecurityItem(new SecurityRequirement().addList("mySecretHeader"));
     }
-    //Auto clear Description input
-
 }

@@ -14,10 +14,10 @@
  *  limitations under the License.
  */
 
-package com.notelysia.newsandroidservices.util;
+package com.notelysia.newsandroidservices.jparepo;
 
-import com.notelysia.newsandroidservices.model.UserInformation;
+import com.notelysia.newsandroidservices.model.SyncNewsFavourite;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserInformationRepo extends JpaRepository<UserInformation, Long> {
+public interface SyncNewsFavouriteRepo extends JpaRepository<SyncNewsFavourite, Long> {
 }

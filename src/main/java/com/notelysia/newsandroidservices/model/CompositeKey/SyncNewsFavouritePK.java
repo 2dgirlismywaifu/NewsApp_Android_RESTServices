@@ -17,25 +17,33 @@
 package com.notelysia.newsandroidservices.model.CompositeKey;
 
 
-import java.io.Serializable;
+import lombok.Getter;
 
+import java.io.Serializable;
+import java.util.Objects;
+
+@Getter
 public class SyncNewsFavouritePK implements Serializable {
     private int favourite_id;
     private int user_id;
-
-    public int getFavourite_id() {
-        return favourite_id;
-    }
 
     public void setFavourite_id(int favourite_id) {
         this.favourite_id = favourite_id;
     }
 
-    public int getUser_id() {
-        return user_id;
-    }
-
     public void setUser_id(int user_id) {
         this.user_id = user_id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SyncNewsFavouritePK that)) return false;
+        return getFavourite_id() == that.getFavourite_id() && getUser_id() == that.getUser_id();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getFavourite_id(), getUser_id());
     }
 }

@@ -17,6 +17,7 @@
 
 package com.notelysia.newsandroidservices;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -31,7 +32,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 //@SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
 @SpringBootApplication(exclude = {UserDetailsServiceAutoConfiguration.class})
-@EnableJpaRepositories({"com.notelysia.newsandroidservices.util"})
+@EnableJpaRepositories({"com.notelysia.newsandroidservices.jparepo"})
 @EntityScan({"com.notelysia.newsandroidservices.model"})
 @EnableWebMvc
 public class NewsandroidRestApplication {
@@ -40,13 +41,17 @@ public class NewsandroidRestApplication {
     public WebMvcConfigurer customConfigurer() {
         return new WebMvcConfigurer() {
             @Override
-            public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+            public void configureContentNegotiation(@NotNull ContentNegotiationConfigurer configurer) {
                 configurer.defaultContentType(MediaType.APPLICATION_JSON);
             }
         };
     }
     public static void main(String[] args) {
-        SpringApplication.run(NewsandroidRestApplication.class, args);
+
+        SpringApplication app = new SpringApplication(NewsandroidRestApplication.class);
+        //replace 2984 with your desired port number
+        app.setDefaultProperties(java.util.Collections.singletonMap("server.port", "2984"));
+        app.run(args);
     }
 
 }

@@ -17,8 +17,8 @@
 
 package com.notelysia.newsandroidservices.controller;
 
+import com.notelysia.newsandroidservices.jparepo.NewsAPICountryRepo;
 import com.notelysia.newsandroidservices.model.NewsAPICountry;
-import com.notelysia.newsandroidservices.util.NewsAPICountryRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,9 +34,9 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v2")
 public class NewsAPICountryController {
+
     @Autowired
     NewsAPICountryRepo newsAPICountryRepo;
-
 
     @GetMapping(value = "/newsapi/country/list")
      public ResponseEntity<Map<String, List<NewsAPICountry>>> allCountryList() {

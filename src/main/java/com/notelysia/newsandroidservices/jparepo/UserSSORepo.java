@@ -14,10 +14,22 @@
  *  limitations under the License.
  */
 
-package com.notelysia.newsandroidservices.util;
+package com.notelysia.newsandroidservices.jparepo;
 
 import com.notelysia.newsandroidservices.model.UserSSO;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface UserSSORepo extends JpaRepository<UserSSO, Long> {
+    //Update nickname user
+    @Transactional
+    @Modifying
+    @Query("UPDATE UserSSO userPassLogin " +
+            "SET userPassLogin.nickname = ?1 WHERE userPassLogin.user_id = ?2")
+    void updateNickname(String nickname, String user_id);
+    //Count email user to make sure no duplicate email happen
+    @Query("SELECT COUNT(userSSO.email) FROM UserSSO userSSO WHERE userSSO.email = ?1")
+    int countEmail(String email);
 }

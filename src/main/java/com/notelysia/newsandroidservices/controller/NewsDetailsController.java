@@ -14,27 +14,11 @@
  *  limitations under the License.
  */
 
-package com.notelysia.newsandroidservices.deprecated;
+package com.notelysia.newsandroidservices.controller;
 
-import com.notelysia.newsandroidservices.util.AzureSQLConnection;
-import com.notelysia.newsandroidservices.model.NewsDetail;
-import com.notelysia.newsandroidservices.deprecated.RSSList;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-@Deprecated
+
 @RestController
 public class NewsDetailsController {
 //    Connection con = null;

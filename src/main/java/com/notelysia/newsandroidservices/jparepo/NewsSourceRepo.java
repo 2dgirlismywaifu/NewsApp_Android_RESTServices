@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package com.notelysia.newsandroidservices.util;
+package com.notelysia.newsandroidservices.jparepo;
 
 import com.notelysia.newsandroidservices.model.NewsSource;
 import org.springframework.data.jpa.repository.JpaRepository;

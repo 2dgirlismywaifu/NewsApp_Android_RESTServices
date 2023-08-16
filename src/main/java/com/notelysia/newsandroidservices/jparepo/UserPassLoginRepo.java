@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package com.notelysia.newsandroidservices.util;
+package com.notelysia.newsandroidservices.jparepo;
 
 import com.notelysia.newsandroidservices.model.UserPassLogin;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -25,6 +25,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 public interface UserPassLoginRepo extends JpaRepository<UserPassLogin, Long> {
+    //Get password_hash from email and user_id
+    @Query("FROM UserPassLogin userPassLogin WHERE userPassLogin.email = ?1 OR userPassLogin.user_id = ?2")
+    Optional<UserPassLogin> findByEmailOrUserid(String email, String user_id);
     //Verify account
     @Transactional
     @Modifying
@@ -48,6 +51,12 @@ public interface UserPassLoginRepo extends JpaRepository<UserPassLogin, Long> {
     //Get Recovery Code from email
     @Query("FROM UserPassLogin userPassLogin WHERE userPassLogin.email = ?1")
     Optional<UserPassLogin> findByRecovery(String recovery);
+    //Update recovery code with user_id
+    @Transactional
+    @Modifying
+    @Query("UPDATE UserPassLogin userPassLogin " +
+            "SET userPassLogin.recovery = ?1 WHERE userPassLogin.user_id = ?2")
+    void updateRecovery(String recovery, String user_id);
     //Update nickname user
     @Transactional
     @Modifying

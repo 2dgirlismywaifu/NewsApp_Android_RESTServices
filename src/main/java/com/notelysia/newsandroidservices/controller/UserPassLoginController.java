@@ -18,8 +18,10 @@
 package com.notelysia.newsandroidservices.controller;
 
 import com.notelysia.newsandroidservices.exception.*;
+import com.notelysia.newsandroidservices.jparepo.UserInformationRepo;
+import com.notelysia.newsandroidservices.jparepo.UserPassLoginRepo;
 import com.notelysia.newsandroidservices.model.*;
-import com.notelysia.newsandroidservices.util.*;
+import com.notelysia.newsandroidservices.config.*;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -44,17 +46,7 @@ public class UserPassLoginController {
     private String getDecode (byte[] data) {
         return decodeString.decodeString(data);
     }
-//    public final String CREATE_USER = "INSERT INTO USER_PASSLOGIN (user_id, email, password, salt, nickname, verify, recovery) VALUES (?,?,?,?,?,?,?)";
-//    public final String CREATE_USER_INFORMATION = "INSERT INTO USER_INFORMATION (user_id, name, gender, birthday, avatar) VALUES (?,?,?,?,?)";
-//    ////////Update information////////////////
-//    public final String UPDATE_USER_NAME = "UPDATE USER_PASSLOGIN SET nickname = ? WHERE user_id = ?";
-//    public final String UPDATE_USER_AVATAR = "UPDATE USER_INFORMATION SET avatar =? WHERE user_id = ?";
-//    public final String UPDATE_USER_FULLNAME = "UPDATE USER_INFORMATION SET name =? WHERE user_id = ?";
-//    public final String UPDATE_USER_GENDER = "UPDATE USER_INFORMATION SET gender = ? WHERE user_id = ?";
-//    public final String UPDATE_USER_BIRTHDAY = "UPDATE USER_INFORMATION SET birthday = ? WHERE user_id = ?";
-//    //////////////Update password////////////////
-//    public final String UPDATE_USER_PASSWORD = "UPDATE USER_PASSLOGIN SET password = ?, salt = ? WHERE user_id = ?";
-//    public final String RECOVERY_ACCOUNT = "SELECT * FROM USER_PASSLOGIN, USER_INFORMATION WHERE recovery = ? AND USER_PASSLOGIN.user_id = USER_INFORMATION.user_id";
+
     @PostMapping(value = "/register", params = {"fullname","email", "password", "nickname"})
     //Create user account
     //Add description to each parameter
@@ -111,7 +103,7 @@ public class UserPassLoginController {
             throws ResourceNotFound {
         HashMap<String, String> userFound = new HashMap<>();
         userPassLogin = userPassLoginRepo.findByEmailOrNickname(getDecode(account.getBytes(StandardCharsets.UTF_8)), getDecode(account.getBytes(StandardCharsets.UTF_8)))
-                .orElseThrow(() -> new ResourceNotFound("User not found for this id :: " + account));
+                .orElseThrow(() -> new ResourceNotFound("Failed"));
         String password_hash = userPassLogin.getPassword();
         String salt = userPassLogin.getSalt();
         String password_check = BCrypt.hashpw(getDecode(password.getBytes(StandardCharsets.UTF_8)), salt);
@@ -151,7 +143,7 @@ public class UserPassLoginController {
             @Parameter(name = "email", description = "Encode it to BASE64 before input") String email) throws ResourceNotFound {
         userPassLogin = userPassLoginRepo.findByNickname(getDecode(nickname.getBytes(StandardCharsets.UTF_8)),
                         getDecode(email.getBytes(StandardCharsets.UTF_8)))
-                .orElseThrow(() -> new ResourceNotFound("User not found for this id :: " + nickname));
+                .orElseThrow(() -> new ResourceNotFound("Failed"));
         return ResponseEntity.ok().body(new HashMap<>() {{
             put("nickname", userPassLogin.getNickname());
             put("email", userPassLogin.getEmail());
@@ -162,256 +154,128 @@ public class UserPassLoginController {
     public ResponseEntity<HashMap<String, String>> recoveryCode(
             @Parameter(name = "email", description = "Encode it to BASE64 before input") String email) throws ResourceNotFound {
         userPassLogin = userPassLoginRepo.findByRecovery(getDecode(email.getBytes(StandardCharsets.UTF_8)))
-                .orElseThrow(() -> new ResourceNotFound("User not found for this id :: " + email));
+                .orElseThrow(() -> new ResourceNotFound("Failed"));
         return ResponseEntity.ok().body(new HashMap<>() {{
             put("recoverycode", userPassLogin.getRecovery());
         }});
     }
-//    //Generate recovery code from user
-//    @RequestMapping(value = "/generaterecoverycode", params = {"userid"}, method = RequestMethod.POST)
-//    public ResponseEntity <HashMap<String, String>> generateRecoveryCode(@RequestParam(value = "userid") String userid) {
-//        con = new AzureSQLConnection().getConnection();
-//        String new_recovery_code = java.util.UUID.randomUUID().toString();
-//        HashMap<String, String> recoverySuccess = new HashMap<>();
-//        try {
-//            ps = con.prepareStatement("UPDATE USER_PASSLOGIN SET recovery = ? WHERE user_id = ?");
-//            ps.setString(1, new_recovery_code);
-//            ps.setString(2, userid);
-//            int rs = ps.executeUpdate();
-//            if (rs >0 ){
-//                recoverySuccess.put("status", "pass");
-//                recoverySuccess.put("recoverycode", new_recovery_code);
-//            }
-//            else
-//            {
-//                recoverySuccess.put("status", "fail");
-//                recoverySuccess.put("recoverycode", "");
-//            }
-//            con.close();
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//        return ResponseEntity.ok().body(recoverySuccess);
-//    }
-//    //There is another settings form user, but it will write later
-//    //Other settings is: Avatar Account, User Information like real name, birthday, gender, etc
-//    //Most important is user can change password
-//    //Before allow change password, first check old password is correct or not
-//    @RequestMapping(value = "/account/password/check", params = {"userid", "email", "oldpass"}, method = RequestMethod.GET)
-//    public ResponseEntity<HashMap<String, String>> checkOldPassword(@RequestParam(value = "userid") String userid,
-//                                                                    @RequestParam(value = "email") String email,
-//                                                                    @RequestParam(value = "oldpass") String oldpass) {
-//        HashMap<String, String> passwordMatch = new HashMap<>();
-//        con = new AzureSQLConnection().getConnection();
-//        try {
-//            ps = con.prepareStatement("SELECT * FROM USER_PASSLOGIN WHERE user_id = ? AND email = ?");
-//            ps.setString(1, userid);
-//            ps.setString(2, email);
-//            ResultSet rs = ps.executeQuery();
-//            if (rs.next()) {
-//                String password_hash = rs.getString("password");
-//                String salt = rs.getString("salt");
-//                String password_check = BCrypt.hashpw(oldpass, salt);
-//                if (password_check.equals(password_hash)) {
-//                    passwordMatch.put("status", "pass");
-//                }
-//                else {
-//                    passwordMatch.put("status", "fail");
-//                }
-//            }
-//            else {
-//                passwordMatch.put("status", "fail");
-//            }
-//            con.close();
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//        return ResponseEntity.ok().body(passwordMatch);
-//    }
-//    //Update user password
-//    @RequestMapping(value = "/account/password/update", params = {"userid", "newpass"}, method = RequestMethod.POST)
-//    public ResponseEntity<HashMap<String, String>> updatePassword(@RequestParam(value = "userid") String userid,
-//                                                                  @RequestParam(value = "newpass") String newpass) {
-//        con = new AzureSQLConnection().getConnection();
-//        HashMap<String, String> updateSuccess = new HashMap<>();
-//        try {
-//            //gen new salt
-//            String salt = BCrypt.gensalt();
-//            //hash new password
-//            String newpass_hash = BCrypt.hashpw(newpass, salt);
-//            ps = con.prepareStatement(UPDATE_USER_PASSWORD);
-//            ps.setString(1, newpass_hash);
-//            ps.setString(2, salt);
-//            ps.setString(3, userid);
-//            int rs = ps.executeUpdate();
-//            if (rs >0 ){
-//                updateSuccess.put("newpass", newpass_hash);
-//                updateSuccess.put("status", "pass");
-//            }
-//            else
-//            {
-//                updateSuccess.put("status", "fail");
-//            }
-//            con.close();
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//        return ResponseEntity.ok().body(updateSuccess);
-//    }
-//    //Update user name
-//    @RequestMapping (value = "/account/username/update", params = {"userid", "username"}, method = RequestMethod.POST)
-//    public ResponseEntity<HashMap<String, String>> updateUserName (@RequestParam(value = "userid") String userid, @RequestParam(value = "username") String username) {
-//        con = new AzureSQLConnection().getConnection();
-//        HashMap<String, String> updateSuccess = new HashMap<>();
-//        try {
-//            ps = con.prepareStatement(UPDATE_USER_NAME);
-//            ps.setString(1, username);
-//            ps.setString(2, userid);
-//            int rs = ps.executeUpdate();
-//            if (rs >0 ){
-//                updateSuccess.put("status", "pass");
-//                updateSuccess.put("username", username);
-//            }
-//            else
-//            {
-//                updateSuccess.put("status", "fail");
-//            }
-//            con.close();
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//        return ResponseEntity.ok().body(updateSuccess);
-//    }
-//    //Update user fullname
-//    @RequestMapping (value = "/account/fullname/update", params = {"userid", "fullname"}, method = RequestMethod.POST)
-//    public ResponseEntity<HashMap<String, String>> updateUserFullname (@RequestParam(value = "userid") String userid, @RequestParam(value = "fullname") String fullname) {
-//        con = new AzureSQLConnection().getConnection();
-//        HashMap<String, String> updateSuccess = new HashMap<>();
-//        try {
-//            ps = con.prepareStatement(UPDATE_USER_FULLNAME);
-//            ps.setString(1, fullname);
-//            ps.setString(2, userid);
-//            int rs = ps.executeUpdate();
-//            if (rs >0 ){
-//                updateSuccess.put("status", "pass");
-//                updateSuccess.put("fullname", fullname);
-//            }
-//            else
-//            {
-//                updateSuccess.put("status", "fail");
-//            }
-//            con.close();
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//        return ResponseEntity.ok().body(updateSuccess);
-//    }
-//    //Update user birthday
-//    @RequestMapping (value = "/account/birthday/update", params = {"userid", "birthday"}, method = RequestMethod.POST)
-//    public ResponseEntity<HashMap<String, String>> updateUserBirthday (@RequestParam(value = "userid") String userid, @RequestParam(value = "birthday") String birthday) {
-//        con = new AzureSQLConnection().getConnection();
-//        HashMap<String, String> updateSuccess = new HashMap<>();
-//        try {
-//            ps = con.prepareStatement(UPDATE_USER_BIRTHDAY);
-//            ps.setString(1, birthday);
-//            ps.setString(2, userid);
-//            int rs = ps.executeUpdate();
-//            if (rs >0 ){
-//                updateSuccess.put("status", "pass");
-//                updateSuccess.put("birthday", birthday);
-//            }
-//            else
-//            {
-//                updateSuccess.put("status", "fail");
-//            }
-//            con.close();
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//        return ResponseEntity.ok().body(updateSuccess);
-//    }
-//    //Update user gender
-//    @RequestMapping (value = "/account/gender/update", params = {"userid", "gender"}, method = RequestMethod.POST)
-//    public ResponseEntity<HashMap<String, String>> updateUserGender (@RequestParam(value = "userid") String userid, @RequestParam(value = "gender") String gender) {
-//        con = new AzureSQLConnection().getConnection();
-//        HashMap<String, String> updateSuccess = new HashMap<>();
-//        try {
-//            ps = con.prepareStatement(UPDATE_USER_GENDER);
-//            ps.setString(1, gender);
-//            ps.setString(2, userid);
-//            int rs = ps.executeUpdate();
-//            if (rs >0 ){
-//                updateSuccess.put("status", "pass");
-//                updateSuccess.put("gender", gender);
-//            }
-//            else
-//            {
-//                updateSuccess.put("status", "fail");
-//            }
-//            con.close();
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//        return ResponseEntity.ok().body(updateSuccess);
-//    }
-//    //Update user avatar
-//    @RequestMapping (value = "/account/avatar/update", params = {"userid", "avatar"}, method = RequestMethod.POST)
-//    public ResponseEntity<HashMap<String, String>> updateUserAvatar (@RequestParam(value = "userid") String userid, @RequestParam(value = "avatar") String avatar) {
-//        con = new AzureSQLConnection().getConnection();
-//        HashMap<String, String> updateSuccess = new HashMap<>();
-//        //First, upload image to Azure Storage Bolb
-//        //Then, get the link of image
-//        //Finally, update the link to database
-//        try {
-//            ps = con.prepareStatement(UPDATE_USER_AVATAR);
-//            ps.setString(1, avatar);
-//            ps.setString(2, userid);
-//            int rs = ps.executeUpdate();
-//            if (rs >0 ){
-//                updateSuccess.put("status", "pass");
-//                updateSuccess.put("avatar", avatar);
-//            }
-//            else
-//            {
-//                updateSuccess.put("status", "fail");
-//            }
-//            con.close();
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//        return ResponseEntity.ok().body(updateSuccess);
-//    }
-//    //Recovery account with recovery code
-//    @RequestMapping(value = "/account/recovery", params = {"code"}, method = RequestMethod.GET)
-//    public ResponseEntity <HashMap<String, String>> RecoveryAccount(@RequestParam(value = "code") String code) {
-//        HashMap<String, String> userFound = new HashMap<>();
-//        con = new AzureSQLConnection().getConnection();
-//        try {
-//            ps = con.prepareStatement(RECOVERY_ACCOUNT);
-//            ps.setString(1, code);
-//            ResultSet rs = ps.executeQuery();
-//            if (rs.next()) {
-//               userFound.put("user_id", rs.getString("user_id"));
-//               userFound.put("name", rs.getString("name"));
-//               userFound.put("birthaday", rs.getString("birthday"));
-//               userFound.put("gender", rs.getString("gender"));
-//               userFound.put("avatar", rs.getString("avatar"));
-//               userFound.put("email", rs.getString("email"));
-//               userFound.put("password", rs.getString("password"));
-//               userFound.put("salt", rs.getString("salt"));
-//               userFound.put("nickname", rs.getString("nickname"));
-//               userFound.put("verify", rs.getString("verify"));
-
-//               userFound.put("recovery", rs.getString("recovery"));
-//               userFound.put("status", "pass");
-//            }
-//            else {
-//                userFound.put("status", "fail");
-//            }
-//            con.close();
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//        return ResponseEntity.ok().body(userFound);
-//    }
+    //Generate recovery code from user
+    @PostMapping(value = "/generaterecoverycode", params = {"userid"})
+    public ResponseEntity <HashMap<String, String>> generateRecoveryCode(
+            @Parameter(name = "userid", description = "Encode it to BASE64 before input")
+            @RequestParam(value = "userid") String userid) {
+        String new_recovery_code = java.util.UUID.randomUUID().toString();
+        userPassLoginRepo.updateRecovery(new_recovery_code, userid);
+        return ResponseEntity.ok().body(new HashMap<>() {{
+            put("recoverycode", new_recovery_code);
+            put("status", "pass");
+        }});
+    }
+    //There is another settings form user, but it will write later
+    //Other settings is: Avatar Account, User Information like real name, birthday, gender, etc
+    //Most important is user can change password
+    //Before allow change password, first check old password is correct or not
+    @GetMapping(value = "/account/password/check", params = {"userid", "email", "oldpass"})
+    public ResponseEntity<HashMap<String, String>> checkOldPassword(
+            @Parameter(name = "userid", description = "Encode it to BASE64 before input") String userid,
+            @Parameter(name = "email", description = "Encode it to BASE64 before input") String email,
+            @Parameter(name = "oldpass", description = "Encode it to BASE64 before input") String oldpass) throws ResourceNotFound {
+       userPassLogin = userPassLoginRepo.findByEmailOrUserid(getDecode(email.getBytes(StandardCharsets.UTF_8)), getDecode(userid.getBytes(StandardCharsets.UTF_8)))
+               .orElseThrow(() -> new ResourceNotFound("Failed"));
+       String password_hash = userPassLogin.getPassword();
+       String salt = userPassLogin.getSalt();
+       String password_check = BCrypt.hashpw(getDecode(oldpass.getBytes(StandardCharsets.UTF_8)), salt);
+       if (password_check.equals(password_hash)) {
+           return ResponseEntity.ok().body(new HashMap<>() {{
+                    put("status", "pass");
+           }});
+       }
+       else {
+           return ResponseEntity.ok().body(new HashMap<>() {{
+               put("status", "fail");
+           }});
+       }
+    }
+    //Update user name
+    @PostMapping (value = "/account/username/update", params = {"userid", "username"})
+    public ResponseEntity<HashMap<String, String>> updateUserName (
+            @Parameter(name = "userid", description = "Encode it to BASE64 before input")
+            @RequestParam(value = "userid") String userid,
+            @Parameter(name = "username", description = "Encode it to BASE64 before input")
+            @RequestParam(value = "username") String username) {
+        userPassLoginRepo.updateNickname(getDecode(username.getBytes(StandardCharsets.UTF_8)), getDecode(userid.getBytes(StandardCharsets.UTF_8)));
+        return ResponseEntity.ok().body(new HashMap<>() {{
+            put("status", "pass");
+            put("username", username);
+        }});
+    }
+    //Update user fullname
+    @PostMapping (value = "/account/fullname/update", params = {"userid", "fullname"})
+    public ResponseEntity<HashMap<String, String>> updateUserFullname (
+            @Parameter(name = "userid", description = "Encode it to BASE64 before input")
+            @RequestParam(value = "userid") String userid,
+            @Parameter(name = "fullname", description = "Encode it to BASE64 before input")
+            @RequestParam(value = "fullname") String fullname) {
+        userInformationRepo.updateFullname(getDecode(fullname.getBytes(StandardCharsets.UTF_8)), getDecode(userid.getBytes(StandardCharsets.UTF_8)));
+        return ResponseEntity.ok().body(new HashMap<>() {{
+            put("status", "pass");
+            put("username", fullname);
+        }});
+    }
+    //Update user birthday
+    @PostMapping (value = "/account/birthday/update", params = {"userid", "birthday"})
+    public ResponseEntity<HashMap<String, String>> updateUserBirthday (
+            @Parameter(name = "userid", description = "Encode it to BASE64 before input")
+            @RequestParam(value = "userid") String userid,
+            @Parameter(name = "birthday", description = "Encode it to BASE64 before input")
+            @RequestParam(value = "birthday") String birthday) {
+        userInformationRepo.updateBirthday(getDecode(birthday.getBytes(StandardCharsets.UTF_8)), getDecode(userid.getBytes(StandardCharsets.UTF_8)));
+        return ResponseEntity.ok().body(new HashMap<>(){{
+            put("status", "pass");
+            put("birthday", birthday);
+        }});
+    }
+    //Update user gender
+    @PostMapping (value = "/account/gender/update", params = {"userid", "gender"})
+    public ResponseEntity<HashMap<String, String>> updateUserGender (
+            @Parameter(name = "userid", description = "Encode it to BASE64 before input")
+            @RequestParam(value = "userid") String userid,
+            @Parameter(name = "gender", description = "Encode it to BASE64 before input")
+            @RequestParam(value = "gender") String gender) {
+        userInformationRepo.updateGender(getDecode(gender.getBytes(StandardCharsets.UTF_8)), getDecode(userid.getBytes(StandardCharsets.UTF_8)));
+        return ResponseEntity.ok().body(new HashMap<>(){{
+            put("status", "pass");
+            put("gender", gender);
+        }});
+    }
+    //Update user avatar
+    @PostMapping (value = "/account/avatar/update", params = {"userid", "avatar"})
+    public ResponseEntity<HashMap<String, String>> updateUserAvatar (
+            @Parameter(name = "userid", description = "Encode it to BASE64 before input")
+            @RequestParam(value = "userid") String userid,
+            @Parameter(name = "avatar", description = "Encode it to BASE64 before input")
+            @RequestParam(value = "avatar") String avatar) {
+        userInformationRepo.updateAvatar(getDecode(avatar.getBytes(StandardCharsets.UTF_8)), getDecode(userid.getBytes(StandardCharsets.UTF_8)));
+        return ResponseEntity.ok().body(new HashMap<>(){{
+            put("status", "pass");
+            put("avatar", avatar);
+        }});
+    }
+    //Recovery account with recovery code
+    @GetMapping(value = "/account/recovery", params = {"code"})
+    public ResponseEntity <HashMap<String, String>> RecoveryAccount(
+            @Parameter(name = "code", description = "Encode it to BASE64 before input") String code) throws ResourceNotFound {
+    userPassLogin = userPassLoginRepo.findByRecovery(getDecode(code.getBytes(StandardCharsets.UTF_8)))
+            .orElseThrow(() -> new ResourceNotFound("Failed"));
+    return ResponseEntity.ok().body(new HashMap<>() {{
+        put("user_id", String.valueOf(userPassLogin.getUser_id()));
+        put("email", userPassLogin.getEmail());
+        put("password", userPassLogin.getPassword());
+        put("salt", userPassLogin.getSalt());
+        put("nickname", userPassLogin.getNickname());
+        put("verify", userPassLogin.getVerify());
+        put("recovery", userPassLogin.getVerify());
+        put("status", "pass");
+    }});
+    }
 }

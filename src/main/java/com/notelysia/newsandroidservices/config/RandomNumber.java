@@ -15,7 +15,7 @@
  *
  */
 
-package com.notelysia.newsandroidservices.util;
+package com.notelysia.newsandroidservices.config;
 
 public class RandomNumber {
     //generate random number with length = 6

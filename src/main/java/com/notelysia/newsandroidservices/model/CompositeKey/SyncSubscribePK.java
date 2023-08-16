@@ -16,25 +16,33 @@
 
 package com.notelysia.newsandroidservices.model.CompositeKey;
 
-import java.io.Serializable;
+import lombok.Getter;
 
+import java.io.Serializable;
+import java.util.Objects;
+
+@Getter
 public class SyncSubscribePK implements Serializable {
     private int sync_id;
     private int user_id;
-
-    public int getSync_id() {
-        return sync_id;
-    }
 
     public void setSync_id(int sync_id) {
         this.sync_id = sync_id;
     }
 
-    public int getUser_id() {
-        return user_id;
-    }
-
     public void setUser_id(int user_id) {
         this.user_id = user_id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SyncSubscribePK that)) return false;
+        return getSync_id() == that.getSync_id() && getUser_id() == that.getUser_id();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getSync_id(), getUser_id());
     }
 }

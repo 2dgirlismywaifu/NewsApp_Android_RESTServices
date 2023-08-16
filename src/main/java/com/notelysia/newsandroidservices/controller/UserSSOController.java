@@ -17,186 +17,121 @@
 
 package com.notelysia.newsandroidservices.controller;
 
-import com.notelysia.newsandroidservices.util.AzureSQLConnection;
-import com.notelysia.newsandroidservices.util.RandomNumber;
+import com.notelysia.newsandroidservices.config.DecodeString;
+import com.notelysia.newsandroidservices.config.RandomNumber;
+import com.notelysia.newsandroidservices.jparepo.UserInformationRepo;
+import com.notelysia.newsandroidservices.jparepo.UserInformationSSORepo;
+import com.notelysia.newsandroidservices.jparepo.UserPassLoginRepo;
+import com.notelysia.newsandroidservices.jparepo.UserSSORepo;
+import com.notelysia.newsandroidservices.model.UserInformation;
+import com.notelysia.newsandroidservices.model.UserInformationSSO;
+import com.notelysia.newsandroidservices.model.UserPassLogin;
+import com.notelysia.newsandroidservices.model.UserSSO;
+import io.swagger.v3.oas.annotations.Parameter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+
 @RestController
+@RequestMapping("/api/v2")
 public class UserSSOController {
-//    Connection con = null;
-//    PreparedStatement ps;
-//    public final String verify = "true"; //sso always verify
-//    public String date = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date());
-//    public final String CREATE_USER = "INSERT INTO USER_SSO (user_id, email, nickname, verify) VALUES (?,?,?,?)";
-//    public final String CREATE_USER_INFORMATION = "INSERT INTO USER_SSO_INFORMATION (user_id, name, gender, birthday, avatar) VALUES (?,?,?,?,?)";
-//    //only user information
-//    //update user when user login with SSO (nickname, name, avatar)
-//    public final String UPDATE_USER = "UPDATE USER_SSO SET nickname = ? WHERE user_id = ?";
-//    public final String UPDATE_USER_AVATAR = "UPDATE USER_SSO_INFORMATION SET avatar =? WHERE user_id = ?";
-//    public final String UPDATE_USER_NAME = "UPDATE USER_SSO_INFORMATION SET name =? WHERE user_id = ?";
-//    public final String UPDATE_USER_GENDER = "UPDATE USER_SSO_INFORMATION SET gender = ? WHERE user_id = ?";
-//    public final String UPDATE_USER_BIRTHDAY = "UPDATE USER_SSO_INFORMATION SET birthday = ? WHERE user_id = ?";
-//    @RequestMapping(value = "/sso", params = {"fullname","email", "nickname", "avatar"},method = RequestMethod.POST)
-//    //Create user account
-//    //Why gender and birthday not input? Because it is private information about each user.
-//    // Firebase do not have function to get the user's gender/birthdate
-//    public ResponseEntity <HashMap<String, String>> createUser
-//            (@RequestParam(value = "fullname") String fullname,
-//             @RequestParam(value = "email") String email,
-//             @RequestParam(value = "nickname") String nickname,
-//             @RequestParam(value = "avatar") String avatar) {
-//        String user_id_random = new RandomNumber().generateSSONumber();
-//        String status;
-//        con = new AzureSQLConnection().getConnection();
-//        try {
-//            PreparedStatement ps = con.prepareStatement(CREATE_USER + ";" + CREATE_USER_INFORMATION);
-//            //CREATE USER_PASSLOGIN
-//            ps.setString(1, user_id_random);
-//            ps.setString(2, email);
-//            ps.setString(3, nickname);
-//            ps.setString(4, verify);
-//            //CREATE USER_INFORMATION
-//            ps.setString(5, user_id_random);
-//            ps.setString(6, fullname);
-//            ps.setString(7, "not_input");
-//            ps.setString(8, date);
-//            ps.setString(9, avatar);
-//            int rs = ps.executeUpdate();
-//            if (rs > 0) {
-//                status = "success";
-//            }
-//            else {
-//                status = "failed";
-//            }
-//            con.close();
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//        return ResponseEntity.ok().body(new HashMap<String, String>() {{
-//            put("user_id", user_id_random);
-//            put("fullname", fullname);
-//            put("email", email);
-//            put("nickname", nickname);
-//            put("verify", verify);
-//            put("status", status);
-//            }});
-//    }
-//    //Update user information
-//    @RequestMapping(value = "/sso/update", params = {"user_id", "name", "avatar"}, method = RequestMethod.POST)
-//    public ResponseEntity <HashMap<String, String>> updateUser(@RequestParam(value = "user_id") String user_id,
-//                                                              @RequestParam(value = "name") String name,
-//                                                              @RequestParam(value = "avatar") String avatar) {
-//        HashMap<String, String> userFound = new HashMap<>();
-//       con = new AzureSQLConnection().getConnection();
-//        try {
-//            ps = con.prepareStatement(UPDATE_USER + ";" + UPDATE_USER_NAME + "; " + UPDATE_USER_AVATAR);
-//            ps.setString(1, name);
-//            ps.setString(2, user_id);
-//            ps.setString(3, name);
-//            ps.setString(4, user_id);
-//            ps.setString(5, avatar);
-//            ps.setString(6, user_id);
-//            int rs = ps.executeUpdate();
-//            if (rs > 0) {
-//                userFound.put("user_id", user_id);
-//                userFound.put("name", name);
-//                userFound.put("nickname", name);
-//                userFound.put("avatar", avatar);
-//                userFound.put("status", "pass");
-//            }
-//            else {
-//                userFound.put("status", "fail");
-//            }
-//            con.close();
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//        return ResponseEntity.ok().body(userFound);
-//    }
-//    @RequestMapping(value = "/sso/count", params = {"email"}, method = RequestMethod.GET)
-//    public ResponseEntity <HashMap<String, String>> countUser(
-//            @RequestParam(value = "email") String email) {
-//        HashMap<String, String> userFound = new HashMap<>();
-//       con = new AzureSQLConnection().getConnection();
-//        try {
-//            ps = con.prepareStatement("SELECT * FROM USER_SSO, USER_SSO_INFORMATION WHERE email = ? AND USER_SSO.user_id = USER_SSO_INFORMATION.user_id");
-//            ps.setString(1, email);
-//            ResultSet rs = ps.executeQuery();
-//            if (rs.next()) {
-//                userFound.put("user_id", rs.getString("user_id"));
-//                userFound.put("name", rs.getString("name"));
-//                userFound.put("birthaday", rs.getString("birthday"));
-//                userFound.put("gender", rs.getString("gender"));
-//                userFound.put("avatar", rs.getString("avatar"));
-//                userFound.put("email", rs.getString("email"));
-//                userFound.put("nickname", rs.getString("nickname"));
-//                userFound.put("verify", rs.getString("verify"));
-//                userFound.put("status", "pass");
-//            }
-//            else {
-//                userFound.put("status", "fail");
-//            }
-//            con.close();
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//        return ResponseEntity.ok().body(userFound);
-//    }
-//    //Update birthday
-//    @RequestMapping (value = "/sso/birthday/update", params = {"userid", "birthday"}, method = RequestMethod.POST)
-//    public ResponseEntity<HashMap<String, String>> updateUserBirthday (@RequestParam(value = "userid") String userid, @RequestParam(value = "birthday") String birthday) {
-//        con = new AzureSQLConnection().getConnection();
-//        HashMap<String, String> updateSuccess = new HashMap<>();
-//        try {
-//            ps = con.prepareStatement(UPDATE_USER_BIRTHDAY);
-//            ps.setString(1, birthday);
-//            ps.setString(2, userid);
-//            int rs = ps.executeUpdate();
-//            if (rs >0 ){
-//                updateSuccess.put("status", "pass");
-//                updateSuccess.put("birthday", birthday);
-//            }
-//            else
-//            {
-//                updateSuccess.put("status", "fail");
-//            }
-//            con.close();
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//        return ResponseEntity.ok().body(updateSuccess);
-//    }
-//
-//    @RequestMapping (value = "/sso/gender/update", params = {"userid", "gender"}, method = RequestMethod.POST)
-//    public ResponseEntity<HashMap<String, String>> updateUserGender (@RequestParam(value = "userid") String userid, @RequestParam(value = "gender") String gender) {
-//        con = new AzureSQLConnection().getConnection();
-//        HashMap<String, String> updateSuccess = new HashMap<>();
-//        try {
-//            ps = con.prepareStatement(UPDATE_USER_GENDER);
-//            ps.setString(1, gender);
-//            ps.setString(2, userid);
-//            int rs = ps.executeUpdate();
-//            if (rs >0 ){
-//                updateSuccess.put("status", "pass");
-//                updateSuccess.put("gender", gender);
-//            }
-//            else
-//            {
-//                updateSuccess.put("status", "fail");
-//            }
-//            con.close();
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//        return ResponseEntity.ok().body(updateSuccess);
-//    }
+    DecodeString decodeString = new DecodeString();
+    UserSSO userSSO;
+    UserInformationSSO userInformationSSO;
+    @Autowired
+    UserSSORepo userSSORepo;
+    @Autowired
+    UserInformationSSORepo userInformationSSORepo;
+    private String getDecode (byte[] data) {
+        return decodeString.decodeString(data);
+    }
+    public final String verify = "true"; //sso always verify
+    public String date = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date());
+    @PostMapping(value = "/sso", params = {"fullname","email", "nickname", "avatar"})
+    //Create user account
+    //Why gender and birthday not input? Because it is private information about each user.
+    // Firebase do not have function to get the user's gender/birthdate
+    public ResponseEntity<HashMap<String, String>> createUser
+            (@Parameter(name = "fullname", description = "Encode it to BASE64 before input", required = true)
+             @RequestParam(value = "fullname") String fullname,
+             @Parameter(name = "email", description = "Encode it to BASE64 before input", required = true)
+             @RequestParam(value = "email") String email,
+             @Parameter(name = "nickname", description = "Encode it to BASE64 before input", required = true)
+             @RequestParam(value = "nickname") String nickname,
+             @Parameter(name = "avatar", description = "Encode it to BASE64 before input", required = true)
+             @RequestParam(value = "avatar") String avatar) {
+        String user_id_random = new RandomNumber().generateSSONumber();
+        userSSO = new UserSSO(Integer.parseInt(user_id_random), getDecode(email.getBytes()), getDecode(nickname.getBytes()), verify);
+        userInformationSSO = new UserInformationSSO(Integer.parseInt(user_id_random), getDecode(fullname.getBytes()), "not_input", date, getDecode(avatar.getBytes()));
+        userSSORepo.save(userSSO);
+        userInformationSSORepo.save(userInformationSSO);
+        return ResponseEntity.ok().body(new HashMap<>() {{
+            put("user_id", String.valueOf(userSSO.getUser_id()));
+            put("fullname", userInformationSSO.getName());
+            put("email", userSSO.getEmail());
+            put("nickname", userSSO.getNickname());
+            put("verify", verify);
+            put("status", "success");
+        }});
+    }
+    //Update user information
+    @PostMapping(value = "/sso/update", params = {"user_id", "name", "avatar"})
+    public ResponseEntity <HashMap<String, String>> updateUser(
+            @Parameter(name = "user_id", description = "Encode it to BASE64 before input", required = true)
+            @RequestParam(value = "user_id") String user_id,
+            @Parameter(name = "name", description = "Encode it to BASE64 before input", required = true)
+            @RequestParam(value = "name") String name,
+            @Parameter(name = "avatar", description = "Encode it to BASE64 before input", required = true)
+            @RequestParam(value = "avatar") String avatar) {
+        userSSORepo.updateNickname(getDecode(name.getBytes()), getDecode(user_id.getBytes()));
+        userInformationSSORepo.updateAvatar(getDecode(avatar.getBytes()), getDecode(user_id.getBytes()));
+        return ResponseEntity.ok().body(new HashMap<>(){{
+            put("user_id", getDecode(user_id.getBytes()));
+            put("nickname", getDecode(name.getBytes()));
+            put("avatar", getDecode(avatar.getBytes()));
+            put("status", "pass");
+        }});
+    }
+    @GetMapping(value = "/sso/count", params = {"email"})
+    public ResponseEntity <HashMap<String, String>> countUser(
+            @Parameter(name = "email", description = "Encode it to BASE64 before input") String email) {
+        HashMap<String, String> userFound = new HashMap<>();
+        if (userSSORepo.countEmail(getDecode(email.getBytes())) > 1
+                && userInformationSSORepo.countUserId(getDecode(email.getBytes())) > 1) {
+            userFound.put("status", "duplicate");
+        }
+        else {
+            userFound.put("status", "pass");
+        }
+        return ResponseEntity.ok().body(userFound);
+    }
+//Update user birthday
+    @PostMapping (value = "/sso/birthday/update", params = {"userid", "birthday"})
+    public ResponseEntity<HashMap<String, String>> updateSSOBirthday (
+            @Parameter(name = "userid", description = "Encode it to BASE64 before input")
+            @RequestParam(value = "userid") String userid,
+            @Parameter(name = "birthday", description = "Encode it to BASE64 before input")
+            @RequestParam(value = "birthday") String birthday) {
+        userInformationSSORepo.updateBirthday(getDecode(birthday.getBytes(StandardCharsets.UTF_8)), getDecode(userid.getBytes(StandardCharsets.UTF_8)));
+        return ResponseEntity.ok().body(new HashMap<>(){{
+            put("status", "pass");
+            put("birthday", birthday);
+        }});
+    }
+    //Update user gender
+    @PostMapping (value = "/sso/gender/update", params = {"userid", "gender"})
+    public ResponseEntity<HashMap<String, String>> updateSSOGender (
+            @Parameter(name = "userid", description = "Encode it to BASE64 before input")
+            @RequestParam(value = "userid") String userid,
+            @Parameter(name = "gender", description = "Encode it to BASE64 before input")
+            @RequestParam(value = "gender") String gender) {
+        userInformationSSORepo.updateGender(getDecode(gender.getBytes(StandardCharsets.UTF_8)), getDecode(userid.getBytes(StandardCharsets.UTF_8)));
+        return ResponseEntity.ok().body(new HashMap<>(){{
+            put("status", "pass");
+            put("gender", gender);
+        }});
+    }
 }

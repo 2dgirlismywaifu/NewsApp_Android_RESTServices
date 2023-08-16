@@ -14,14 +14,10 @@
  *  limitations under the License.
  */
 
-package com.notelysia.newsandroidservices.util;
+package com.notelysia.newsandroidservices.jparepo;
 
-import java.util.Base64;
+import com.notelysia.newsandroidservices.model.NewsTypeImage;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public class DecodeString {
-
-    //This class will decode base64 byte[] to normal string
-    public String decodeString(byte[] encodedString) {
-        return new String(Base64.getDecoder().decode(encodedString));
-    }
+public interface NewsTypeImageRepo extends JpaRepository<NewsTypeImage, Long> {
 }
