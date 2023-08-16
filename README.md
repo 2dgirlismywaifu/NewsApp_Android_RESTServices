@@ -238,14 +238,7 @@ Don't forget to give the project a star! Thanks again!
 [![twitter-shield]][twitter-url] <br >
 My Gmail Workspace: longntworkspace2911@gmail.com <br>
 Project Link: [https://github.com/2dgirlismywaifu/NewsApp_Android_RESTServices](https://github.com/2dgirlismywaifu/NewsApp_Android_RESTServices)
-\
-Scan QR code bellow to follow my Github account 💕💕💕
-<div align="center">
-  <br />
-  <a href='https://github.com/2dgirlismywaifu' border='0' style='cursor:pointer;display:block'>
-    <img src='https://cdn.me-qr.com/qr/49033888.png?v=1676917850' alt='2dgirlismywaifu'>
-  </a>
-</div>
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- MARKDOWN LINKS & IMAGES -->
