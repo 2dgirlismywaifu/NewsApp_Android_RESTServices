@@ -17,8 +17,9 @@
 package com.notelysia.newsandroidservices.controller;
 
 import com.notelysia.newsandroidservices.exception.ResourceNotFound;
-import com.notelysia.newsandroidservices.model.NewsSource;
 import com.notelysia.newsandroidservices.jparepo.NewsSourceRepo;
+import com.notelysia.newsandroidservices.model.NewsSource;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v2")
+@Tag(name = "News Source", description = "API for News Source")
 public class NewsSourceController {
     Map<String, NewsSource> respond;
 

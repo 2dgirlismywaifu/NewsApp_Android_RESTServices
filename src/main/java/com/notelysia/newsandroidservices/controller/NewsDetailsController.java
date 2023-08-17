@@ -16,94 +16,70 @@
 
 package com.notelysia.newsandroidservices.controller;
 
+import com.notelysia.newsandroidservices.config.DecodeString;
+import com.notelysia.newsandroidservices.jparepo.NewsDetailsRepo;
+import com.notelysia.newsandroidservices.model.NewsDetail;
+import com.notelysia.newsandroidservices.model.RSSList;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
+import java.util.List;
 
 
 @RestController
+@RequestMapping("/api/v2")
+@Tag(name = "News Details List Country", description = "API for News Details List Country")
 public class NewsDetailsController {
-//    Connection con = null;
-//    PreparedStatement ps;
-//    ResultSet rs;
-//    //This is only for guest user, follow subscribe only for logined user
-//    @RequestMapping(value = "/guest/newsdetails", params = {"type", "name"}, method = RequestMethod.GET)
-//    public ResponseEntity<Map<String, List<NewsDetail>>> allNewsSource(
-//            @RequestParam(value = "type") String type
-//            , @RequestParam(value = "name") String name) {
-//        con = new AzureSQLConnection().getConnection();
-//        List<NewsDetail> newsDetailList = new ArrayList<>();
-//        Map<String, List<NewsDetail>> respond = new HashMap<>();
-//        try {
-//            ps = con.prepareStatement("SELECT * FROM NEWS_DETAIL, NEWS_SOURCE WHERE NEWS_DETAIL.source_id = NEWS_SOURCE.source_id AND url_type = ? AND NEWS_SOURCE.source_name=?");
-//            ps.setString(1, type);
-//            ps.setString(2, name);
-//            rs = ps.executeQuery();
-//            while (rs.next()) {
-//                NewsDetail newsDetail = new NewsDetail();
-//                newsDetail.setSource_id(rs.getString("source_id"));
-//                newsDetail.setSource_name(rs.getString("source_name"));
-//                newsDetail.setUrl_type(rs.getString("url_type"));
-//                newsDetail.setUrl(rs.getString("url"));
-//                newsDetailList.add(newsDetail);
-//            }
-//            con.close();
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//        respond.put("newsDetails", newsDetailList);
-//        return new ResponseEntity<>(respond, HttpStatus.OK);
-//    }
-//
-//    //This is list url for each source
-//    @RequestMapping(value = "/newsdetails/list", params = {"name"}, method = RequestMethod.GET)
-//    public ResponseEntity<Map<String, List<NewsDetail>>> allNewsSource(
-//            @RequestParam(value = "name") String name) {
-//        con = new AzureSQLConnection().getConnection();
-//        List<NewsDetail> sourceDetailsList = new ArrayList<>();
-//        Map<String, List<NewsDetail>> respond = new HashMap<>();
-//        try {
-//            ps = con.prepareStatement("SELECT * FROM NEWS_DETAIL, NEWS_SOURCE WHERE NEWS_DETAIL.source_id = NEWS_SOURCE.source_id AND NEWS_SOURCE.source_name=?");
-//            ps.setString(1, name);
-//            rs = ps.executeQuery();
-//            while (rs.next()) {
-//                NewsDetail newsDetail = new NewsDetail();
-//                newsDetail.setSource_id(rs.getString("source_id"));
-//                newsDetail.setSource_name(rs.getString("source_name"));
-//                newsDetail.setUrl_type(rs.getString("url_type"));
-//                newsDetail.setUrl(rs.getString("url"));
-//                sourceDetailsList.add(newsDetail);
-//            }
-//            con.close();
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//        respond.put("List" + name, sourceDetailsList);
-//        return new ResponseEntity<>(respond, HttpStatus.OK);
-//    }
-//    //GET URL RSS LIST FOLLOW SOURCE_NAME
-//    @RequestMapping(value = "/newsdetails/rss/list", params = {"name"}, method = RequestMethod.GET)
-//    public ResponseEntity<Map<String, List<RSSList>>> allRSSList(
-//            @RequestParam(value = "name") String name) {
-//        con = new AzureSQLConnection().getConnection();
-//        List<RSSList> rssList = new ArrayList<>();
-//        Map<String, List<RSSList>> respond = new HashMap<>();
-//        try {
-//            ps = con.prepareStatement("SELECT NEWS_DETAIL.url_type, NEWS_DETAIL.url, NEWSTYPE_IMAGE.url_image FROM NEWS_DETAIL, NEWS_SOURCE, NEWSTYPE_IMAGE " +
-//                    "WHERE NEWS_DETAIL.url_type = NEWSTYPE_IMAGE.url_type and NEWS_DETAIL.source_id = NEWS_SOURCE.source_id and NEWS_SOURCE.source_name = ?");
-//            ps.setString(1, name);
-//            rs = ps.executeQuery();
-//            while (rs.next()) {
-//                RSSList rss = new RSSList();
-//                rss.setUrl_type(rs.getString("url_type"));
-//                rss.setUrl(rs.getString("url"));
-//                rss.setUrl_image(rs.getString("url_image"));
-//                rssList.add(rss);
-//            }
-//            con.close();
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//        respond.put("RSSList", rssList);
-//        return new ResponseEntity<>(respond, HttpStatus.OK);
-//    }
+    DecodeString decodeString = new DecodeString();
+    private String getDecode (byte[] data) {
+        return decodeString.decodeString(data);
+    }
+    @Autowired
+    NewsDetailsRepo newsDetailsRepo;
+    //This is only for guest user, follow subscribe only for logined user
+    @GetMapping(value = "/guest/newsdetails", params = {"type", "name"})
+    public ResponseEntity<HashMap<String, List<NewsDetail>>> allNewsSource(
+            @Parameter (name = "type", description = "Encode it to BASE64 before input", required = true)
+            @RequestParam(value = "type") String type,
+            @Parameter (name = "name", description = "Encode it to BASE64 before input", required = true)
+            @RequestParam(value = "name") String name) {
+        return new ResponseEntity<>(new HashMap<>(){
+            {
+                put("newsDetails", newsDetailsRepo.findByUrlTypeAndSourceName(getDecode(type.getBytes()), getDecode(name.getBytes())));
+            }
+        }, HttpStatus.OK);
+    }
+
+    //This is list url for each source
+    @GetMapping(value = "/newsdetails/list", params = {"name"})
+    public ResponseEntity<HashMap<String, List<NewsDetail>>> allNewsSource(
+            @Parameter (name = "name", description = "Encode it to BASE64 before input", required = true)
+            @RequestParam(value = "name") String name) {
+        return new ResponseEntity<>(new HashMap<>(){
+            {
+                put("List" + getDecode(name.getBytes()), newsDetailsRepo.findBySourceName(getDecode(name.getBytes())));
+            }
+        }, HttpStatus.OK);
+    }
+    //GET URL RSS LIST FOLLOW SOURCE_NAME
+    @GetMapping(value = "/newsdetails/rss/list", params = {"name"})
+    public ResponseEntity<HashMap<String, List<RSSList>>> allRSSList(
+            @Parameter (name = "name", description = "Encode it to BASE64 before input", required = true)
+            @RequestParam(value = "name") String name) {
+        List<RSSList> rssList = newsDetailsRepo.findUrlBySourceName(getDecode(name.getBytes()));
+        return new ResponseEntity<>(new HashMap<>(){
+            {
+                put("RSSList", rssList);
+            }
+        }, HttpStatus.OK);
+    }
 
 }

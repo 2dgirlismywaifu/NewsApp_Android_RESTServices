@@ -17,8 +17,11 @@
 
 package com.notelysia.newsandroidservices.controller;
 
+import com.notelysia.newsandroidservices.config.DecodeString;
 import com.notelysia.newsandroidservices.jparepo.NewsAPICountryRepo;
 import com.notelysia.newsandroidservices.model.NewsAPICountry;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,8 +36,12 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v2")
+@Tag(name = "NewsAPI Country", description = "API for NewsAPI Country List")
 public class NewsAPICountryController {
-
+    DecodeString decodeString = new DecodeString();
+    private String getDecode (byte[] data) {
+        return decodeString.decodeString(data);
+    }
     @Autowired
     NewsAPICountryRepo newsAPICountryRepo;
 
@@ -46,9 +53,10 @@ public class NewsAPICountryController {
     }
     @GetMapping(value = "/newsapi/country/list", params = {"name"})
     public ResponseEntity<Map<String, List<NewsAPICountry>>> getCountryCode(
+            @Parameter(name = "name", description = "Country Name", required = true)
             @RequestParam(value = "name") String name) {
         Map<String, List<NewsAPICountry>> respond = new HashMap<>();
-        respond.put("countrycode", newsAPICountryRepo.findByCountry(name));
+        respond.put("countrycode", newsAPICountryRepo.findByCountry(getDecode(name.getBytes())));
         return new ResponseEntity<>(respond, HttpStatus.OK);
     }
 }

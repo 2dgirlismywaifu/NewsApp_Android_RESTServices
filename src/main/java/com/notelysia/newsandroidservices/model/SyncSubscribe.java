@@ -57,4 +57,16 @@ public class SyncSubscribe {
     public void setSource_id(int source_id) {
         this.source_id = source_id;
     }
+
+    public int getSync_id() {
+        return sync_id;
+    }
+
+    public int getUser_id() {
+        return user_id;
+    }
+
+    public int getSource_id() {
+        return source_id;
+    }
 }

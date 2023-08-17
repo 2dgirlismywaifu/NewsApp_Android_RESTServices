@@ -18,6 +18,30 @@ package com.notelysia.newsandroidservices.jparepo;
 
 import com.notelysia.newsandroidservices.model.SyncNewsFavourite;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
-public interface SyncNewsFavouriteRepo extends JpaRepository<SyncNewsFavourite, Long> {
+import java.util.List;
+
+public interface SyncNewsFavouriteRepo extends JpaRepository<SyncNewsFavourite, Integer> {
+    //Delete news favourite by user_id, url, title, image_url, source_name
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM SyncNewsFavourite s WHERE s.user_id = ?1 AND s.url = ?2 AND s.title = ?3 " +
+            "AND s.image_url = ?4 AND s.source_name = ?5")
+    void deleteNewsFavourite(String userId, String url, String title,
+                                                              String imageUrl, String sourceName);
+
+    //Get news favourite by user_id
+    @Query("SELECT s FROM SyncNewsFavourite s WHERE s.user_id = ?1")
+    List<SyncNewsFavourite> findByUserId(int userId);
+
+    //Get news favourite exist by user_id, url, title, image_url, source_name
+    @Query("SELECT s FROM SyncNewsFavourite s WHERE s.user_id = ?1 AND s.url = ?2 AND s.title = ?3 " +
+            "AND s.image_url = ?4 AND s.source_name = ?5")
+    SyncNewsFavourite findSyncNewsFavouriteBy(int userId, String sourceId,
+                                                    String title, String imageUrl,
+                                                    String sourceName);
+
 }

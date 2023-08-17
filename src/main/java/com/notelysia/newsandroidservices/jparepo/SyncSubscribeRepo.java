@@ -18,6 +18,18 @@ package com.notelysia.newsandroidservices.jparepo;
 
 import com.notelysia.newsandroidservices.model.SyncSubscribe;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface SyncSubscribeRepo extends JpaRepository<SyncSubscribe, Long> {
+    //Delete subscribe by user_id and source_id
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM SyncSubscribe s WHERE s.user_id = ?1 AND s.source_id = ?2")
+    void deleteByUserIdAndSourceId(int user_id, String source_id);
+
+    //Get subscribe by user_id and source_id
+    @Query("SELECT s FROM SyncSubscribe s WHERE s.user_id = ?1 AND s.source_id = ?2")
+    SyncSubscribe findByUserIdAndSourceId(int user_id, String source_id);
 }

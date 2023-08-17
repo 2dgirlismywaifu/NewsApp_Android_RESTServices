@@ -17,12 +17,15 @@
 
 package com.notelysia.newsandroidservices.controller;
 
-import com.notelysia.newsandroidservices.exception.*;
+import com.notelysia.newsandroidservices.config.DecodeString;
+import com.notelysia.newsandroidservices.config.RandomNumber;
+import com.notelysia.newsandroidservices.exception.ResourceNotFound;
 import com.notelysia.newsandroidservices.jparepo.UserInformationRepo;
 import com.notelysia.newsandroidservices.jparepo.UserPassLoginRepo;
-import com.notelysia.newsandroidservices.model.*;
-import com.notelysia.newsandroidservices.config.*;
+import com.notelysia.newsandroidservices.model.UserInformation;
+import com.notelysia.newsandroidservices.model.UserPassLogin;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -33,6 +36,7 @@ import java.util.HashMap;
 
 @RestController
 @RequestMapping("/api/v2")
+@Tag(name = "User Pass Login", description = "API for User Pass Login")
 public class UserPassLoginController {
     DecodeString decodeString = new DecodeString();
     UserPassLogin userPassLogin;

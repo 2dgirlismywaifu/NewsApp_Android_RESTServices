@@ -19,15 +19,12 @@ package com.notelysia.newsandroidservices.controller;
 
 import com.notelysia.newsandroidservices.config.DecodeString;
 import com.notelysia.newsandroidservices.config.RandomNumber;
-import com.notelysia.newsandroidservices.jparepo.UserInformationRepo;
 import com.notelysia.newsandroidservices.jparepo.UserInformationSSORepo;
-import com.notelysia.newsandroidservices.jparepo.UserPassLoginRepo;
 import com.notelysia.newsandroidservices.jparepo.UserSSORepo;
-import com.notelysia.newsandroidservices.model.UserInformation;
 import com.notelysia.newsandroidservices.model.UserInformationSSO;
-import com.notelysia.newsandroidservices.model.UserPassLogin;
 import com.notelysia.newsandroidservices.model.UserSSO;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +34,7 @@ import java.util.HashMap;
 
 @RestController
 @RequestMapping("/api/v2")
+@Tag(name = "User SSO", description = "API for User SSO")
 public class UserSSOController {
     DecodeString decodeString = new DecodeString();
     UserSSO userSSO;
