@@ -53,7 +53,7 @@ public class NewsAPICountryController {
     }
     @GetMapping(value = "/newsapi/country/list", params = {"name"})
     public ResponseEntity<Map<String, List<NewsAPICountry>>> getCountryCode(
-            @Parameter(name = "name", description = "Country Name", required = true)
+            @Parameter(name = "name", description = "Country Name only required if get country code")
             @RequestParam(value = "name") String name) {
         Map<String, List<NewsAPICountry>> respond = new HashMap<>();
         respond.put("countrycode", newsAPICountryRepo.findByCountry(getDecode(name.getBytes())));
