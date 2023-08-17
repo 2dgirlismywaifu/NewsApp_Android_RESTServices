@@ -96,31 +96,31 @@ Notes: You can use Azure App Services with F1 Plan (Free Forever), but performan
 2. Open `application.properties` in `src\main\resources` and edit like this bellow
 
     ```properties
-  #Enter your database information here (Note: You must create a database with the name newsapp-android before running the application)
-#You do NOT need encode to BASE64
-#####################################################################################################
-#This is the database information to connect
-spring.jpa.database=(type of database)
-spring.datasource.url=(your jdbc url)
-#type of schema
-spring.jpa.properties.hibernate.default_schema=(read your database manual to find it)
-spring.datasource.username=(your database username)
-spring.datasource.password=(your database password)
-#####################################################################################################
-#Spring Configuration
-spring.jpa.show-sql=true
-spring.jpa.properties.hibernate.format_sql = true
-spring.groovy.template.check-template-location=false
-spring.jpa.open-in-view=false
-spring.jpa.hibernate.naming.physical-strategy=org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.SQLServerDialect
-#Springdoc Configuration
-#Hibernate ddl auto (create, create-drop, validate, update)
-spring.jpa.hibernate.ddl-auto = none
-#####################################################################################################
-#Authentication header (Encode it with BASE64)
-newsapp.http.auth-token-header-name=(Your API Header, encode it with base64)
-newsapp.http.auth-token=(Your API Token), encode it with base64)
+    #Enter your database information here (Note: You must create a database with the name newsapp-android before running the application)
+    #You do NOT need encode to BASE64
+    #####################################################################################################
+    #This is the database information to connect
+    spring.jpa.database=(type of database)
+    spring.datasource.url=(your jdbc url)
+    #type of schema
+    spring.jpa.properties.hibernate.default_schema=(read your database manual to find it)
+    spring.datasource.username=(your database username)
+    spring.datasource.password=(your database password)
+    #####################################################################################################
+    #Spring Configuration
+    spring.jpa.show-sql=true
+    spring.jpa.properties.hibernate.format_sql = true
+    spring.groovy.template.check-template-location=false
+    spring.jpa.open-in-view=false
+    spring.jpa.hibernate.naming.physical-strategy=org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.SQLServerDialect
+    #Springdoc Configuration
+    #Hibernate ddl auto (create, create-drop, validate, update)
+    spring.jpa.hibernate.ddl-auto = none
+    #####################################################################################################
+    #Authentication header (Encode it with BASE64)
+    newsapp.http.auth-token-header-name=(Your API Header, encode it with base64)
+    newsapp.http.auth-token=(Your API Token), encode it with base64)
     ```
     Note: this file is ignored, you need create path like this
     ```
