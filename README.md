@@ -1,4 +1,4 @@
-<h1 align="center">Services has shutdown due leak from history commit</h1>
+<!--<h1 align="center">Services has shutdown due leak from history commit</h1> -->
 <a name="readme-top"></a>
 
 <!-- PROJECT LOGO -->
