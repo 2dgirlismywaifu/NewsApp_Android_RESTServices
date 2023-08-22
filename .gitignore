@@ -33,3 +33,4 @@ build/
 .vscode/
 
 /spring_conf/db.properties
+/spring_conf/authkey.properties

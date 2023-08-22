@@ -20,10 +20,8 @@ package com.notelysia.restservices;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.MediaType;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -32,8 +30,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 //@SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
 @SpringBootApplication(exclude = {UserDetailsServiceAutoConfiguration.class})
-@EnableJpaRepositories({"com.notelysia.restservices.newsapp.jparepo"})
-@EntityScan({"com.notelysia.restservices.newsapp.model"})
 @EnableWebMvc
 public class MyRestApplication {
 

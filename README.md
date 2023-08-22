@@ -1,4 +1,4 @@
-<!--<h1 align="center">Services has shutdown due leak from history commit</h1> -->
+<h1 align="center">Source will rename in the future</h1>
 <a name="readme-top"></a>
 
 <!-- PROJECT LOGO -->
@@ -8,9 +8,9 @@
     <img src="images/logo.png" alt="Logo" width="200" height="200">
   </a>
 
-<h3 align="center", style="font-size:25px">NewsApp REST Services</h3>
-<p1 align="center", style="font-size:20px">Powered by Microsft Azure Services</p1><br />
-  <a href="https://github.com/2dgirlismywaifu/NewsAPP_RSS_NewsAPI_Azure", style="font-size:20px"><strong>REST Services for News App Reader Project</strong></a>
+<h3 align="center", style="font-size:25px">NOTElysia REST Services</h3>
+<p1 align="center", style="font-size:20px">Ready for Microsft Azure Services</p1><br />
+  <a href="https://github.com/2dgirlismywaifu", style="font-size:20px"><strong>AIO REST Services For My Own Project</strong></a>
 <hr>
 
  ![Contributors][contributors-shield]
@@ -40,6 +40,8 @@
     <li>
       <a href="#about-the-project">About The Project</a>
       <ul>
+        <li><a href="#Legacy-Key-Generator">Legacy Key Generator</a></li>
+        <li><a href="#NewsAPP-RSS-NewsAPI">NewsAPP-RSS-NewsAPI</a></li>
         <li><a href="#build-with">Build With</a></li>
       </ul>
     </li>
@@ -64,11 +66,36 @@
 <!-- ABOUT THE PROJECT -->
 # **About The Project**
 
-This is REST Services for NewsApp Reader. This service intermediaries between the database server and the application tasks: account login, account registration, account recovery, user information update, and request lists: source news, country providing news (NewsAPI), stored image url from Azure Blob Storage...
+* This is AIO Spring Boot REST Services for all of my project. You can access Swagger UI 3.0 for testting.
+* You can deloy it Microsoft Azure App Services. And also, you can deloy and run it in your local services in Windows and Linux. MacOS can run it, but nobody use MacOS for server.
+* Link demo: http://notelysiaserver.ddns.net:2984/swagger-ui/index.html
+* API Auth-key (Encrypted): m5sDzL1CNHbNmj4PwoOCksnYEA7C/q/5I4YEt+OfaXY=
+* Secret key: c1d03d02ae8f472662acfb2b9876ac91087e00ff
+* Decrypt it, you will find the answer. If you too lazy, download this source and write your own application.properties file.
+
 
 [![Product Name Screen Shot][product-screenshot]](https://github.com/2dgirlismywaifu/NewsApp_Android_RESTServices)
-Note: The data in the picture is simulation
+<div align="center">
+  <p1 align="center", style="font-size:18px">Note: The data in the picture is simulation</p1><br />
+</div>
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+## **Legacy Key Generator**
+  * Link project: https://github.com/2dgirlismywaifu/Legacy_Key_Generator
+  * This service will generate a vail Legacy Key for Windows 95, Windows NT 4.0 and Office 95 - 97. You can read the rule in the link project.
+  * Remember: This service is only for research and purpose. Do NOT Piracy any paid software. Buy the license if you want use it.
+    <br /> <br />
+   [![Legacy Key Generator Screen short][legacy-key-screenshot]](https://github.com/2dgirlismywaifu/NewsAPP-RSS-NewsAPI)
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## **NewsAPP-RSS-NewsAPI**
+  * Link project: https://github.com/2dgirlismywaifu/NewsAPP-RSS-NewsAPI
+  * This service intermediaries between the database server and the application tasks: account login, account registration, account recovery, user information update, and request lists: source news, country providing news (NewsAPI), stored image url from Azure Blob Storage...
+  <br /> <br />
+  [![NewsAPP-RSS-NewsAPI Screen short][news-newsapi-screenshot]](https://github.com/2dgirlismywaifu/NewsAPP-RSS-NewsAPI)
+  <div align="center">
+  <p1 align="center", style="font-size:18px">NewsAPP-RSS-NewsAPI demo in Swagger UI 3.0</p1><br />
+  </div>
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## **Build with**
@@ -94,41 +121,21 @@ Notes: You can use Azure App Services with F1 Plan (Free Forever), but performan
     ```sh
     git clone https://github.com/2dgirlismywaifu/NewsApp_Android_RESTServices.git
    ```
-2. Open `application.properties` in `src\main\resources` and edit like this bellow
+2. Create folder `spring_conf` in main folder project and create two files `authkey.properties` and `db.properties`
 
     ```properties
-    #Enter your database information here (Note: You must create a database with the name newsapp-android before running the application)
-    #You do NOT need encode to BASE64
-    #####################################################################################################
-    #This is the database information to connect
-    spring.jpa.database=(type of database)
-    spring.datasource.url=(your jdbc url)
-    #type of schema
-    spring.jpa.properties.hibernate.default_schema=(read your database manual to find it)
-    spring.datasource.username=(your database username)
-    spring.datasource.password=(your database password)
-    #####################################################################################################
-    #Spring Configuration
-    spring.jpa.show-sql=true
-    spring.jpa.properties.hibernate.format_sql = true
-    spring.groovy.template.check-template-location=false
-    spring.jpa.open-in-view=false
-    spring.jpa.hibernate.naming.physical-strategy=org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-    spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.SQLServerDialect
-    #Springdoc Configuration
-    #Hibernate ddl auto (create, create-drop, validate, update)
-    spring.jpa.hibernate.ddl-auto = none
-    #####################################################################################################
-    #Authentication header (Encode it with BASE64)
-    newsapp.http.auth-token-header-name=(Your API Header, encode it with base64)
-    newsapp.http.auth-token=(Your API Token), encode it with base64)
-    ```
-    Note: this file is ignored, you need create path like this
-    ```
-    src\main\resources
-      └── static
-      └── templates
-      └── application.properties
+    #db.properties
+    #this is jdbc connect use for JPA, it will not commit in Github
+    jdbc.sqlserver=(your sql driver)
+    #Database for first connection
+    jdbc.url=(your url)
+    jdbc.username=(your username)
+    jdbc.password=(your password)
+
+    #authkey.properties
+    #Auth Key encode to base 64
+    auth-token-header-name=(Your API Header)
+    auth-token=(Your API Token)
     ```
 3. Open pom.xml and delete this section bellow
     ```xml
@@ -188,12 +195,8 @@ Notes: You can use Azure App Services with F1 Plan (Free Forever), but performan
 
 # **Demo**
 
-https://user-images.githubusercontent.com/59259855/218605589-bbea246e-4fb9-4f6e-ae1f-12bcd05f6ed7.mp4
+- Will upload later
 
-Link demo: http://171.229.245.89:2984/swagger-ui/index.html  \
-API Auth-key (Encrypted): m5sDzL1CNHbNmj4PwoOCksnYEA7C/q/5I4YEt+OfaXY=   \
-Secret key: c1d03d02ae8f472662acfb2b9876ac91087e00ff \
-Decrypt it, you will find the answer. If you too lazy, download this source and write your own application.properties file.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -279,6 +282,8 @@ Project Link: [https://github.com/2dgirlismywaifu/NewsApp_Android_RESTServices](
 [twitter-shield]: https://img.shields.io/twitter/follow/MyWaifuis2DGirl?color=C9CBFF&label=%40MyWaifuis2DGirl&logo=TWITTER&logoColor=C9CBFF&style=for-the-badge
 [twitter-url]: https://twitter.com/MyWaifuis2DGirl
 [product-screenshot]: images/screenshot.png
+[news-newsapi-screenshot]: images/newsapp.png
+[legacy-key-screenshot]: images/legacykey.png
 
 [Spring-boot]: https://img.shields.io/badge/springboot-302D41?style=for-the-badge&logo=springboot&logoColor=34eb67
 [Springboot-url]: https://spring.io/

@@ -21,19 +21,24 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.io.FileInputStream;
 import java.util.Base64;
+import java.util.Properties;
+
 @Configuration
 public class SwaggerConfiguration {
 
-    @Value("${newsapp.http.auth-token-header-name}")
-    private String principalRequestHeader;
+    Properties props = new Properties();
+    FileInputStream in;
 
     @Bean
-    public OpenAPI customOpenAPI() {
+    public OpenAPI customOpenAPI() throws Exception {
+        in = new FileInputStream("spring_conf/authkey.properties");
+        props.load(in);
+        in.close();
         return new OpenAPI()
                 //Edit footer, change /v3/api-docs
                 .externalDocs(new io.swagger.v3.oas.models.ExternalDocumentation()
@@ -45,7 +50,7 @@ public class SwaggerConfiguration {
                         .addSecuritySchemes("mySecretHeader", new SecurityScheme()
                                 .type(SecurityScheme.Type.APIKEY)
                                 .in(SecurityScheme.In.HEADER)
-                                .name(new String(Base64.getDecoder().decode(principalRequestHeader)))))
+                                .name(new String(Base64.getDecoder().decode(props.getProperty("auth-token-header-name"))))))
 
                 // AddSecurityItem section applies created scheme globally
                 .addSecurityItem(new SecurityRequirement().addList("mySecretHeader"));
