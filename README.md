@@ -8,7 +8,7 @@
     <img src="images/logo.png" alt="Logo" width="200" height="200">
   </a>
 
-<h3 align="center", style="font-size:25px">NOTElysia REST Services</h3>
+<h3 align="center", style="font-size:25px">NOTElysia REST Services (Server ON)</h3>
 <p1 align="center", style="font-size:20px">Ready for Microsft Azure Services</p1><br />
   <a href="https://github.com/2dgirlismywaifu", style="font-size:20px"><strong>AIO REST Services For My Own Project</strong></a>
 <hr>
