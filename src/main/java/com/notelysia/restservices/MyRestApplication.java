@@ -17,7 +17,7 @@
 
 package com.notelysia.restservices;
 
-import org.jetbrains.annotations.NotNull;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
@@ -36,7 +36,7 @@ public class MyRestApplication {
     public WebMvcConfigurer customConfigurer() {
         return new WebMvcConfigurer() {
             @Override
-            public void configureContentNegotiation(@NotNull ContentNegotiationConfigurer configurer) {
+            public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
                 configurer.defaultContentType(MediaType.APPLICATION_JSON);
             }
         };
