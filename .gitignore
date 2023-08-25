@@ -34,3 +34,4 @@ build/
 
 /spring_conf/db.properties
 /spring_conf/authkey.properties
+!/log/
