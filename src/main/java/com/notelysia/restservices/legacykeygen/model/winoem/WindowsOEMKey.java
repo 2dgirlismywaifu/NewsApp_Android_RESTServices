@@ -17,6 +17,8 @@
 package com.notelysia.restservices.legacykeygen.model.winoem;
 
 
+import lombok.Getter;
+
 public class WindowsOEMKey {
     
     String XXXKey = new XXXKey().generateKey();
@@ -25,13 +27,9 @@ public class WindowsOEMKey {
     String NNKey = new NKey().getNNKeyReturn();
     String SSSSSKey = new SSSSSSKey().generateKey();
     String ZZZZZKey = new ZZZZZKey().generateKey();
+    @Getter
     String Windows95Key = XXXKey + YY95 + "-OEM-" + NNKey + SSSSSKey + "-" + ZZZZZKey;
+    @Getter
     String WindowsNTKey = XXXKey + YYNT + "-OEM-" + NNKey + SSSSSKey + "-" + ZZZZZKey;
 
-    public String getWindows95Key() { return Windows95Key; }
-
-    public String getWindowsNTKey() {
-        return WindowsNTKey;
-    }
-    
 }

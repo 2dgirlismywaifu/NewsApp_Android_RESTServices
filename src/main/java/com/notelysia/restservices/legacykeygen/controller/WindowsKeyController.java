@@ -20,6 +20,8 @@ import com.notelysia.restservices.legacykeygen.model.winoem.WindowsOEMKey;
 import com.notelysia.restservices.legacykeygen.model.winrtm.WindowsRTMKey;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +34,7 @@ import java.util.HashMap;
 @RequestMapping("/api/v2")
 @Tag(name = "Legacy Windows Key", description = "Legacy Windows Key Generator")
 public class WindowsKeyController {
-
+    private static final Logger logger = LogManager.getLogger(WindowsKeyController.class);
     WindowsOEMKey winOEMKey = new WindowsOEMKey();
     WindowsRTMKey winRTMKey = new WindowsRTMKey();
 
@@ -52,7 +54,8 @@ public class WindowsKeyController {
                 respond.put("Windows NT 4 Retail", winRTMKey.getWindowsNTKey());
             }
             default -> {
-                respond.put("key", "Invalid OS");
+                respond.put("key", "Invalid OS: " + os);
+                logger.error("Invalid OS: " + os);
                 return ResponseEntity.ok(respond);
             }
         }

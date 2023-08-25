@@ -20,6 +20,8 @@ import com.notelysia.restservices.legacykeygen.model.officekey.Office95;
 import com.notelysia.restservices.legacykeygen.model.officekey.Office97;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +34,7 @@ import java.util.HashMap;
 @RequestMapping("/api/v2")
 @Tag(name = "Legacy Office Key", description = "Legacy Office Key Generator")
 public class OfficeKeyController {
+    private static final Logger logger = LogManager.getLogger(OfficeKeyController.class);
     Office95 office95 = new Office95();
     Office97 office97 = new Office97();
     @GetMapping(value = "/office", params = {"version"})
@@ -48,7 +51,10 @@ public class OfficeKeyController {
                 respond.put("Office 97", office97.getOffice97Key());
                 return ResponseEntity.ok(respond);
             }
-            default -> respond.put("key", "Invalid Version");
+            default -> {
+                respond.put("key", "Invalid Version: " + version);
+                logger.error("Invalid Version: " + version);
+            }
         }
         return ResponseEntity.ok(respond);
     }

@@ -32,7 +32,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @SpringBootApplication(exclude = {UserDetailsServiceAutoConfiguration.class})
 @EnableWebMvc
 public class MyRestApplication {
-
     @Bean
     public WebMvcConfigurer customConfigurer() {
         return new WebMvcConfigurer() {

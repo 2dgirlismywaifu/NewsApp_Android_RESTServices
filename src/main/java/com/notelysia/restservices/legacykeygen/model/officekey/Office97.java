@@ -16,13 +16,12 @@
 
 package com.notelysia.restservices.legacykeygen.model.officekey;
 
+import lombok.Getter;
+
 public class Office97 {
     String XXXXKey = new XXXXKey().generateOffice97Key();
     String XXXXXXXKey = new XXXXXXXKey().generateKey();
+    @Getter
     String office97Key = XXXXKey + "-" + XXXXXXXKey;
 
-    public String getOffice97Key() {
-        return office97Key;
-    }
-    
 }

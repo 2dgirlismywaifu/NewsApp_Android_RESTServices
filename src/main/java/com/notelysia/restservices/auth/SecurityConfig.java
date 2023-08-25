@@ -17,6 +17,10 @@
 
 package com.notelysia.restservices.auth;
 
+
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -38,16 +42,18 @@ import static org.springframework.security.web.util.matcher.AntPathRequestMatche
 @EnableWebSecurity
 @Order(1)
 public class SecurityConfig {
+    private static final Logger logger = LogManager.getLogger(SecurityConfig.class);
     Properties props = new Properties();
     FileInputStream in;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        in = new FileInputStream("spring_conf/authkey.properties");
-        props.load(in);
-        in.close();
-        ApiKeyAuthFilter filter = new ApiKeyAuthFilter(new String(Base64.getDecoder().decode(props.getProperty("auth-token-header-name"))));
-        filter.setAuthenticationManager(
+    public SecurityFilterChain filterChain(HttpSecurity http) {
+        try {
+            in = new FileInputStream("spring_conf/authkey.properties");
+            props.load(in);
+            in.close();
+            ApiKeyAuthFilter filter = new ApiKeyAuthFilter(new String(Base64.getDecoder().decode(props.getProperty("auth-token-header-name"))));
+            filter.setAuthenticationManager(
             authentication -> {
               String principal = (String) authentication.getPrincipal();
               if (!Objects.equals(new String(Base64.getDecoder().decode(props.getProperty("auth-token"))), principal)) {
@@ -57,22 +63,24 @@ public class SecurityConfig {
               authentication.setAuthenticated(true);
               return authentication;
             });
-        //exclude swagger from authentication
-
-        http.authorizeHttpRequests((request -> request
-                        //Exclude swagger from authentication
-                        .requestMatchers(antMatcher("/v3/api-docs/**"), antMatcher("/swagger-ui/**"), antMatcher("/swagger-ui.html")).permitAll()
-                        //Exclude for Legacy Key Generator
-                        .requestMatchers(antMatcher("/api/v2/win"), antMatcher("/api/v2/office")).permitAll()
-                        .anyRequest().authenticated()))
-            .addFilter(filter)
-            .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            http.authorizeHttpRequests((request -> request
+                            //Exclude swagger from authentication
+                            .requestMatchers(antMatcher("/v3/api-docs/**"), antMatcher("/swagger-ui/**"), antMatcher("/swagger-ui.html")).permitAll()
+                            //Exclude for Legacy Key Generator
+                            .requestMatchers(antMatcher("/api/v2/win"), antMatcher("/api/v2/office")).permitAll()
+                            .anyRequest().authenticated()))
                 .addFilter(filter)
-                .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(
-                sessionManagement ->
-                    sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        return http.build();
+                .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                    .addFilter(filter)
+                    .csrf(AbstractHttpConfigurer::disable)
+                    .sessionManagement(
+                    sessionManagement ->
+                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+            return http.build();
+        } catch (Exception e) {
+            logger.error("Error: " + e, e);
+            return null;
+        }
     }
 
 }

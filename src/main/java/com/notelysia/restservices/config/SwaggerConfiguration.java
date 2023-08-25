@@ -21,38 +21,47 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Base64;
 import java.util.Properties;
 
 @Configuration
 public class SwaggerConfiguration {
-
+    private static final Logger logger = LogManager.getLogger(SwaggerConfiguration.class);
     Properties props = new Properties();
     FileInputStream in;
 
     @Bean
-    public OpenAPI customOpenAPI() throws Exception {
-        in = new FileInputStream("spring_conf/authkey.properties");
-        props.load(in);
-        in.close();
-        return new OpenAPI()
-                //Edit footer, change /v3/api-docs
-                .externalDocs(new io.swagger.v3.oas.models.ExternalDocumentation()
-                        .description("Open Source Project NewsApp-RESTServices")
-                        .url("https://github.com/2dgirlismywaifu/NewsApp-RESTServices"))
-                .info(new Info().title("NewsApp Reset API").version("2.0.0"))
-                // Components section defines Security Scheme "mySecretHeader"
-                .components(new Components()
-                        .addSecuritySchemes("mySecretHeader", new SecurityScheme()
-                                .type(SecurityScheme.Type.APIKEY)
-                                .in(SecurityScheme.In.HEADER)
-                                .name(new String(Base64.getDecoder().decode(props.getProperty("auth-token-header-name"))))))
+    public OpenAPI customOpenAPI() {
 
-                // AddSecurityItem section applies created scheme globally
-                .addSecurityItem(new SecurityRequirement().addList("mySecretHeader"));
+        try {
+            in = new FileInputStream("spring_conf/authkey.properties");
+            props.load(in);
+            in.close();
+            return new OpenAPI()
+                    //Edit footer, change /v3/api-docs
+                    .externalDocs(new io.swagger.v3.oas.models.ExternalDocumentation()
+                            .description("Open Source Project NewsApp-RESTServices")
+                            .url("https://github.com/2dgirlismywaifu/NewsApp-RESTServices"))
+                    .info(new Info().title("NewsApp Reset API").version("2.0.0"))
+                    // Components section defines Security Scheme "mySecretHeader"
+                    .components(new Components()
+                            .addSecuritySchemes("mySecretHeader", new SecurityScheme()
+                                    .type(SecurityScheme.Type.APIKEY)
+                                    .in(SecurityScheme.In.HEADER)
+                                    .name(new String(Base64.getDecoder().decode(props.getProperty("auth-token-header-name"))))))
+
+                    // AddSecurityItem section applies created scheme globally
+                    .addSecurityItem(new SecurityRequirement().addList("mySecretHeader"));
+        } catch (IOException e) {
+            logger.error("Error : " +e, e);
+            return null;
+        }
     }
 }

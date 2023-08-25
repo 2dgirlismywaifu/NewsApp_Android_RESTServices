@@ -17,6 +17,8 @@
 package com.notelysia.restservices.config.database;
 
 import jakarta.persistence.EntityManagerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
@@ -41,22 +43,28 @@ import java.util.Properties;
         transactionManagerRef = "NewsAppTransactionManager",
         basePackages = {"com.notelysia.restservices.newsapp.jparepo"})
 public class NewsAppDatasourceConfig {
+    private static final Logger logger = LogManager.getLogger(NewsAppDatasourceConfig.class);
     //Create a bean for DataSource
     Properties props = new Properties();
     FileInputStream in;
     @Primary
     @Bean (name = "newsapp_datasource")
-    public DataSource newsappSource() throws IOException {
+    public DataSource newsappSource(){
         DataSourceBuilder<?> dataSourceBuilder;
-        in = new FileInputStream("spring_conf/db.properties");
-        props.load(in);
-        in.close();
-        dataSourceBuilder = DataSourceBuilder.create();
-        dataSourceBuilder.driverClassName(props.getProperty("jdbc.sqlserver"));
-        dataSourceBuilder.url(props.getProperty("jdbc.url"));
-        dataSourceBuilder.username(props.getProperty("jdbc.username"));
-        dataSourceBuilder.password(props.getProperty("jdbc.password"));
-        return dataSourceBuilder.build();
+        try {
+            in = new FileInputStream("spring_conf/db.properties");
+            props.load(in);
+            in.close();
+            dataSourceBuilder = DataSourceBuilder.create();
+            dataSourceBuilder.driverClassName(props.getProperty("jdbc.sqlserver"));
+            dataSourceBuilder.url(props.getProperty("jdbc.url"));
+            dataSourceBuilder.username(props.getProperty("jdbc.username"));
+            dataSourceBuilder.password(props.getProperty("jdbc.password"));
+            return dataSourceBuilder.build();
+        } catch (IOException e) {
+            logger.error("Error: " + e, e);
+            return null;
+        }
     }
 
     @Primary
