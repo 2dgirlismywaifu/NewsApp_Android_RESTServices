@@ -126,7 +126,16 @@ Notes: You can use Azure App Services with F1 Plan (Free Forever), but performan
     ```properties
     #db.properties
     #this is jdbc connect use for JPA, it will not commit in Github
-    jdbc.sqlserver=(your sql driver)
+    jdbc.sqlserver=com.microsoft.sqlserver.jdbc.SQLServerDriver
+    jdbc.mysql=com.mysql.jdbc.Driver
+    jdbc.oracle=oracle.jdbc.driver.OracleDriver
+    jdbc.postgresql=org.postgresql.Driver
+    jdbc.h2=org.h2.Driver
+    jdbc.hsqldb=org.hsqldb.jdbcDriver
+    jdbc.mariadb=org.mariadb.jdbc.Driver
+    jdbc.db2=com.ibm.db2.jcc.DB2Driver
+    jdbc.sysbase=sybase.jdbc.sqlanywhere.IDriver
+    jdbc.msaccess=net.ucanaccess.jdbc.UcanaccessDriver
     #Database for first connection
     jdbc.url=(your url)
     jdbc.username=(your username)

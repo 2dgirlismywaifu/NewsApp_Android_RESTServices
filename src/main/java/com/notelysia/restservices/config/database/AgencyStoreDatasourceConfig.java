@@ -25,7 +25,6 @@ import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -40,17 +39,17 @@ import java.util.Properties;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
-        entityManagerFactoryRef = "NewsAppEntityManagerFactory",
-        transactionManagerRef = "NewsAppTransactionManager",
+        entityManagerFactoryRef = "AgencyStoreEntityManagerFactory",
+        transactionManagerRef = "AgencyStoreTransactionManager",
         basePackages = {"com.notelysia.restservices.newsapp.jparepo"})
-public class NewsAppDatasourceConfig {
-    private static final Logger logger = LogManager.getLogger(NewsAppDatasourceConfig.class);
+public class AgencyStoreDatasourceConfig {
+    private static final Logger logger = LogManager.getLogger(AgencyStoreDatasourceConfig.class);
     //Create a bean for DataSource
     Properties props = new Properties();
     FileInputStream in;
-    @Primary
-    @Bean (name = "newsapp_datasource")
-    public DataSource newsappSource(){
+
+    @Bean (name = "agencystore_datasource")
+    public DataSource agencyStoreSource(){
         DataSourceBuilder<?> dataSourceBuilder;
         try {
             in = new FileInputStream("spring_conf/db.properties");
@@ -58,9 +57,9 @@ public class NewsAppDatasourceConfig {
             in.close();
             dataSourceBuilder = DataSourceBuilder.create();
             dataSourceBuilder.driverClassName(props.getProperty("jdbc.sqlserver"));
-            dataSourceBuilder.url(props.getProperty("jdbc.url"));
-            dataSourceBuilder.username(props.getProperty("jdbc.username"));
-            dataSourceBuilder.password(props.getProperty("jdbc.password"));
+            dataSourceBuilder.url(props.getProperty("jdbc.third.url"));
+            dataSourceBuilder.username(props.getProperty("jdbc.third.username"));
+            dataSourceBuilder.password(props.getProperty("jdbc.third.password"));
             return dataSourceBuilder.build();
         } catch (IOException e) {
             logger.error("Error: " + e, e);
@@ -68,21 +67,21 @@ public class NewsAppDatasourceConfig {
         }
     }
 
-    @Primary
-	@Bean(name = "NewsAppEntityManagerFactory")
-	public LocalContainerEntityManagerFactoryBean primaryEntityManagerFactory(EntityManagerFactoryBuilder builder,
-                                                                              @Qualifier("newsapp_datasource")
-                                                                              DataSource newsappSource) {
+
+	@Bean(name = "AgencyStoreEntityManagerFactory")
+	public LocalContainerEntityManagerFactoryBean thirdEntityManagerFactory(EntityManagerFactoryBuilder builder,
+                                                                              @Qualifier("agencystore_datasource")
+                                                                              DataSource agencyStoreSource) {
         return builder
-				.dataSource(newsappSource)
+				.dataSource(agencyStoreSource)
 				.packages("com.notelysia.restservices.newsapp.model")
                 .properties(new HibernateProperties().getSQLServerProperties())
 				.build();
 	}
-    @Bean(name = "NewsAppTransactionManager")
-	public PlatformTransactionManager primaryTransactionManager(
-			@Qualifier("NewsAppEntityManagerFactory") EntityManagerFactory primaryEntityManagerFactory) {
-		return new JpaTransactionManager(primaryEntityManagerFactory);
+    @Bean(name = "AgencyStoreTransactionManager")
+	public PlatformTransactionManager thirdTransactionManager(
+			@Qualifier("AgencyStoreEntityManagerFactory") EntityManagerFactory thirdEntityManagerFactory) {
+		return new JpaTransactionManager(thirdEntityManagerFactory);
 	}
 
 
