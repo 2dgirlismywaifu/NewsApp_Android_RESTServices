@@ -1,4 +1,4 @@
-<h1 align="center">Source will rename in the future</h1>
+<h1 align="center">Maintaining now, will open back soon</h1>
 <a name="readme-top"></a>
 
 <!-- PROJECT LOGO -->
