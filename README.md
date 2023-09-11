@@ -69,8 +69,7 @@
 * This is AIO Spring Boot REST Services for all of my project. You can access Swagger UI 3.0 for testting.
 * You can deloy it Microsoft Azure App Services. And also, you can deloy and run it in your local services in Windows and Linux. MacOS can run it, but nobody use MacOS for server.
 * Link demo: http://notelysiaserver.ddns.net:2984/swagger-ui/index.html
-* API Auth-key (Encrypted): m5sDzL1CNHbNmj4PwoOCksnYEA7C/q/5I4YEt+OfaXY=
-* Secret key: c1d03d02ae8f472662acfb2b9876ac91087e00ff
+* API Auth-key for testing (BASE64): dGhpc2lzZml4c2VjcmV0cGFzc3dvcmRsZWFr
 * Decrypt it, you will find the answer. If you too lazy, download this source and write your own application.properties file.
 
 
