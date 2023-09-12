@@ -41,7 +41,7 @@ import java.util.Properties;
 @EnableJpaRepositories(
         entityManagerFactoryRef = "BookStoreEntityManagerFactory",
         transactionManagerRef = "BookStoreTransactionManager",
-        basePackages = {"com.notelysia.restservices.newsapp.jparepo"})
+        basePackages = {"com.notelysia.restservices.bookstore.jparepo"})
 public class BookStoreDatasourceConfig {
     private static final Logger logger = LogManager.getLogger(BookStoreDatasourceConfig.class);
     //Create a bean for DataSource
@@ -74,7 +74,7 @@ public class BookStoreDatasourceConfig {
                                                                               DataSource bookstoreSource) {
         return builder
 				.dataSource(bookstoreSource)
-				.packages("com.notelysia.restservices.newsapp.model")
+				.packages("com.notelysia.restservices.bookstore.model")
                 .properties(new HibernateProperties().getSQLServerProperties())
 				.build();
 	}

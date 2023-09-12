@@ -50,6 +50,7 @@ public class SwaggerConfiguration {
                             .description("Open Source Project NewsApp-RESTServices")
                             .url("https://github.com/2dgirlismywaifu/NewsApp-RESTServices"))
                     .info(new Info().title("NewsApp Reset API").version("2.0.0"))
+                    //HTTP or HTTPS
                     // Components section defines Security Scheme "mySecretHeader"
                     .components(new Components()
                             .addSecuritySchemes("mySecretHeader", new SecurityScheme()

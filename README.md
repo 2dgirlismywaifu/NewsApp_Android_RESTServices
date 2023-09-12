@@ -1,4 +1,4 @@
-<h1 align="center">Maintaining now, will open back soon</h1>
+<h1 align="center">Server ON with SSL Secure</h1>
 <a name="readme-top"></a>
 
 <!-- PROJECT LOGO -->
@@ -68,7 +68,7 @@
 
 * This is AIO Spring Boot REST Services for all of my project. You can access Swagger UI 3.0 for testting.
 * You can deloy it Microsoft Azure App Services. And also, you can deloy and run it in your local services in Windows and Linux. MacOS can run it, but nobody use MacOS for server.
-* Link demo: http://notelysiaserver.ddns.net:2984/swagger-ui/index.html
+* Link demo: https://notelysiaserver.ddns.net:3000/swagger-ui/index.html
 * API Auth-key for testing (BASE64): dGhpc2lzZml4c2VjcmV0cGFzc3dvcmRsZWFr
 * Decrypt it, you will find the answer. If you too lazy, download this source and write your own application.properties file.
 
