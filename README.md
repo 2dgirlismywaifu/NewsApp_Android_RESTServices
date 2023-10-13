@@ -1,4 +1,3 @@
-<h1 align="center">Temporary shutdown, overheated issues</h1>
 <a name="readme-top"></a>
 
 <!-- PROJECT LOGO -->
