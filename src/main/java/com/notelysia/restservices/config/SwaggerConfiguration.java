@@ -61,7 +61,7 @@ public class SwaggerConfiguration {
                     // AddSecurityItem section applies created scheme globally
                     .addSecurityItem(new SecurityRequirement().addList("mySecretHeader"));
         } catch (IOException e) {
-            logger.error("Error : " +e, e);
+            logger.error("Error : " + e, e);
             return null;
         }
     }

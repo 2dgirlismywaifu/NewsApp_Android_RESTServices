@@ -19,26 +19,26 @@ package com.notelysia.restservices.exception;
 import java.util.Date;
 
 public class ErrorDetail {
-    private Date timestamp;
     private final String message;
     private final String details;
+    private Date timestamp;
 
     public ErrorDetail(Date timestamp, String message, String details) {
-         super();
-         this.timestamp = timestamp;
-         this.message = message;
-         this.details = details;
+        super();
+        this.timestamp = timestamp;
+        this.message = message;
+        this.details = details;
     }
 
     public Date getTimestamp() {
-         return timestamp;
+        return timestamp;
     }
 
     public String getMessage() {
-         return message;
+        return message;
     }
 
     public String getDetails() {
-         return details;
+        return details;
     }
 }

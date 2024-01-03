@@ -18,7 +18,6 @@
 package com.notelysia.restservices.auth;
 
 
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.Bean;
@@ -54,28 +53,28 @@ public class SecurityConfig {
             in.close();
             ApiKeyAuthFilter filter = new ApiKeyAuthFilter(new String(Base64.getDecoder().decode(props.getProperty("auth-token-header-name"))));
             filter.setAuthenticationManager(
-            authentication -> {
-              String principal = (String) authentication.getPrincipal();
-              if (!Objects.equals(new String(Base64.getDecoder().decode(props.getProperty("auth-token"))), principal)) {
-                throw new BadCredentialsException(
-                    "The API key was not found or not the expected value.");
-              }
-              authentication.setAuthenticated(true);
-              return authentication;
-            });
+                    authentication -> {
+                        String principal = (String) authentication.getPrincipal();
+                        if (!Objects.equals(new String(Base64.getDecoder().decode(props.getProperty("auth-token"))), principal)) {
+                            throw new BadCredentialsException(
+                                    "The API key was not found or not the expected value.");
+                        }
+                        authentication.setAuthenticated(true);
+                        return authentication;
+                    });
             http.authorizeHttpRequests((request -> request
                             //Exclude swagger from authentication
                             .requestMatchers(antMatcher("/v3/api-docs/**"), antMatcher("/swagger-ui/**"), antMatcher("/swagger-ui.html")).permitAll()
                             //Exclude for Legacy Key Generator
                             .requestMatchers(antMatcher("/api/v2/win"), antMatcher("/api/v2/office")).permitAll()
                             .anyRequest().authenticated()))
-                .addFilter(filter)
-                .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                    .addFilter(filter)
+                    .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                     .addFilter(filter)
                     .csrf(AbstractHttpConfigurer::disable)
                     .sessionManagement(
-                    sessionManagement ->
-                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                            sessionManagement ->
+                                    sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
             return http.build();
         } catch (Exception e) {
             logger.error("Error: " + e, e);

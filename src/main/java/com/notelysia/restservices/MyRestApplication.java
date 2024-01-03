@@ -32,6 +32,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @SpringBootApplication(exclude = {UserDetailsServiceAutoConfiguration.class})
 @EnableWebMvc
 public class MyRestApplication {
+    public static void main(String[] args) {
+
+        SpringApplication app = new SpringApplication(MyRestApplication.class);
+        //replace 2984 with your desired port number
+        app.setDefaultProperties(java.util.Collections.singletonMap("server.port", "2984"));
+        app.run(args);
+    }
+
     @Bean
     public WebMvcConfigurer customConfigurer() {
         return new WebMvcConfigurer() {
@@ -40,13 +48,6 @@ public class MyRestApplication {
                 configurer.defaultContentType(MediaType.APPLICATION_JSON);
             }
         };
-    }
-    public static void main(String[] args) {
-
-        SpringApplication app = new SpringApplication(MyRestApplication.class);
-        //replace 2984 with your desired port number
-        app.setDefaultProperties(java.util.Collections.singletonMap("server.port", "2984"));
-        app.run(args);
     }
 
 }

@@ -29,12 +29,13 @@ import java.util.Date;
 @ControllerAdvice
 public class GlobalExceptionHandler {
     private static final Logger logger = LogManager.getLogger(GlobalExceptionHandler.class);
+
     @ExceptionHandler(ResourceNotFound.class)
     public ResponseEntity<?> resourceNotFoundException(ResourceNotFound ex, WebRequest request) {
-         ErrorDetail errorDetails = new ErrorDetail(new Date(), ex.getMessage(),
-                 request.getDescription(false));
-         logger.error("Resource not found: " + ex.getMessage());
-         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+        ErrorDetail errorDetails = new ErrorDetail(new Date(), ex.getMessage(),
+                request.getDescription(false));
+        logger.error("Resource not found: " + ex.getMessage());
+        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(Exception.class)

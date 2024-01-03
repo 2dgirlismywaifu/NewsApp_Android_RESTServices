@@ -48,9 +48,10 @@ public class NewsAppDatasourceConfig {
     //Create a bean for DataSource
     Properties props = new Properties();
     FileInputStream in;
+
     @Primary
-    @Bean (name = "newsapp_datasource")
-    public DataSource newsappSource(){
+    @Bean(name = "newsapp_datasource")
+    public DataSource newsappSource() {
         DataSourceBuilder<?> dataSourceBuilder;
         try {
             in = new FileInputStream("spring_conf/db.properties");
@@ -69,21 +70,22 @@ public class NewsAppDatasourceConfig {
     }
 
     @Primary
-	@Bean(name = "NewsAppEntityManagerFactory")
-	public LocalContainerEntityManagerFactoryBean primaryEntityManagerFactory(EntityManagerFactoryBuilder builder,
+    @Bean(name = "NewsAppEntityManagerFactory")
+    public LocalContainerEntityManagerFactoryBean primaryEntityManagerFactory(EntityManagerFactoryBuilder builder,
                                                                               @Qualifier("newsapp_datasource")
                                                                               DataSource newsappSource) {
         return builder
-				.dataSource(newsappSource)
-				.packages("com.notelysia.restservices.newsapp.model")
+                .dataSource(newsappSource)
+                .packages("com.notelysia.restservices.newsapp.model")
                 .properties(new HibernateProperties().getSQLServerProperties())
-				.build();
-	}
+                .build();
+    }
+
     @Bean(name = "NewsAppTransactionManager")
-	public PlatformTransactionManager primaryTransactionManager(
-			@Qualifier("NewsAppEntityManagerFactory") EntityManagerFactory primaryEntityManagerFactory) {
-		return new JpaTransactionManager(primaryEntityManagerFactory);
-	}
+    public PlatformTransactionManager primaryTransactionManager(
+            @Qualifier("NewsAppEntityManagerFactory") EntityManagerFactory primaryEntityManagerFactory) {
+        return new JpaTransactionManager(primaryEntityManagerFactory);
+    }
 
 
 }

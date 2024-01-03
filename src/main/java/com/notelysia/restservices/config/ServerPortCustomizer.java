@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
 public class ServerPortCustomizer implements WebServerFactoryCustomizer<ConfigurableWebServerFactory> {
     @Override
     public void customize(ConfigurableWebServerFactory factory) {
-            //replace 2984 with your desired port number
-            factory.setPort(2984);
+        //replace 2984 with your desired port number
+        factory.setPort(2984);
     }
 }

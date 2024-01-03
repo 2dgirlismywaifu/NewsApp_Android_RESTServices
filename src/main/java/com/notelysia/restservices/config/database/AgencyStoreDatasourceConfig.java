@@ -48,8 +48,8 @@ public class AgencyStoreDatasourceConfig {
     Properties props = new Properties();
     FileInputStream in;
 
-    @Bean (name = "agencystore_datasource")
-    public DataSource agencyStoreSource(){
+    @Bean(name = "agencystore_datasource")
+    public DataSource agencyStoreSource() {
         DataSourceBuilder<?> dataSourceBuilder;
         try {
             in = new FileInputStream("spring_conf/db.properties");
@@ -68,21 +68,22 @@ public class AgencyStoreDatasourceConfig {
     }
 
 
-	@Bean(name = "AgencyStoreEntityManagerFactory")
-	public LocalContainerEntityManagerFactoryBean thirdEntityManagerFactory(EntityManagerFactoryBuilder builder,
-                                                                              @Qualifier("agencystore_datasource")
-                                                                              DataSource agencyStoreSource) {
+    @Bean(name = "AgencyStoreEntityManagerFactory")
+    public LocalContainerEntityManagerFactoryBean thirdEntityManagerFactory(EntityManagerFactoryBuilder builder,
+                                                                            @Qualifier("agencystore_datasource")
+                                                                            DataSource agencyStoreSource) {
         return builder
-				.dataSource(agencyStoreSource)
-				.packages("com.notelysia.restservices.agencystore.model")
+                .dataSource(agencyStoreSource)
+                .packages("com.notelysia.restservices.agencystore.model")
                 .properties(new HibernateProperties().getSQLServerProperties())
-				.build();
-	}
+                .build();
+    }
+
     @Bean(name = "AgencyStoreTransactionManager")
-	public PlatformTransactionManager thirdTransactionManager(
-			@Qualifier("AgencyStoreEntityManagerFactory") EntityManagerFactory thirdEntityManagerFactory) {
-		return new JpaTransactionManager(thirdEntityManagerFactory);
-	}
+    public PlatformTransactionManager thirdTransactionManager(
+            @Qualifier("AgencyStoreEntityManagerFactory") EntityManagerFactory thirdEntityManagerFactory) {
+        return new JpaTransactionManager(thirdEntityManagerFactory);
+    }
 
 
 }

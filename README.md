@@ -9,16 +9,17 @@
 
 <h3 align="center", style="font-size:25px">NOTElysia REST Services (Server ON)</h3>
 <p1 align="center", style="font-size:20px">Ready for Microsft Azure Services</p1><br />
-  <a href="https://github.com/2dgirlismywaifu", style="font-size:20px"><strong>AIO REST Services For My Own Project</strong></a>
+<a href="https://github.com/2dgirlismywaifu", style="font-size:20px"><strong>AIO REST Services For My Own
+Project</strong></a>
 <hr>
 
- ![Contributors][contributors-shield]
-  [![Forks][forks-shield]][forks-url]
-  [![Stargazers][stars-shield]][stars-url]
-  ![Reposize][size-shield]
-  ![Lastcommit][commit-shield]
-  [![Issues][issues-shield]][issues-url]
-  [![APACHE License][license-shield]][license-url]
+![Contributors][contributors-shield]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+![Reposize][size-shield]
+![Lastcommit][commit-shield]
+[![Issues][issues-shield]][issues-url]
+[![APACHE License][license-shield]][license-url]
 
 </div>
   <div align="center">
@@ -63,14 +64,16 @@
 
 
 <!-- ABOUT THE PROJECT -->
+
 # **About The Project**
 
 * This is AIO Spring Boot REST Services for all of my project. You can access Swagger UI 3.0 for testting.
-* You can deloy it Microsoft Azure App Services. And also, you can deloy and run it in your local services in Windows and Linux. MacOS can run it, but nobody use MacOS for server.
+* You can deloy it Microsoft Azure App Services. And also, you can deloy and run it in your local services in Windows
+  and Linux. MacOS can run it, but nobody use MacOS for server.
 * Link demo: https://notelysiaserver.ddns.net:3000/swagger-ui/index.html
 * API Auth-key for testing (BASE64): dGhpc2lzZml4c2VjcmV0cGFzc3dvcmRsZWFr
-* Decrypt it, you will find the answer. If you too lazy, download this source and write your own application.properties file.
-
+* Decrypt it, you will find the answer. If you too lazy, download this source and write your own application.properties
+  file.
 
 [![Product Name Screen Shot][product-screenshot]](https://github.com/2dgirlismywaifu/NewsApp_Android_RESTServices)
 <div align="center">
@@ -79,42 +82,61 @@
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## **Legacy Key Generator**
-  * Link project: https://github.com/2dgirlismywaifu/Legacy_Key_Generator
-  * This service will generate a vail Legacy Key for Windows 95, Windows NT 4.0 and Office 95 - 97. You can read the rule in the link project.
-  * Remember: This service is only for research and purpose. Do NOT Piracy any paid software. Buy the license if you want use it.
-    <br /> <br />
-   [![Legacy Key Generator Screen short][legacy-key-screenshot]](https://github.com/2dgirlismywaifu/NewsAPP-RSS-NewsAPI)
+
+* Link project: https://github.com/2dgirlismywaifu/Legacy_Key_Generator
+* This service will generate a vail Legacy Key for Windows 95, Windows NT 4.0 and Office 95 - 97. You can read the rule
+  in the link project.
+* Remember: This service is only for research and purpose. Do NOT Piracy any paid software. Buy the license if you want
+  use it.
+  <br /> <br />
+  [![Legacy Key Generator Screen short][legacy-key-screenshot]](https://github.com/2dgirlismywaifu/NewsAPP-RSS-NewsAPI)
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## **NewsAPP-RSS-NewsAPI**
-  * Link project: https://github.com/2dgirlismywaifu/NewsAPP-RSS-NewsAPI
-  * This service intermediaries between the database server and the application tasks: account login, account registration, account recovery, user information update, and request lists: source news, country providing news (NewsAPI), stored image url from Azure Blob Storage...
+
+* Link project: https://github.com/2dgirlismywaifu/NewsAPP-RSS-NewsAPI
+* This service intermediaries between the database server and the application tasks: account login, account
+  registration, account recovery, user information update, and request lists: source news, country providing news (
+  NewsAPI), stored image url from Azure Blob Storage...
   <br /> <br />
   [![NewsAPP-RSS-NewsAPI Screen short][news-newsapi-screenshot]](https://github.com/2dgirlismywaifu/NewsAPP-RSS-NewsAPI)
+
   <div align="center">
   <p1 align="center", style="font-size:18px">NewsAPP-RSS-NewsAPI demo in Swagger UI 3.0</p1><br />
   </div>
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## **Build with**
-  * [![Next][Spring-boot]][SpringBoot-url]
-  * [![Azure][Azure-services]][azure-url]
+
+* [![Next][Spring-boot]][SpringBoot-url]
+* [![Azure][Azure-services]][azure-url]
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- GETTING STARTED -->
+
 # **Getting Started**
+
 - This project only use for research and purpose. It is NOT available for retail. \
 - Follow all instruction to run project in your local devices.
+
 ## **Prerequisites**
+
 Before use this project, you need have:
+
 * Java IDE like (Eclipse, IntelliJ IDEA, Apache Netbeans). Recommend JetBrains IntelliJ IDEA
 * If you do not want use IDE, you can use code editor like Visual Studio Code
 * Sign up Free Account Microsoft Azure Portal if you do not have any account
-* Create free Azure SQL Database S0: [Free Azure SQL Database](https://learn.microsoft.com/en-us/azure/azure-sql/database/free-sql-db-free-account-how-to-deploy?view=azuresql)
-* Create App Services B1 Plan (13$/month): [NewsApp Android RESTServices](https://github.com/2dgirlismywaifu/NewsApp_Android_RESTServices)
+* Create free Azure SQL Database
+  S0: [Free Azure SQL Database](https://learn.microsoft.com/en-us/azure/azure-sql/database/free-sql-db-free-account-how-to-deploy?view=azuresql)
+* Create App Services B1 Plan (
+  13$/month): [NewsApp Android RESTServices](https://github.com/2dgirlismywaifu/NewsApp_Android_RESTServices)
 * Java Development Kit 17 and add Java to OS environment\
-Notes: You can use Azure App Services with F1 Plan (Free Forever), but performance is very slow.
+  Notes: You can use Azure App Services with F1 Plan (Free Forever), but performance is very slow.
+
 ## **Installation**
+
 1. Clone the repo
     ```sh
     git clone https://github.com/2dgirlismywaifu/NewsApp_Android_RESTServices.git
@@ -189,36 +211,44 @@ Notes: You can use Azure App Services with F1 Plan (Free Forever), but performan
     - Choose operating system: Linux or Windows are okay.
     - Choose the environment: the source code is built using Java 17, so I will choose Java 17 and Java SE
     ```
-  - Press “y” in your keyboard to confirm and proceed with automatic configuration in pom.xml file.
+
+- Press “y” in your keyboard to confirm and proceed with automatic configuration in pom.xml file.
+
 6. Open terminal in root folder project and run this command
 
     ```sh
       ./mvnw package azure-webapp:deploy
     ```
-  - The library will require login to Azure Portal account via OpenAuth2 to get account information and deploy to App Service configured as above.
-  - Note: No account data is retained in the source code after deployment. Every redeployment will ask to login again.
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+- The library will require login to Azure Portal account via OpenAuth2 to get account information and deploy to App
+  Service configured as above.
+- Note: No account data is retained in the source code after deployment. Every redeployment will ask to login again.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 # **Demo**
 
 - Will upload later
 
-
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 # **Known Issues**
+
 1. You tell me :)\
-See the [open issues](https://github.com/2dgirlismywaifu/NewsApp_Android_RESTServices/issues) for a full list of proposed features (and known issues).
+   See the [open issues](https://github.com/2dgirlismywaifu/NewsApp_Android_RESTServices/issues) for a full list of
+   proposed features (and known issues).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- CONTRIBUTING -->
+
 # **Contributing**
 
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any
+contributions you make are **greatly appreciated**.
 
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also
+simply open an issue with the tag "enhancement".
 Don't forget to give the project a star! Thanks again!
 
 1. Fork this Project
@@ -242,8 +272,11 @@ Don't forget to give the project a star! Thanks again!
 
 
 <!-- LICENSE -->
+
 # **License**
+
 - **Do NOT delete my header copyright if you fork or clone this project for personal use**
+
 ```
             Copyright By @2dgirlismywaifu (2023)
 
@@ -259,41 +292,65 @@ Don't forget to give the project a star! Thanks again!
    See the License for the specific language governing permissions and
    limitations under the License.
 ```
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 
 <!-- CONTACT -->
+
 # **Contact**
+
 [![twitter-shield]][twitter-url] <br >
 My Gmail Workspace: longntworkspace2911@gmail.com <br>
-Project Link: [https://github.com/2dgirlismywaifu/NewsApp_Android_RESTServices](https://github.com/2dgirlismywaifu/NewsApp_Android_RESTServices)
+Project
+Link: [https://github.com/2dgirlismywaifu/NewsApp_Android_RESTServices](https://github.com/2dgirlismywaifu/NewsApp_Android_RESTServices)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+
 [contributors-shield]: https://img.shields.io/github/contributors/2dgirlismywaifu/NewsApp_Android_RESTServices.svg?style=for-the-badge&color=C9CBFF&logoColor=D9E0EE&labelColor=302D41
+
 [contributors-url]: https://github.com/2dgirlismywaifu/NewsApp_Android_RESTServices/graphs/contributors
+
 [forks-shield]: https://img.shields.io/github/forks/2dgirlismywaifu/NewsApp_Android_RESTServices.svg?style=for-the-badge&color=C9CBFF&logoColor=D9E0EE&labelColor=302D41
+
 [forks-url]: https://github.com/2dgirlismywaifu/NewsApp_Android_RESTServices/network/members
+
 [stars-shield]: https://img.shields.io/github/stars/2dgirlismywaifu/NewsApp_Android_RESTServices.svg?style=for-the-badge&color=C9CBFF&logoColor=D9E0EE&labelColor=302D41
+
 [size-shield]: https://img.shields.io/github/repo-size/2dgirlismywaifu/NewsApp_Android_RESTServices.svg?style=for-the-badge&color=C9CBFF&logoColor=D9E0EE&labelColor=302D41
+
 [linecount-shield]: https://img.shields.io/tokei/lines/github/2dgirlismywaifu/NewsApp_Android_RESTServices?color=C9CBFF&labelColor=302D41&style=for-the-badge
+
 [commit-shield]: https://img.shields.io/github/last-commit/2dgirlismywaifu/NewsApp_Android_RESTServices.svg?style=for-the-badge&color=C9CBFF&logoColor=D9E0EE&labelColor=302D41
+
 [stars-url]: https://github.com/2dgirlismywaifu/NewsApp_Android_RESTServices/stargazers
+
 [issues-shield]: https://img.shields.io/github/issues/2dgirlismywaifu/NewsApp_Android_RESTServices.svg?style=for-the-badge&color=C9CBFF&logoColor=D9E0EE&labelColor=302D41
+
 [issues-url]: https://github.com/2dgirlismywaifu/NewsApp_Android_RESTServices/issues
+
 [license-shield]: https://img.shields.io/github/license/2dgirlismywaifu/NewsApp_Android_RESTServices.svg?style=for-the-badge&color=C9CBFF&logoColor=D9E0EE&labelColor=302D41
+
 [license-url]: https://github.com/2dgirlismywaifu/NewsApp_Android_RESTServices/blob/main/LICENSE
+
 [twitter-shield]: https://img.shields.io/twitter/follow/MyWaifuis2DGirl?color=C9CBFF&label=%40MyWaifuis2DGirl&logo=TWITTER&logoColor=C9CBFF&style=for-the-badge
+
 [twitter-url]: https://twitter.com/MyWaifuis2DGirl
+
 [product-screenshot]: images/screenshot.png
+
 [news-newsapi-screenshot]: images/newsapp.png
+
 [legacy-key-screenshot]: images/legacykey.png
 
 [Spring-boot]: https://img.shields.io/badge/springboot-302D41?style=for-the-badge&logo=springboot&logoColor=34eb67
+
 [Springboot-url]: https://spring.io/
 
 [Azure-services]: https://img.shields.io/badge/Microsoft%20Azure%20Services-302D41?style=for-the-badge&logo=Microsoft&logoColor=3f1ceb
+
 [Azure-url]: https://azure.microsoft.com/en-us/get-started/azure-portal

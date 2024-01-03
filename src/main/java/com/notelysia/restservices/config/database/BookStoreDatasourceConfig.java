@@ -48,8 +48,8 @@ public class BookStoreDatasourceConfig {
     Properties props = new Properties();
     FileInputStream in;
 
-    @Bean (name = "bookstore_datasource")
-    public DataSource bookStoreSource(){
+    @Bean(name = "bookstore_datasource")
+    public DataSource bookStoreSource() {
         DataSourceBuilder<?> dataSourceBuilder;
         try {
             in = new FileInputStream("spring_conf/db.properties");
@@ -68,21 +68,22 @@ public class BookStoreDatasourceConfig {
     }
 
 
-	@Bean(name = "BookStoreEntityManagerFactory")
-	public LocalContainerEntityManagerFactoryBean secondEntityManagerFactory(EntityManagerFactoryBuilder builder,
-                                                                              @Qualifier("bookstore_datasource")
-                                                                              DataSource bookstoreSource) {
+    @Bean(name = "BookStoreEntityManagerFactory")
+    public LocalContainerEntityManagerFactoryBean secondEntityManagerFactory(EntityManagerFactoryBuilder builder,
+                                                                             @Qualifier("bookstore_datasource")
+                                                                             DataSource bookstoreSource) {
         return builder
-				.dataSource(bookstoreSource)
-				.packages("com.notelysia.restservices.bookstore.model")
+                .dataSource(bookstoreSource)
+                .packages("com.notelysia.restservices.bookstore.model")
                 .properties(new HibernateProperties().getSQLServerProperties())
-				.build();
-	}
+                .build();
+    }
+
     @Bean(name = "BookStoreTransactionManager")
-	public PlatformTransactionManager secondTransactionManager(
-			@Qualifier("BookStoreEntityManagerFactory") EntityManagerFactory secondEntityManagerFactory) {
-		return new JpaTransactionManager(secondEntityManagerFactory);
-	}
+    public PlatformTransactionManager secondTransactionManager(
+            @Qualifier("BookStoreEntityManagerFactory") EntityManagerFactory secondEntityManagerFactory) {
+        return new JpaTransactionManager(secondEntityManagerFactory);
+    }
 
 
 }
