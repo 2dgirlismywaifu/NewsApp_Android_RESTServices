@@ -30,6 +30,10 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Entity
 @Table(name = "user_passlogin")
+@SecondaryTables({
+        @SecondaryTable(name = "sync_subscribe", pkJoinColumns = @PrimaryKeyJoinColumn(name = "user_id")),
+        @SecondaryTable(name = "sync_news_favourite", pkJoinColumns = @PrimaryKeyJoinColumn(name = "user_id"))
+})
 public class UserPassLogin implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
