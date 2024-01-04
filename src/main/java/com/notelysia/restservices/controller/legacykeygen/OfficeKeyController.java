@@ -45,11 +45,11 @@ public class OfficeKeyController {
         HashMap<String, String> respond = new HashMap<>();
         switch (version) {
             case "95" -> {
-                respond.put("Office 95", office95.getOffice95Key());
+                respond.put("Office 95", this.office95.getOffice95Key());
                 return ResponseEntity.ok(respond);
             }
             case "97" -> {
-                respond.put("Office 97", office97.getOffice97Key());
+                respond.put("Office 97", this.office97.getOffice97Key());
                 return ResponseEntity.ok(respond);
             }
             default -> {

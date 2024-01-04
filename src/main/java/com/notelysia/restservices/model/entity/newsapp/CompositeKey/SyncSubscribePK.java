@@ -31,11 +31,11 @@ public class SyncSubscribePK implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof SyncSubscribePK that)) return false;
-        return getSyncId() == that.getSyncId() && getUserId() == that.getUserId();
+        return this.getSyncId() == that.getSyncId() && this.getUserId() == that.getUserId();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getSyncId(), getUserId());
+        return Objects.hash(this.getSyncId(), this.getUserId());
     }
 }

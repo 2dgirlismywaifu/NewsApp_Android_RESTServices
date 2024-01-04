@@ -21,7 +21,7 @@ import java.util.Date;
 public class ErrorDetail {
     private final String message;
     private final String details;
-    private Date timestamp;
+    private final Date timestamp;
 
     public ErrorDetail(Date timestamp, String message, String details) {
         super();
@@ -31,14 +31,14 @@ public class ErrorDetail {
     }
 
     public Date getTimestamp() {
-        return timestamp;
+        return this.timestamp;
     }
 
     public String getMessage() {
-        return message;
+        return this.message;
     }
 
     public String getDetails() {
-        return details;
+        return this.details;
     }
 }

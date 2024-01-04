@@ -44,7 +44,7 @@ public class NewsSourceController {
     @GetMapping(value = "/guest/news-source")
     public ResponseEntity<Map<String, List<NewsSource>>> allNewsSource() {
         Map<String, List<NewsSource>> listrespond = new HashMap<>();
-        listrespond.put("newsSource", newsSourceServices.findAllNewsSource());
+        listrespond.put("newsSource", this.newsSourceServices.findAllNewsSource());
         return new ResponseEntity<>(listrespond, HttpStatus.OK);
     }
 
@@ -53,11 +53,11 @@ public class NewsSourceController {
     public ResponseEntity<Map<String, NewsSource>> userNewsSource(
             @RequestParam(value = "userid") int userid
     ) throws ResourceNotFound {
-        respond = new HashMap<>();
-        NewsSource newsSources = newsSourceServices.findByUserId(userid)
+        this.respond = new HashMap<>();
+        NewsSource newsSources = this.newsSourceServices.findByUserId(userid)
                 .orElseThrow(() -> new ResourceNotFound("Failed"));
-        respond.put("newsSource", newsSources);
-        return new ResponseEntity<>(respond, HttpStatus.OK);
+        this.respond.put("newsSource", newsSources);
+        return new ResponseEntity<>(this.respond, HttpStatus.OK);
     }
 
 }

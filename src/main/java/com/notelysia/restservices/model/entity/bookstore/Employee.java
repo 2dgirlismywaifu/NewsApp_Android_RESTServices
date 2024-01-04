@@ -22,25 +22,29 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.io.Serializable;
 
 @Entity
 @Table(name = "Employee")
 @Getter
 @Setter
 @AllArgsConstructor
-public class Employee {
+@NoArgsConstructor
+public class Employee implements Serializable {
     @Id
-    @Column(name = "MaNV")
+    @Column(name = "employee_id")
     private String id;
-    @Column(name = "TenNV")
+    @Column(name = "employee_name")
     private String name;
-    @Column(name = "Tel")
+    @Column(name = "phone")
     private String phone;
-    @Column(name = "Email")
+    @Column(name = "email")
     private String email;
-    @Column(name = "Address")
+    @Column(name = "address")
     private String address;
-    @Column(name = "Job")
+    @Column(name = "position")
     private String position;
 }

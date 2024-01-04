@@ -22,25 +22,29 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.io.Serializable;
 
 @Entity
 @Table(name = "Customer")
 @Getter
 @Setter
 @AllArgsConstructor
-public class Customer {
+@NoArgsConstructor
+public class Customer implements Serializable {
     @Id
-    @Column(name = "MaKH")
+    @Column(name = "customer_id")
     private String id;
-    @Column(name = "HoTenKH")
+    @Column(name = "customer_name")
     private String name;
-    @Column(name = "SDT")
+    @Column(name = "phone")
     private String phone;
-    @Column(name = "ThuHang")
+    @Column(name = "level")
     private String level;
-    @Column(name = "NgayLapThe")
+    @Column(name = "date_created")
     private String date;
-    @Column(name = "TongGiaTri")
+    @Column(name = "total")
     private String total;
 }

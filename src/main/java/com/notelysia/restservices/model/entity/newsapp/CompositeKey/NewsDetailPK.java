@@ -31,11 +31,11 @@ public class NewsDetailPK implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof NewsDetailPK that)) return false;
-        return getSourceId() == that.getSourceId() && Objects.equals(getUrlType(), that.getUrlType());
+        return this.getSourceId() == that.getSourceId() && Objects.equals(this.getUrlType(), that.getUrlType());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getSourceId(), getUrlType());
+        return Objects.hash(this.getSourceId(), this.getUrlType());
     }
 }

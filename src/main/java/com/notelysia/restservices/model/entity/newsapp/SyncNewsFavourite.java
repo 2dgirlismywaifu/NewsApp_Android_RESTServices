@@ -23,15 +23,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @IdClass(SyncNewsFavouritePK.class)
-@Table(name = "SYNC_NEWS_FAVOURITE")
-public class SyncNewsFavourite {
+@Table(name = "sync_news_favourite")
+public class SyncNewsFavourite implements Serializable {
     //Instance variables
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "favourite_id")
     private int favouriteId;

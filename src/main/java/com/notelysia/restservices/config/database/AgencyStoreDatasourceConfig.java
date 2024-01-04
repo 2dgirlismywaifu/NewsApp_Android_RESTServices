@@ -41,25 +41,25 @@ import java.util.Properties;
 @EnableJpaRepositories(
         entityManagerFactoryRef = "AgencyStoreEntityManagerFactory",
         transactionManagerRef = "AgencyStoreTransactionManager",
-        basePackages = {"com.notelysia.restservices.agencystore.jparepo"})
+        basePackages = {"com.notelysia.restservices.repository.agencystore"})
 public class AgencyStoreDatasourceConfig {
     private static final Logger logger = LogManager.getLogger(AgencyStoreDatasourceConfig.class);
     //Create a bean for DataSource
     Properties props = new Properties();
     FileInputStream in;
 
-    @Bean(name = "agencystore_datasource")
+    @Bean(name = "agency-store-datasource")
     public DataSource agencyStoreSource() {
         DataSourceBuilder<?> dataSourceBuilder;
         try {
-            in = new FileInputStream("spring_conf/db.properties");
-            props.load(in);
-            in.close();
+            this.in = new FileInputStream("spring_conf/db.properties");
+            this.props.load(this.in);
+            this.in.close();
             dataSourceBuilder = DataSourceBuilder.create();
-            dataSourceBuilder.driverClassName(props.getProperty("jdbc.sqlserver"));
-            dataSourceBuilder.url(props.getProperty("jdbc.third.url"));
-            dataSourceBuilder.username(props.getProperty("jdbc.third.username"));
-            dataSourceBuilder.password(props.getProperty("jdbc.third.password"));
+            dataSourceBuilder.driverClassName(this.props.getProperty("jdbc.mariadb"));
+            dataSourceBuilder.url(this.props.getProperty("jdbc.third.url"));
+            dataSourceBuilder.username(this.props.getProperty("jdbc.third.username"));
+            dataSourceBuilder.password(this.props.getProperty("jdbc.third.password"));
             return dataSourceBuilder.build();
         } catch (IOException e) {
             logger.error("Error: " + e, e);
@@ -70,12 +70,12 @@ public class AgencyStoreDatasourceConfig {
 
     @Bean(name = "AgencyStoreEntityManagerFactory")
     public LocalContainerEntityManagerFactoryBean thirdEntityManagerFactory(EntityManagerFactoryBuilder builder,
-                                                                            @Qualifier("agencystore_datasource")
+                                                                            @Qualifier("agency-store-datasource")
                                                                             DataSource agencyStoreSource) {
         return builder
                 .dataSource(agencyStoreSource)
-                .packages("com.notelysia.restservices.agencystore.model")
-                .properties(new HibernateProperties().getSQLServerProperties())
+                .packages("com.notelysia.restservices.model.entity.agencystore")
+                .properties(new HibernateProperties().getMariaDBProperties())
                 .build();
     }
 

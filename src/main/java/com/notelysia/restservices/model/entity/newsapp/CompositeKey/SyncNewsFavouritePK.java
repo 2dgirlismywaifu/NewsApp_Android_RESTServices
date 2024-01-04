@@ -32,11 +32,11 @@ public class SyncNewsFavouritePK implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof SyncNewsFavouritePK that)) return false;
-        return getFavouriteId() == that.getFavouriteId() && getUserId() == that.getUserId();
+        return this.getFavouriteId() == that.getFavouriteId() && this.getUserId() == that.getUserId();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getFavouriteId(), getUserId());
+        return Objects.hash(this.getFavouriteId(), this.getUserId());
     }
 }

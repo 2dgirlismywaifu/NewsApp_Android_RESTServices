@@ -22,19 +22,21 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "NEWS_SOURCE")
+@Table(name = "news_source")
 @SecondaryTables({
-        @SecondaryTable(name = "IMAGE_INFORMATION", pkJoinColumns = @PrimaryKeyJoinColumn(name = "source_id")),
-        @SecondaryTable(name = "SYNC_SUBSCRIBE", pkJoinColumns = @PrimaryKeyJoinColumn(name = "source_id")),
-        @SecondaryTable(name = "SYNC_SUBSCRIBE_SSO", pkJoinColumns = @PrimaryKeyJoinColumn(name = "source_id"))
+        @SecondaryTable(name = "image_information", pkJoinColumns = @PrimaryKeyJoinColumn(name = "source_id")),
+        @SecondaryTable(name = "sync_subscribe", pkJoinColumns = @PrimaryKeyJoinColumn(name = "source_id")),
 })
-public class NewsSource {
+public class NewsSource implements Serializable {
     //Instance variables
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "source_id")
     private int sourceId;
@@ -42,7 +44,7 @@ public class NewsSource {
     private String source_name;
     @Column(name = "urlmain")
     private String urlMain;
-    @Column(name = "information")
+    @Column(name = "information", length = 4000)
     private String information;
     @Column(name = "image", table = "IMAGE_INFORMATION")
     private String image;

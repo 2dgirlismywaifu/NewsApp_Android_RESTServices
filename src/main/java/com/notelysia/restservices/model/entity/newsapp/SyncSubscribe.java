@@ -23,15 +23,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @IdClass(SyncSubscribePK.class)
-@Table(name = "SYNC_SUBSCRIBE")
-public class SyncSubscribe {
+@Table(name = "sync_subscribe")
+public class SyncSubscribe implements Serializable {
     //Instance variables
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "sync_id")
     private int syncId;

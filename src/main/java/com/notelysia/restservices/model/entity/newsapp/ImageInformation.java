@@ -23,15 +23,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "IMAGE_INFORMATION")
+@Table(name = "image_information")
 @IdClass(ImageInfoPK.class)
-public class ImageInformation {
+public class ImageInformation implements Serializable {
     //Instance variables
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "image_id")
     private int imageId;

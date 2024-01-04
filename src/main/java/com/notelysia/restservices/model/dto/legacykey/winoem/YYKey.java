@@ -23,7 +23,7 @@ public class YYKey {
     Random rand = new Random();
 
     public String generateWin95Key() {
-        int win95year = rand.nextInt(8) + 1995;
+        int win95year = this.rand.nextInt(8) + 1995;
         int thirdDigit = (win95year / 10) % 10;
         int fourthDigit = win95year % 10;
         int newNumber = thirdDigit * 10 + fourthDigit;
@@ -31,7 +31,7 @@ public class YYKey {
     }
 
     public String generateWinNTKey() {
-        int winntyear = rand.nextInt(9) + 1995;
+        int winntyear = this.rand.nextInt(9) + 1995;
         int thirdDigit = (winntyear / 10) % 10;
         int fourthDigit = winntyear % 10;
         int newNumber = thirdDigit * 10 + fourthDigit;

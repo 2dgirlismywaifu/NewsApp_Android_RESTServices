@@ -45,13 +45,13 @@ public class WindowsKeyController {
         HashMap<String, String> respond = new HashMap<>();
         switch (os) {
             case "95" -> {
-                respond.put("Windows 95 OEM", winOEMKey.getWindows95Key());
-                respond.put("Windows 95 Retail", winRTMKey.getWindows95Key());
+                respond.put("Windows 95 OEM", this.winOEMKey.getWindows95Key());
+                respond.put("Windows 95 Retail", this.winRTMKey.getWindows95Key());
                 return ResponseEntity.ok(respond);
             }
             case "nt4" -> {
-                respond.put("Windows NT 4 OEM", winOEMKey.getWindowsNTKey());
-                respond.put("Windows NT 4 Retail", winRTMKey.getWindowsNTKey());
+                respond.put("Windows NT 4 OEM", this.winOEMKey.getWindowsNTKey());
+                respond.put("Windows NT 4 Retail", this.winRTMKey.getWindowsNTKey());
             }
             default -> {
                 respond.put("key", "Invalid OS: " + os);

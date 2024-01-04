@@ -20,27 +20,31 @@ import com.notelysia.restservices.model.entity.bookstore.CompositeKey.LoginPK;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.io.Serializable;
 
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "Login")
 @IdClass(LoginPK.class)
-public class Login {
+public class Login implements Serializable {
     @Id
-    @Column(name = "MaNV")
+    @Column(name = "employee_id")
     private String id;
     @Id
-    @Column(name = "Username")
+    @Column(name = "user_name")
     private String username;
-    @Column(name = "Password")
+    @Column(name = "password")
     private String password;
-    @Column(name = "AccLevel")
+    @Column(name = "acc_level")
     private int accLevel;
-    @Column(name = "RecKey")
+    @Column(name = "recKey")
     private String recKey;
-    @Column(name = "Salt")
+    @Column(name = "salt")
     private String salt;
 }

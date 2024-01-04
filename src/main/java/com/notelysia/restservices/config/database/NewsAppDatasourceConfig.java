@@ -42,7 +42,7 @@ import java.util.Properties;
 @EnableJpaRepositories(
         entityManagerFactoryRef = "NewsAppEntityManagerFactory",
         transactionManagerRef = "NewsAppTransactionManager",
-        basePackages = {"com.notelysia.restservices.newsapp.jparepo"})
+        basePackages = {"com.notelysia.restservices.repository.newsapp"})
 public class NewsAppDatasourceConfig {
     private static final Logger logger = LogManager.getLogger(NewsAppDatasourceConfig.class);
     //Create a bean for DataSource
@@ -50,18 +50,18 @@ public class NewsAppDatasourceConfig {
     FileInputStream in;
 
     @Primary
-    @Bean(name = "newsapp_datasource")
+    @Bean(name = "news-app-datasource")
     public DataSource newsappSource() {
         DataSourceBuilder<?> dataSourceBuilder;
         try {
-            in = new FileInputStream("spring_conf/db.properties");
-            props.load(in);
-            in.close();
+            this.in = new FileInputStream("spring_conf/db.properties");
+            this.props.load(this.in);
+            this.in.close();
             dataSourceBuilder = DataSourceBuilder.create();
-            dataSourceBuilder.driverClassName(props.getProperty("jdbc.sqlserver"));
-            dataSourceBuilder.url(props.getProperty("jdbc.url"));
-            dataSourceBuilder.username(props.getProperty("jdbc.username"));
-            dataSourceBuilder.password(props.getProperty("jdbc.password"));
+            dataSourceBuilder.driverClassName(this.props.getProperty("jdbc.mariadb"));
+            dataSourceBuilder.url(this.props.getProperty("jdbc.url"));
+            dataSourceBuilder.username(this.props.getProperty("jdbc.username"));
+            dataSourceBuilder.password(this.props.getProperty("jdbc.password"));
             return dataSourceBuilder.build();
         } catch (IOException e) {
             logger.error("Error: " + e, e);
@@ -72,12 +72,12 @@ public class NewsAppDatasourceConfig {
     @Primary
     @Bean(name = "NewsAppEntityManagerFactory")
     public LocalContainerEntityManagerFactoryBean primaryEntityManagerFactory(EntityManagerFactoryBuilder builder,
-                                                                              @Qualifier("newsapp_datasource")
-                                                                              DataSource newsappSource) {
+                                                                              @Qualifier("news-app-datasource")
+                                                                              DataSource newsAppSource) {
         return builder
-                .dataSource(newsappSource)
-                .packages("com.notelysia.restservices.newsapp.model")
-                .properties(new HibernateProperties().getSQLServerProperties())
+                .dataSource(newsAppSource)
+                .packages("com.notelysia.restservices.model.entity.newsapp")
+                .properties(new HibernateProperties().getMariaDBProperties())
                 .build();
     }
 

@@ -43,7 +43,7 @@ public class NewsDetailController {
     private NewsSourceServices newsSourceServices;
 
     private String getDecode(byte[] data) {
-        return decodeString.decodeString(data);
+        return this.decodeString.decodeString(data);
     }
 
     //This is only for guest user, follow subscribe only for logined user
@@ -53,10 +53,10 @@ public class NewsDetailController {
             @RequestParam(value = "type") String type,
             @Parameter(name = "name", description = "Encode it to BASE64 before input", required = true)
             @RequestParam(value = "name") String name) {
-        List<NewsDetail> newsDetailList = newsSourceServices.findByUrlTypeAndSourceName(getDecode(type.getBytes()), getDecode(name.getBytes()));
+        List<NewsDetail> newsDetailList = this.newsSourceServices.findByUrlTypeAndSourceName(this.getDecode(type.getBytes()), this.getDecode(name.getBytes()));
         return new ResponseEntity<>(new HashMap<>() {
             {
-                put("newsDetails", newsDetailList);
+                this.put("newsDetails", newsDetailList);
             }
         }, HttpStatus.OK);
     }
@@ -66,10 +66,10 @@ public class NewsDetailController {
     public ResponseEntity<HashMap<String, List<NewsDetail>>> allNewsSource(
             @Parameter(name = "name", description = "Encode it to BASE64 before input", required = true)
             @RequestParam(value = "name") String name) {
-        List<NewsDetail> newsDetailList = newsSourceServices.findBySourceName(getDecode(name.getBytes()));
+        List<NewsDetail> newsDetailList = this.newsSourceServices.findBySourceName(this.getDecode(name.getBytes()));
         return new ResponseEntity<>(new HashMap<>() {
             {
-                put("List" + getDecode(name.getBytes()), newsDetailList);
+                this.put("List" + NewsDetailController.this.getDecode(name.getBytes()), newsDetailList);
             }
         }, HttpStatus.OK);
     }
@@ -79,10 +79,10 @@ public class NewsDetailController {
     public ResponseEntity<HashMap<String, List<RSSList>>> allRSSList(
             @Parameter(name = "name", description = "Encode it to BASE64 before input", required = true)
             @RequestParam(value = "name") String name) {
-        List<RSSList> rssList = newsSourceServices.findUrlBySourceName(getDecode(name.getBytes()));
+        List<RSSList> rssList = this.newsSourceServices.findUrlBySourceName(this.getDecode(name.getBytes()));
         return new ResponseEntity<>(new HashMap<>() {
             {
-                put("RSSList", rssList);
+                this.put("RSSList", rssList);
             }
         }, HttpStatus.OK);
     }

@@ -20,7 +20,10 @@ import com.notelysia.restservices.model.entity.bookstore.CompositeKey.BillPK;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.io.Serializable;
 
 @Entity
 @Table(name = "Bill")
@@ -28,17 +31,18 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class Bill {
+@NoArgsConstructor
+public class Bill implements Serializable {
     @Id
-    @Column(name = "MaHD")
+    @Column(name = "bill_id")
     private String billId;
-    @Column(name = "MaKH")
+    @Column(name = "customer_id")
     private String customerId;
     @Id
-    @Column(name = "MaNV")
+    @Column(name = "employee_id")
     private String employeeId;
-    @Column(name = "NgayMua")
+    @Column(name = "date_bought")
     private String date;
-    @Column(name = "ThanhTien")
+    @Column(name = "total_money")
     private String total;
 }

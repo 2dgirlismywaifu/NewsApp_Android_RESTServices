@@ -16,28 +16,28 @@
 
 package com.notelysia.restservices.model.entity.newsapp;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.io.Serializable;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "NEWSTYPE_IMAGE")
-public class NewsTypeImage {
+@Table(name = "newstype_image")
+public class NewsTypeImage implements Serializable {
     //Instance variables
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
+    @Column(name = "id")
+    private int id;
     @Column(name = "url_type")
     private String urlType;
-    @Column(name = "name_type")
-    private String nameType;
     @Column(name = "url_image")
     private String urlImage;
 }

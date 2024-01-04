@@ -21,15 +21,15 @@ public class WindowsRTMKey {
     String XXX95Key = new XXXKey().generateWin95Key();
     String XXXNTKey = new XXXKey().generateWinNTKey();
     String XXXXXXXKey = new XXXXXXXKey().generateWin95AndNTRTMKey();
-    String windows95RTMKey = XXX95Key + "-" + XXXXXXXKey;
-    String windowsNTRTMKey = XXXNTKey + "-" + XXXXXXXKey;
+    String windows95RTMKey = this.XXX95Key + "-" + this.XXXXXXXKey;
+    String windowsNTRTMKey = this.XXXNTKey + "-" + this.XXXXXXXKey;
 
     public String getWindows95Key() {
-        return windows95RTMKey;
+        return this.windows95RTMKey;
     }
 
     public String getWindowsNTKey() {
-        return windowsNTRTMKey;
+        return this.windowsNTRTMKey;
     }
 
 }

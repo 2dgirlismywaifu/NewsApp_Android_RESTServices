@@ -28,8 +28,8 @@ public class WindowsOEMKey {
     String SSSSSKey = new SSSSSSKey().generateKey();
     String ZZZZZKey = new ZZZZZKey().generateKey();
     @Getter
-    String Windows95Key = XXXKey + YY95 + "-OEM-" + NNKey + SSSSSKey + "-" + ZZZZZKey;
+    String Windows95Key = this.XXXKey + this.YY95 + "-OEM-" + this.NNKey + this.SSSSSKey + "-" + this.ZZZZZKey;
     @Getter
-    String WindowsNTKey = XXXKey + YYNT + "-OEM-" + NNKey + SSSSSKey + "-" + ZZZZZKey;
+    String WindowsNTKey = this.XXXKey + this.YYNT + "-OEM-" + this.NNKey + this.SSSSSKey + "-" + this.ZZZZZKey;
 
 }

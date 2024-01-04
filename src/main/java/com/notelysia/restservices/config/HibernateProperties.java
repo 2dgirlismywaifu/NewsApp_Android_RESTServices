@@ -29,8 +29,8 @@ public class HibernateProperties {
     public HashMap<String, Object> getSQLServerProperties() {
         HashMap<String, Object> properties = new HashMap<>();
         properties.put("hibernate.dialect", "org.hibernate.dialect.SQLServerDialect");
-        properties.put("hibernate.show_sql", getShowSQL());
-        properties.put("hibernate.format_sql", getFormatSQL());
+        properties.put("hibernate.show_sql", this.getShowSQL());
+        properties.put("hibernate.format_sql", this.getFormatSQL());
         properties.put("hibernate.default_schema", "dbo");
         return properties;
     }
@@ -39,8 +39,8 @@ public class HibernateProperties {
     public HashMap<String, Object> getMySQLProperties() {
         HashMap<String, Object> properties = new HashMap<>();
         properties.put("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
-        properties.put("hibernate.show_sql", getShowSQL());
-        properties.put("hibernate.format_sql", getFormatSQL());
+        properties.put("hibernate.show_sql", this.getShowSQL());
+        properties.put("hibernate.format_sql", this.getFormatSQL());
         return properties;
     }
 
@@ -48,8 +48,8 @@ public class HibernateProperties {
     public HashMap<String, Object> getPostgreSQLProperties() {
         HashMap<String, Object> properties = new HashMap<>();
         properties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
-        properties.put("hibernate.show_sql", getShowSQL());
-        properties.put("hibernate.format_sql", getFormatSQL());
+        properties.put("hibernate.show_sql", this.getShowSQL());
+        properties.put("hibernate.format_sql", this.getFormatSQL());
         return properties;
     }
 
@@ -57,8 +57,8 @@ public class HibernateProperties {
     public HashMap<String, Object> getOracleProperties() {
         HashMap<String, Object> properties = new HashMap<>();
         properties.put("hibernate.dialect", "org.hibernate.dialect.OracleDialect");
-        properties.put("hibernate.show_sql", getShowSQL());
-        properties.put("hibernate.format_sql", getFormatSQL());
+        properties.put("hibernate.show_sql", this.getShowSQL());
+        properties.put("hibernate.format_sql", this.getFormatSQL());
         return properties;
     }
 
@@ -66,8 +66,8 @@ public class HibernateProperties {
     public HashMap<String, Object> getH2Properties() {
         HashMap<String, Object> properties = new HashMap<>();
         properties.put("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
-        properties.put("hibernate.show_sql", getShowSQL());
-        properties.put("hibernate.format_sql", getFormatSQL());
+        properties.put("hibernate.show_sql", this.getShowSQL());
+        properties.put("hibernate.format_sql", this.getFormatSQL());
         return properties;
     }
 
@@ -75,8 +75,8 @@ public class HibernateProperties {
     public HashMap<String, Object> getHSQLDBProperties() {
         HashMap<String, Object> properties = new HashMap<>();
         properties.put("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
-        properties.put("hibernate.show_sql", getShowSQL());
-        properties.put("hibernate.format_sql", getFormatSQL());
+        properties.put("hibernate.show_sql", this.getShowSQL());
+        properties.put("hibernate.format_sql", this.getFormatSQL());
         return properties;
     }
 
@@ -84,8 +84,8 @@ public class HibernateProperties {
     public HashMap<String, Object> getMariaDBProperties() {
         HashMap<String, Object> properties = new HashMap<>();
         properties.put("hibernate.dialect", "org.hibernate.dialect.MariaDBDialect");
-        properties.put("hibernate.show_sql", getShowSQL());
-        properties.put("hibernate.format_sql", getFormatSQL());
+        properties.put("hibernate.show_sql", this.getShowSQL());
+        properties.put("hibernate.format_sql", this.getFormatSQL());
         return properties;
     }
 
@@ -93,8 +93,8 @@ public class HibernateProperties {
     public HashMap<String, Object> getDB2Properties() {
         HashMap<String, Object> properties = new HashMap<>();
         properties.put("hibernate.dialect", "org.hibernate.dialect.DB2Dialect");
-        properties.put("hibernate.show_sql", getShowSQL());
-        properties.put("hibernate.format_sql", getFormatSQL());
+        properties.put("hibernate.show_sql", this.getShowSQL());
+        properties.put("hibernate.format_sql", this.getFormatSQL());
         return properties;
     }
 
@@ -102,8 +102,8 @@ public class HibernateProperties {
     public HashMap<String, Object> getSybaseProperties() {
         HashMap<String, Object> properties = new HashMap<>();
         properties.put("hibernate.dialect", "org.hibernate.dialect.SybaseDialect");
-        properties.put("hibernate.show_sql", getShowSQL());
-        properties.put("hibernate.format_sql", getFormatSQL());
+        properties.put("hibernate.show_sql", this.getShowSQL());
+        properties.put("hibernate.format_sql", this.getFormatSQL());
         return properties;
     }
 
@@ -111,8 +111,8 @@ public class HibernateProperties {
     public HashMap<String, Object> getMSAccessProperties() {
         HashMap<String, Object> properties = new HashMap<>();
         properties.put("hibernate.dialect", "org.hibernate.dialect.MsAccessDialect");
-        properties.put("hibernate.show_sql", getShowSQL());
-        properties.put("hibernate.format_sql", getFormatSQL());
+        properties.put("hibernate.show_sql", this.getShowSQL());
+        properties.put("hibernate.format_sql", this.getFormatSQL());
         return properties;
     }
 }

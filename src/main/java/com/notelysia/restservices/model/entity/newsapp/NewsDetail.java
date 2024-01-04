@@ -23,15 +23,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @IdClass(NewsDetailPK.class)
-@Table(name = "NEWS_DETAIL")
-public class NewsDetail {
+@Table(name = "news_detail")
+public class NewsDetail implements Serializable {
     //Instance variables
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "source_id")
     private int sourceId;

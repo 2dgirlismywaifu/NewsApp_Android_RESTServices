@@ -25,7 +25,7 @@ public class XXXXXXXKey {
     public String generateKey() {
         Random rand = new Random();
         int num = rand.nextInt(9000000) + 1000000;
-        while (sumOfDigits(num) % 7 != 0) {
+        while (this.sumOfDigits(num) % 7 != 0) {
             num = rand.nextInt(9000000) + 1000000;
         }
         return String.valueOf(num);

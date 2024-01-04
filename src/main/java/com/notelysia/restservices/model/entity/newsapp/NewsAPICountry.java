@@ -16,23 +16,23 @@
 
 package com.notelysia.restservices.model.entity.newsapp;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.io.Serializable;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "NEWSAPI_COUNTRY")
-public class NewsAPICountry {
+@Table(name = "newsapi_country")
+public class NewsAPICountry implements Serializable {
     //53 Countries only used, no China
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "country_id")
     private int countryId;

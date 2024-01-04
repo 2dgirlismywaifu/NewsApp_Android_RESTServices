@@ -22,31 +22,35 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.io.Serializable;
 
 @Entity
 @Table(name = "Book")
 @Getter
 @Setter
 @AllArgsConstructor
-public class Book {
+@NoArgsConstructor
+public class Book implements Serializable {
     @Id
-    @Column(name = "MaSach")
+    @Column(name = "book_id")
     private String bookId;
-    @Column(name = "TenSach")
+    @Column(name = "book_name")
     private String name;
-    @Column(name = "TheLoai")
+    @Column(name = "type")
     private String type;
-    @Column(name = "TacGia")
+    @Column(name = "author")
     private String author;
-    @Column(name = "NamXuatBan")
+    @Column(name = "date_publish")
     private String datepub;
-    @Column(name = "NhaXuatBan")
+    @Column(name = "publisher")
     private String publisher;
-    @Column(name = "NgayNhap")
+    @Column(name = "date_import")
     private String date;
-    @Column(name = "GiaTri")
+    @Column(name = "price")
     private String price;
-    @Column(name = "SoLuong")
+    @Column(name = "amount")
     private String amount;
 }

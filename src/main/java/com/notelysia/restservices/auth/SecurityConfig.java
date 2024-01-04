@@ -48,14 +48,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) {
         try {
-            in = new FileInputStream("spring_conf/authkey.properties");
-            props.load(in);
-            in.close();
-            ApiKeyAuthFilter filter = new ApiKeyAuthFilter(new String(Base64.getDecoder().decode(props.getProperty("auth-token-header-name"))));
+            this.in = new FileInputStream("spring_conf/authkey.properties");
+            this.props.load(this.in);
+            this.in.close();
+            ApiKeyAuthFilter filter = new ApiKeyAuthFilter(new String(Base64.getDecoder().decode(this.props.getProperty("auth-token-header-name"))));
             filter.setAuthenticationManager(
                     authentication -> {
                         String principal = (String) authentication.getPrincipal();
-                        if (!Objects.equals(new String(Base64.getDecoder().decode(props.getProperty("auth-token"))), principal)) {
+                        if (!Objects.equals(new String(Base64.getDecoder().decode(this.props.getProperty("auth-token"))), principal)) {
                             throw new BadCredentialsException(
                                     "The API key was not found or not the expected value.");
                         }

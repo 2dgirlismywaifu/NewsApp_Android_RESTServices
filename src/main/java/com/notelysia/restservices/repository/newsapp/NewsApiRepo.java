@@ -14,25 +14,17 @@
  *  limitations under the License.
  */
 
-package com.notelysia.restservices.repository;
+package com.notelysia.restservices.repository.newsapp;
 
-import com.notelysia.restservices.model.entity.newsapp.UserSSO;
+import com.notelysia.restservices.model.entity.newsapp.NewsAPICountry;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 @Repository
-public interface SsoLoginRepo extends JpaRepository<UserSSO, Long> {
-    //Update nickname user
-    @Transactional
-    @Modifying
-    @Query("UPDATE UserSSO userPassLogin " +
-            "SET userPassLogin.nickname = ?1 WHERE userPassLogin.userId = ?2")
-    void updateNickname(String nickname, String userId);
-
-    //Count email user to make sure no duplicate email happen
-    @Query("SELECT COUNT(userSSO.email) FROM UserSSO userSSO WHERE userSSO.email = ?1")
-    long countEmail(String email);
+public interface NewsApiRepo extends JpaRepository<NewsAPICountry, Long> {
+    @Query(
+            "FROM NewsAPICountry newsapi " +
+                    "WHERE newsapi.countryName = ?1")
+    String findByCountry(String country);
 }

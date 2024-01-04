@@ -32,11 +32,11 @@ public class ImageInfoPK implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof ImageInfoPK that)) return false;
-        return getImageId() == that.getImageId() && getSourceId() == that.getSourceId();
+        return this.getImageId() == that.getImageId() && this.getSourceId() == that.getSourceId();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getImageId(), getSourceId());
+        return Objects.hash(this.getImageId(), this.getSourceId());
     }
 }

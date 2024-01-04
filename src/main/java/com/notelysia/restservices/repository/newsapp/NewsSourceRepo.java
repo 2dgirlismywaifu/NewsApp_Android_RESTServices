@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package com.notelysia.restservices.repository;
+package com.notelysia.restservices.repository.newsapp;
 
 import com.notelysia.restservices.model.entity.newsapp.NewsSource;
 import org.springframework.data.jpa.repository.JpaRepository;

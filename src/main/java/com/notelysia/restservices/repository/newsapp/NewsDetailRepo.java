@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package com.notelysia.restservices.repository;
+package com.notelysia.restservices.repository.newsapp;
 
 import com.notelysia.restservices.model.dto.newsapp.RSSList;
 import com.notelysia.restservices.model.entity.newsapp.NewsDetail;

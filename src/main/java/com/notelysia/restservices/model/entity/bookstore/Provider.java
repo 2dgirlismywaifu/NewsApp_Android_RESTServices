@@ -20,7 +20,10 @@ import com.notelysia.restservices.model.entity.bookstore.CompositeKey.ProviderPK
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.io.Serializable;
 
 @Entity
 @Table(name = "Provider")
@@ -28,23 +31,24 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class Provider {
+@NoArgsConstructor
+public class Provider implements Serializable {
     @Id
-    @Column(name = "MANCC")
+    @Column(name = "publisher_id")
     private String id;
-    @Column(name = "TeNNCC")
+    @Column(name = "publisher_name")
     private String name;
     @Id
-    @Column(name = "MaSach")
+    @Column(name = "book_id")
     private String bookId;
-    @Column(name = "SDT")
+    @Column(name = "phone")
     private String phone;
-    @Column(name = "SoLuong")
+    @Column(name = "amount")
     private String amount;
-    @Column(name = "GiaTri")
+    @Column(name = "price")
     private String price;
-    @Column(name = "NgayNhap")
+    @Column(name = "date_import")
     private String date;
-    @Column(name = "TongGiaTri")
+    @Column(name = "total")
     private String total;
 }

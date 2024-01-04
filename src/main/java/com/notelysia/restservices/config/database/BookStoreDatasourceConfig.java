@@ -41,25 +41,25 @@ import java.util.Properties;
 @EnableJpaRepositories(
         entityManagerFactoryRef = "BookStoreEntityManagerFactory",
         transactionManagerRef = "BookStoreTransactionManager",
-        basePackages = {"com.notelysia.restservices.bookstore.jparepo"})
+        basePackages = {"com.notelysia.restservices.repository.bookstore"})
 public class BookStoreDatasourceConfig {
     private static final Logger logger = LogManager.getLogger(BookStoreDatasourceConfig.class);
     //Create a bean for DataSource
     Properties props = new Properties();
     FileInputStream in;
 
-    @Bean(name = "bookstore_datasource")
+    @Bean(name = "bookstore-datasource")
     public DataSource bookStoreSource() {
         DataSourceBuilder<?> dataSourceBuilder;
         try {
-            in = new FileInputStream("spring_conf/db.properties");
-            props.load(in);
-            in.close();
+            this.in = new FileInputStream("spring_conf/db.properties");
+            this.props.load(this.in);
+            this.in.close();
             dataSourceBuilder = DataSourceBuilder.create();
-            dataSourceBuilder.driverClassName(props.getProperty("jdbc.sqlserver"));
-            dataSourceBuilder.url(props.getProperty("jdbc.second.url"));
-            dataSourceBuilder.username(props.getProperty("jdbc.second.username"));
-            dataSourceBuilder.password(props.getProperty("jdbc.second.password"));
+            dataSourceBuilder.driverClassName(this.props.getProperty("jdbc.mariadb"));
+            dataSourceBuilder.url(this.props.getProperty("jdbc.second.url"));
+            dataSourceBuilder.username(this.props.getProperty("jdbc.second.username"));
+            dataSourceBuilder.password(this.props.getProperty("jdbc.second.password"));
             return dataSourceBuilder.build();
         } catch (IOException e) {
             logger.error("Error: " + e, e);
@@ -70,12 +70,12 @@ public class BookStoreDatasourceConfig {
 
     @Bean(name = "BookStoreEntityManagerFactory")
     public LocalContainerEntityManagerFactoryBean secondEntityManagerFactory(EntityManagerFactoryBuilder builder,
-                                                                             @Qualifier("bookstore_datasource")
+                                                                             @Qualifier("bookstore-datasource")
                                                                              DataSource bookstoreSource) {
         return builder
                 .dataSource(bookstoreSource)
-                .packages("com.notelysia.restservices.bookstore.model")
-                .properties(new HibernateProperties().getSQLServerProperties())
+                .packages("com.notelysia.restservices.model.entity.bookstore")
+                .properties(new HibernateProperties().getMariaDBProperties())
                 .build();
     }
 

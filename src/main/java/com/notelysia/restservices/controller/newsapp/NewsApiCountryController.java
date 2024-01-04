@@ -42,14 +42,14 @@ public class NewsApiCountryController {
     private NewsApiServices newsApiServices;
 
     private String getDecode(byte[] data) {
-        return decodeString.decodeString(data);
+        return this.decodeString.decodeString(data);
     }
 
     @Tag(name = "NewsAPI Country", description = "Get list of all country code")
     @GetMapping(value = "/country/list")
     public ResponseEntity<Map<String, List<NewsAPICountry>>> allCountryList() {
         Map<String, List<NewsAPICountry>> respond = new HashMap<>();
-        respond.put("countrylist", newsApiServices.findAll());
+        respond.put("countrylist", this.newsApiServices.findAll());
         return new ResponseEntity<>(respond, HttpStatus.OK);
     }
 
@@ -59,7 +59,7 @@ public class NewsApiCountryController {
             @Parameter(name = "name", description = "Country Name only required if get country code")
             @RequestParam(value = "name") String name) {
         Map<String, String> respond = new HashMap<>();
-        respond.put("countryCode", newsApiServices.findByCountryName(getDecode(name.getBytes())));
+        respond.put("countryCode", this.newsApiServices.findByCountryName(this.getDecode(name.getBytes())));
         return new ResponseEntity<>(respond, HttpStatus.OK);
     }
 }

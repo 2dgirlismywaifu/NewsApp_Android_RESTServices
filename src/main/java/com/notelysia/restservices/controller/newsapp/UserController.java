@@ -48,7 +48,7 @@ public class UserController {
     private UserServices userServices;
 
     private String getDecode(byte[] data) {
-        return decodeString.decodeString(data);
+        return this.decodeString.decodeString(data);
     }
 
     @PostMapping("/register")
@@ -64,28 +64,28 @@ public class UserController {
         String recovery_code = java.util.UUID.randomUUID().toString();
         //Bcrypt password
         String Salt = BCrypt.gensalt();
-        String passwordHash = BCrypt.hashpw(getDecode(password.getBytes(StandardCharsets.UTF_8)), Salt);
-        userPassLogin = new UserPassLogin(userIdRandom, getDecode(email.getBytes(StandardCharsets.UTF_8)), passwordHash, Salt, getDecode(nickname.getBytes(StandardCharsets.UTF_8)), verify, recovery_code);
-        userInformation = new UserInformation(userIdRandom, getDecode(fullName.getBytes(StandardCharsets.UTF_8)), "not_input", date, "not_available");
-        userServices.saveUser(userPassLogin);
-        userServices.saveInformation(userInformation);
+        String passwordHash = BCrypt.hashpw(this.getDecode(password.getBytes(StandardCharsets.UTF_8)), Salt);
+        this.userPassLogin = new UserPassLogin(userIdRandom, this.getDecode(email.getBytes(StandardCharsets.UTF_8)), passwordHash, Salt, this.getDecode(nickname.getBytes(StandardCharsets.UTF_8)), this.verify, recovery_code);
+        this.userInformation = new UserInformation(userIdRandom, this.getDecode(fullName.getBytes(StandardCharsets.UTF_8)), "not_input", this.date, "not_available");
+        this.userServices.saveUser(this.userPassLogin);
+        this.userServices.saveInformation(this.userInformation);
         return ResponseEntity.ok().body(new HashMap<>() {{
-            put("userId", String.valueOf(userPassLogin.getUserId()));
-            put("email", userPassLogin.getEmail());
-            put("nickname", userPassLogin.getNickname());
-            put("verify", userPassLogin.getVerify());
-            put("status", "pass");
+            this.put("userId", String.valueOf(UserController.this.userPassLogin.getUserId()));
+            this.put("email", UserController.this.userPassLogin.getEmail());
+            this.put("nickname", UserController.this.userPassLogin.getNickname());
+            this.put("verify", UserController.this.userPassLogin.getVerify());
+            this.put("status", "pass");
         }});
     }
 
     //Verify email from Firebase Authentication, if true, update verify to true
     @PostMapping("/verify")
     public ResponseEntity<HashMap<String, String>> verifyEmail(@RequestParam(name = "email") String email) {
-        userServices.updateVerify("true", getDecode(email.getBytes(StandardCharsets.UTF_8)));
+        this.userServices.updateVerify("true", this.getDecode(email.getBytes(StandardCharsets.UTF_8)));
         return ResponseEntity.ok().body(new HashMap<>() {
             {
-                put("email", getDecode(email.getBytes(StandardCharsets.UTF_8)));
-                put("status", "pass");
+                this.put("email", UserController.this.getDecode(email.getBytes(StandardCharsets.UTF_8)));
+                this.put("status", "pass");
             }
         });
     }
@@ -97,16 +97,16 @@ public class UserController {
             @RequestParam(name = "password") String password)
             throws ResourceNotFound {
         HashMap<String, String> userFound = new HashMap<>();
-        userPassLogin = userServices.findByEmailOrNickname(getDecode(account.getBytes(StandardCharsets.UTF_8)), getDecode(account.getBytes(StandardCharsets.UTF_8)))
+        this.userPassLogin = this.userServices.findByEmailOrNickname(this.getDecode(account.getBytes(StandardCharsets.UTF_8)), this.getDecode(account.getBytes(StandardCharsets.UTF_8)))
                 .orElseThrow(() -> new ResourceNotFound("Failed"));
-        String password_hash = userPassLogin.getPassword();
-        String salt = userPassLogin.getSalt();
-        String password_check = BCrypt.hashpw(getDecode(password.getBytes(StandardCharsets.UTF_8)), salt);
+        String password_hash = this.userPassLogin.getPassword();
+        String salt = this.userPassLogin.getSalt();
+        String password_check = BCrypt.hashpw(this.getDecode(password.getBytes(StandardCharsets.UTF_8)), salt);
         if (password_check.equals(password_hash)) {
-            userFound.put("user_id", String.valueOf(userPassLogin.getUserId()));
-            userFound.put("email", userPassLogin.getEmail());
-            userFound.put("nickname", userPassLogin.getNickname());
-            userFound.put("verify", userPassLogin.getVerify());
+            userFound.put("user_id", String.valueOf(this.userPassLogin.getUserId()));
+            userFound.put("email", this.userPassLogin.getEmail());
+            userFound.put("nickname", this.userPassLogin.getNickname());
+            userFound.put("verify", this.userPassLogin.getVerify());
             userFound.put("status", "pass");
             return ResponseEntity.ok().body(userFound);
         } else {
@@ -123,8 +123,8 @@ public class UserController {
         String recovery_code = java.util.UUID.randomUUID().toString();
         //Bcrypt password
         String Salt = BCrypt.gensalt();
-        String password_hash = BCrypt.hashpw(getDecode(password.getBytes(StandardCharsets.UTF_8)), Salt);
-        userServices.updatePassword(password_hash, Salt, recovery_code, getDecode(email.getBytes(StandardCharsets.UTF_8)));
+        String password_hash = BCrypt.hashpw(this.getDecode(password.getBytes(StandardCharsets.UTF_8)), Salt);
+        this.userServices.updatePassword(password_hash, Salt, recovery_code, this.getDecode(email.getBytes(StandardCharsets.UTF_8)));
     }
 
     //Make sure nickname and email is available to use
@@ -132,12 +132,12 @@ public class UserController {
     public ResponseEntity<HashMap<String, String>> CheckNickname(
             @RequestParam(name = "nickname") String nickname,
             @RequestParam(name = "email") String email) throws ResourceNotFound {
-        userPassLogin = userServices.findByNickname(getDecode(nickname.getBytes(StandardCharsets.UTF_8)),
-                        getDecode(email.getBytes(StandardCharsets.UTF_8)))
+        this.userPassLogin = this.userServices.findByNickname(this.getDecode(nickname.getBytes(StandardCharsets.UTF_8)),
+                        this.getDecode(email.getBytes(StandardCharsets.UTF_8)))
                 .orElseThrow(() -> new ResourceNotFound("Failed"));
         return ResponseEntity.ok().body(new HashMap<>() {{
-            put("nickname", userPassLogin.getNickname());
-            put("email", userPassLogin.getEmail());
+            this.put("nickname", UserController.this.userPassLogin.getNickname());
+            this.put("email", UserController.this.userPassLogin.getEmail());
         }});
     }
 
@@ -145,10 +145,10 @@ public class UserController {
     @GetMapping(value = "/recoverycode", params = {"email"})
     public ResponseEntity<HashMap<String, String>> recoveryCode(
             @RequestParam(name = "email") String email) throws ResourceNotFound {
-        userPassLogin = userServices.findByRecovery(getDecode(email.getBytes(StandardCharsets.UTF_8)))
+        this.userPassLogin = this.userServices.findByRecovery(this.getDecode(email.getBytes(StandardCharsets.UTF_8)))
                 .orElseThrow(() -> new ResourceNotFound("Failed"));
         return ResponseEntity.ok().body(new HashMap<>() {{
-            put("recovery", userPassLogin.getRecovery());
+            this.put("recovery", UserController.this.userPassLogin.getRecovery());
         }});
     }
 
@@ -157,10 +157,10 @@ public class UserController {
     public ResponseEntity<HashMap<String, String>> generateRecoveryCode(
             @RequestParam(value = "userId") String userId) {
         String new_recovery_code = java.util.UUID.randomUUID().toString();
-        userServices.updateRecovery(new_recovery_code, userId);
+        this.userServices.updateRecovery(new_recovery_code, userId);
         return ResponseEntity.ok().body(new HashMap<>() {{
-            put("recovery", new_recovery_code);
-            put("status", "pass");
+            this.put("recovery", new_recovery_code);
+            this.put("status", "pass");
         }});
     }
 
@@ -173,19 +173,19 @@ public class UserController {
             @RequestParam(name = "userid") String userId,
             @RequestParam(name = "email") String email,
             @RequestParam(name = "oldPass") String oldPass) throws ResourceNotFound {
-        userPassLogin = userServices.findByEmailOrUserid(getDecode(email.getBytes(StandardCharsets.UTF_8)),
-                        getDecode(userId.getBytes(StandardCharsets.UTF_8)))
+        this.userPassLogin = this.userServices.findByEmailOrUserid(this.getDecode(email.getBytes(StandardCharsets.UTF_8)),
+                        this.getDecode(userId.getBytes(StandardCharsets.UTF_8)))
                 .orElseThrow(() -> new ResourceNotFound("Failed"));
-        String password_hash = userPassLogin.getPassword();
-        String salt = userPassLogin.getSalt();
-        String password_check = BCrypt.hashpw(getDecode(oldPass.getBytes(StandardCharsets.UTF_8)), salt);
+        String password_hash = this.userPassLogin.getPassword();
+        String salt = this.userPassLogin.getSalt();
+        String password_check = BCrypt.hashpw(this.getDecode(oldPass.getBytes(StandardCharsets.UTF_8)), salt);
         if (password_check.equals(password_hash)) {
             return ResponseEntity.ok().body(new HashMap<>() {{
-                put("status", "pass");
+                this.put("status", "pass");
             }});
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new HashMap<>() {{
-                put("status", "fail");
+                this.put("status", "fail");
             }});
         }
     }
@@ -195,11 +195,11 @@ public class UserController {
     public ResponseEntity<HashMap<String, String>> updateUserName(
             @RequestParam(value = "userid") String userid,
             @RequestParam(value = "username") String username) {
-        userServices.updateNickname(getDecode(username.getBytes(StandardCharsets.UTF_8)),
-                getDecode(userid.getBytes(StandardCharsets.UTF_8)));
+        this.userServices.updateNickname(this.getDecode(username.getBytes(StandardCharsets.UTF_8)),
+                this.getDecode(userid.getBytes(StandardCharsets.UTF_8)));
         return ResponseEntity.ok().body(new HashMap<>() {{
-            put("status", "pass");
-            put("username", username);
+            this.put("status", "pass");
+            this.put("username", username);
         }});
     }
 
@@ -208,11 +208,11 @@ public class UserController {
     public ResponseEntity<HashMap<String, String>> updateUserFullName(
             @RequestParam(value = "userid") String userid,
             @RequestParam(value = "fullname") String fullname) {
-        userServices.updateFullName(getDecode(fullname.getBytes(StandardCharsets.UTF_8)),
-                getDecode(userid.getBytes(StandardCharsets.UTF_8)));
+        this.userServices.updateFullName(this.getDecode(fullname.getBytes(StandardCharsets.UTF_8)),
+                this.getDecode(userid.getBytes(StandardCharsets.UTF_8)));
         return ResponseEntity.ok().body(new HashMap<>() {{
-            put("status", "pass");
-            put("username", fullname);
+            this.put("status", "pass");
+            this.put("username", fullname);
         }});
     }
 
@@ -221,11 +221,11 @@ public class UserController {
     public ResponseEntity<HashMap<String, String>> updateUserBirthday(
             @RequestParam(value = "userid") String userid,
             @RequestParam(value = "birthday") String birthday) {
-        userServices.updateBirthday(getDecode(birthday.getBytes(StandardCharsets.UTF_8)),
-                getDecode(userid.getBytes(StandardCharsets.UTF_8)));
+        this.userServices.updateBirthday(this.getDecode(birthday.getBytes(StandardCharsets.UTF_8)),
+                this.getDecode(userid.getBytes(StandardCharsets.UTF_8)));
         return ResponseEntity.ok().body(new HashMap<>() {{
-            put("status", "pass");
-            put("birthday", birthday);
+            this.put("status", "pass");
+            this.put("birthday", birthday);
         }});
     }
 
@@ -234,11 +234,11 @@ public class UserController {
     public ResponseEntity<HashMap<String, String>> updateUserGender(
             @RequestParam(value = "userid") String userid,
             @RequestParam(value = "gender") String gender) {
-        userServices.updateGender(getDecode(gender.getBytes(StandardCharsets.UTF_8)),
-                getDecode(userid.getBytes(StandardCharsets.UTF_8)));
+        this.userServices.updateGender(this.getDecode(gender.getBytes(StandardCharsets.UTF_8)),
+                this.getDecode(userid.getBytes(StandardCharsets.UTF_8)));
         return ResponseEntity.ok().body(new HashMap<>() {{
-            put("status", "pass");
-            put("gender", gender);
+            this.put("status", "pass");
+            this.put("gender", gender);
         }});
     }
 
@@ -247,11 +247,11 @@ public class UserController {
     public ResponseEntity<HashMap<String, String>> updateUserAvatar(
             @RequestParam(value = "userid") String userid,
             @RequestParam(value = "avatar") String avatar) {
-        userServices.updateAvatar(getDecode(avatar.getBytes(StandardCharsets.UTF_8)),
-                getDecode(userid.getBytes(StandardCharsets.UTF_8)));
+        this.userServices.updateAvatar(this.getDecode(avatar.getBytes(StandardCharsets.UTF_8)),
+                this.getDecode(userid.getBytes(StandardCharsets.UTF_8)));
         return ResponseEntity.ok().body(new HashMap<>() {{
-            put("status", "pass");
-            put("avatar", avatar);
+            this.put("status", "pass");
+            this.put("avatar", avatar);
         }});
     }
 
@@ -259,17 +259,17 @@ public class UserController {
     @GetMapping(value = "/account/recovery", params = {"code"})
     public ResponseEntity<HashMap<String, String>> RecoveryAccount(
             @RequestParam(name = "code") String code) throws ResourceNotFound {
-        userPassLogin = userServices.findByRecovery(getDecode(code.getBytes(StandardCharsets.UTF_8)))
+        this.userPassLogin = this.userServices.findByRecovery(this.getDecode(code.getBytes(StandardCharsets.UTF_8)))
                 .orElseThrow(() -> new ResourceNotFound("Failed"));
         return ResponseEntity.ok().body(new HashMap<>() {{
-            put("user_id", String.valueOf(userPassLogin.getUserId()));
-            put("email", userPassLogin.getEmail());
-            put("password", userPassLogin.getPassword());
-            put("salt", userPassLogin.getSalt());
-            put("nickname", userPassLogin.getNickname());
-            put("verify", userPassLogin.getVerify());
-            put("recovery", userPassLogin.getVerify());
-            put("status", "pass");
+            this.put("user_id", String.valueOf(UserController.this.userPassLogin.getUserId()));
+            this.put("email", UserController.this.userPassLogin.getEmail());
+            this.put("password", UserController.this.userPassLogin.getPassword());
+            this.put("salt", UserController.this.userPassLogin.getSalt());
+            this.put("nickname", UserController.this.userPassLogin.getNickname());
+            this.put("verify", UserController.this.userPassLogin.getVerify());
+            this.put("recovery", UserController.this.userPassLogin.getVerify());
+            this.put("status", "pass");
         }});
     }
 
@@ -283,17 +283,17 @@ public class UserController {
      @RequestParam(value = "nickname") String nickname,
      @RequestParam(value = "avatar") String avatar) {
         String user_id_random = new RandomNumber().generateSSONumber();
-        userSSO = new UserSSO(Integer.parseInt(user_id_random), getDecode(email.getBytes()), getDecode(nickname.getBytes()), verify);
-        userInformation = new UserInformation(Integer.parseInt(user_id_random), getDecode(fullName.getBytes()), "not_input", date, getDecode(avatar.getBytes()));
-        userServices.saveSSO(userSSO);
-        userServices.saveInformation(userInformation);
+        this.userSSO = new UserSSO(Integer.parseInt(user_id_random), this.getDecode(email.getBytes()), this.getDecode(nickname.getBytes()), this.verify);
+        this.userInformation = new UserInformation(Integer.parseInt(user_id_random), this.getDecode(fullName.getBytes()), "not_input", this.date, this.getDecode(avatar.getBytes()));
+        this.userServices.saveSSO(this.userSSO);
+        this.userServices.saveInformation(this.userInformation);
         return ResponseEntity.ok().body(new HashMap<>() {{
-            put("user_id", String.valueOf(userSSO.getUserId()));
-            put("fullname", userInformation.getName());
-            put("email", userSSO.getEmail());
-            put("nickname", userSSO.getNickname());
-            put("verify", verify);
-            put("status", "success");
+            this.put("user_id", String.valueOf(UserController.this.userSSO.getUserId()));
+            this.put("fullname", UserController.this.userInformation.getName());
+            this.put("email", UserController.this.userSSO.getEmail());
+            this.put("nickname", UserController.this.userSSO.getNickname());
+            this.put("verify", UserController.this.verify);
+            this.put("status", "success");
         }});
     }
 
@@ -303,13 +303,13 @@ public class UserController {
             @RequestParam(value = "user_id") String user_id,
             @RequestParam(value = "name") String name,
             @RequestParam(value = "avatar") String avatar) {
-        userServices.updateNickname(getDecode(name.getBytes()), getDecode(user_id.getBytes()));
-        userServices.updateAvatar(getDecode(avatar.getBytes()), getDecode(user_id.getBytes()));
+        this.userServices.updateNickname(this.getDecode(name.getBytes()), this.getDecode(user_id.getBytes()));
+        this.userServices.updateAvatar(this.getDecode(avatar.getBytes()), this.getDecode(user_id.getBytes()));
         return ResponseEntity.ok().body(new HashMap<>() {{
-            put("user_id", getDecode(user_id.getBytes()));
-            put("nickname", getDecode(name.getBytes()));
-            put("avatar", getDecode(avatar.getBytes()));
-            put("status", "pass");
+            this.put("user_id", UserController.this.getDecode(user_id.getBytes()));
+            this.put("nickname", UserController.this.getDecode(name.getBytes()));
+            this.put("avatar", UserController.this.getDecode(avatar.getBytes()));
+            this.put("status", "pass");
         }});
     }
 
@@ -320,10 +320,10 @@ public class UserController {
             @RequestParam(value = "userid") String userid,
             @Parameter(name = "birthday", description = "Encode it to BASE64 before input")
             @RequestParam(value = "birthday") String birthday) {
-        userServices.updateBirthday(getDecode(birthday.getBytes(StandardCharsets.UTF_8)), getDecode(userid.getBytes(StandardCharsets.UTF_8)));
+        this.userServices.updateBirthday(this.getDecode(birthday.getBytes(StandardCharsets.UTF_8)), this.getDecode(userid.getBytes(StandardCharsets.UTF_8)));
         return ResponseEntity.ok().body(new HashMap<>() {{
-            put("status", "pass");
-            put("birthday", birthday);
+            this.put("status", "pass");
+            this.put("birthday", birthday);
         }});
     }
 
@@ -334,10 +334,10 @@ public class UserController {
             @RequestParam(value = "userid") String userid,
             @Parameter(name = "gender", description = "Encode it to BASE64 before input")
             @RequestParam(value = "gender") String gender) {
-        userServices.updateGender(getDecode(gender.getBytes(StandardCharsets.UTF_8)), getDecode(userid.getBytes(StandardCharsets.UTF_8)));
+        this.userServices.updateGender(this.getDecode(gender.getBytes(StandardCharsets.UTF_8)), this.getDecode(userid.getBytes(StandardCharsets.UTF_8)));
         return ResponseEntity.ok().body(new HashMap<>() {{
-            put("status", "pass");
-            put("gender", gender);
+            this.put("status", "pass");
+            this.put("gender", gender);
         }});
     }
 }

@@ -33,7 +33,7 @@ public class XXXXXXXKey {
         Random rand = new Random();
         int num = rand.nextInt(9000000) + 1000000;
         while ((num % 10 == 0 || num % 10 == 8 || num % 10 == 9) ||
-                sumOfDigits(num) % 7 != 0) {
+                this.sumOfDigits(num) % 7 != 0) {
             num = rand.nextInt(9000000) + 1000000;
         }
         return String.valueOf(num);

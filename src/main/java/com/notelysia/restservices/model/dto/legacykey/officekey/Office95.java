@@ -22,6 +22,6 @@ public class Office95 {
     String XXXKey = new XXXKey().generateOffice95Key();
     String XXXXXXXKey = new XXXXXXXKey().generateKey();
     @Getter
-    String office95Key = XXXKey + "-" + XXXXXXXKey;
+    String office95Key = this.XXXKey + "-" + this.XXXXXXXKey;
 
 }

@@ -41,9 +41,9 @@ public class SwaggerConfiguration {
     public OpenAPI customOpenAPI() {
 
         try {
-            in = new FileInputStream("spring_conf/authkey.properties");
-            props.load(in);
-            in.close();
+            this.in = new FileInputStream("spring_conf/authkey.properties");
+            this.props.load(this.in);
+            this.in.close();
             return new OpenAPI()
                     //Edit footer, change /v3/api-docs
                     .externalDocs(new io.swagger.v3.oas.models.ExternalDocumentation()
@@ -56,7 +56,7 @@ public class SwaggerConfiguration {
                             .addSecuritySchemes("mySecretHeader", new SecurityScheme()
                                     .type(SecurityScheme.Type.APIKEY)
                                     .in(SecurityScheme.In.HEADER)
-                                    .name(new String(Base64.getDecoder().decode(props.getProperty("auth-token-header-name"))))))
+                                    .name(new String(Base64.getDecoder().decode(this.props.getProperty("auth-token-header-name"))))))
 
                     // AddSecurityItem section applies created scheme globally
                     .addSecurityItem(new SecurityRequirement().addList("mySecretHeader"));
