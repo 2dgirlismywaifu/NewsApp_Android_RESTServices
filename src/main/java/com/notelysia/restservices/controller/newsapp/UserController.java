@@ -35,7 +35,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
 @RestController
-@RequestMapping("/api/v2")
+@RequestMapping("/news-app")
 @Tag(name = "User Pass Login", description = "API for User Pass Login")
 public class UserController {
     private final DecodeString decodeString = new DecodeString();

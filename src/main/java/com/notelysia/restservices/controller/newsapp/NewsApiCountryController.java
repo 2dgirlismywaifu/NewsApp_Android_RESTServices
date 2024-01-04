@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v2/news-api")
+@RequestMapping("/news-api")
 @Tag(name = "NewsAPI Country", description = "API for NewsAPI Country List")
 public class NewsApiCountryController {
     DecodeString decodeString = new DecodeString();

@@ -34,7 +34,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping("/api/v2")
+@RequestMapping("/news-app")
 @Tag(name = "News Source", description = "API for News Source")
 public class NewsSourceController {
     private Map<String, NewsSource> respond;

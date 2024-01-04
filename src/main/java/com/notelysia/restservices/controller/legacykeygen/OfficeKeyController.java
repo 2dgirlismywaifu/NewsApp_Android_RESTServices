@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 
 @RestController
-@RequestMapping("/api/v2")
+@RequestMapping("/legacy-key-generator")
 @Tag(name = "Legacy Office Key", description = "Legacy Office Key Generator")
 public class OfficeKeyController {
     private static final Logger logger = LogManager.getLogger(OfficeKeyController.class);

@@ -31,7 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v2")
+@RequestMapping("/news-app")
 @Tag(name = "Standard Account Favourite Controller", description = "API for Standard Account Favourite Controller")
 public class UserFavouriteController {
     private final DecodeString decodeString = new DecodeString();

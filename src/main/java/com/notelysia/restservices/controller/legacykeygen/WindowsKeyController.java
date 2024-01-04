@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 
 @RestController
-@RequestMapping("/api/v2")
+@RequestMapping("/legacy-key-generator")
 @Tag(name = "Legacy Windows Key", description = "Legacy Windows Key Generator")
 public class WindowsKeyController {
     private static final Logger logger = LogManager.getLogger(WindowsKeyController.class);

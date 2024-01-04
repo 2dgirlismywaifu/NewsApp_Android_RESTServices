@@ -66,8 +66,8 @@ public class SecurityConfig {
                             //Exclude swagger from authentication
                             .requestMatchers(antMatcher("/v3/api-docs/**"), antMatcher("/swagger-ui/**"), antMatcher("/swagger-ui.html")).permitAll()
                             //Exclude for Legacy Key Generator
-                            .requestMatchers(antMatcher("/api/v2/win"), antMatcher("/api/v2/office")).permitAll()
-                            .anyRequest().authenticated()))
+                            .requestMatchers(antMatcher("/legacy-key-generator/**")).permitAll()
+                            .requestMatchers(antMatcher("/news-api/**"), antMatcher("/news-app/**")).authenticated()))
                     .addFilter(filter)
                     .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                     .addFilter(filter)
