@@ -33,6 +33,7 @@ import java.io.Serializable;
 @SecondaryTables({
         @SecondaryTable(name = "image_information", pkJoinColumns = @PrimaryKeyJoinColumn(name = "source_id")),
         @SecondaryTable(name = "sync_subscribe", pkJoinColumns = @PrimaryKeyJoinColumn(name = "source_id")),
+        @SecondaryTable(name = "news_detail", pkJoinColumns = @PrimaryKeyJoinColumn(name = "source_id")),
 })
 public class NewsSource implements Serializable {
     //Instance variables

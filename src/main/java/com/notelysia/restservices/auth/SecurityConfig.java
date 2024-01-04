@@ -57,7 +57,7 @@ public class SecurityConfig {
                         String principal = (String) authentication.getPrincipal();
                         if (!Objects.equals(new String(Base64.getDecoder().decode(this.props.getProperty("auth-token"))), principal)) {
                             throw new BadCredentialsException(
-                                    "The API key was not found or not the expected value.");
+                                    "The api key does not have permission to access or not found!");
                         }
                         authentication.setAuthenticated(true);
                         return authentication;
@@ -71,10 +71,8 @@ public class SecurityConfig {
                     .addFilter(filter)
                     .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                     .addFilter(filter)
-                    .csrf(AbstractHttpConfigurer::disable)
-                    .sessionManagement(
-                            sessionManagement ->
-                                    sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                    .csrf(AbstractHttpConfigurer::disable);
+
             return http.build();
         } catch (Exception e) {
             logger.error("Error: " + e, e);

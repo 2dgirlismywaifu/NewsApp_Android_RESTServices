@@ -32,6 +32,11 @@ import java.io.Serializable;
 @Entity
 @IdClass(SyncSubscribePK.class)
 @Table(name = "sync_subscribe")
+@SecondaryTables({
+        @SecondaryTable(name="news_source", foreignKey = @ForeignKey(name="source_id")),
+        @SecondaryTable(name="user_sso", pkJoinColumns = @PrimaryKeyJoinColumn(name="user_id")),
+        @SecondaryTable(name="user_passlogin", pkJoinColumns = @PrimaryKeyJoinColumn(name="user_id"))
+})
 public class SyncSubscribe implements Serializable {
     //Instance variables
     @GeneratedValue(strategy = GenerationType.IDENTITY)
