@@ -37,9 +37,6 @@
             <Policies>
                 <!-- Causes a rollover if the log file is older than the current JVM's start time -->
                 <OnStartupTriggeringPolicy/>
-                <!-- Causes a rollover once the date/time pattern no longer applies to the active file -->
-                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
-                <SizeBasedTriggeringPolicy size="10 MB"/>
             </Policies>
         </RollingFile>
 
@@ -51,9 +48,8 @@
                 <pattern>%d{yyyy-MM-dd HH:mm} %p %m%n %level %c.%m %ex{full} %n</pattern>
             </PatternLayout>
             <Policies>
-                <!-- Causes a rollover once the date/time pattern no longer applies to the active file -->
-                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
-                <SizeBasedTriggeringPolicy size="10 MB"/>
+                 <!-- Causes a rollover if the log file is older than the current JVM's start time -->
+                <OnStartupTriggeringPolicy/>
             </Policies>
         </RollingFile>
 
@@ -65,23 +61,16 @@
                 <pattern>%d{yyyy-MM-dd HH:mm} %p %m%n %level %c.%m %ex{full} %n</pattern>
             </PatternLayout>
             <Policies>
-                <!-- Causes a rollover once the date/time pattern no longer applies to the active file -->
-                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
-                <SizeBasedTriggeringPolicy size="10 MB"/>
+                 <!-- Causes a rollover if the log file is older than the current JVM's start time -->
+                <OnStartupTriggeringPolicy/>
             </Policies>
         </RollingFile>
 
     </Appenders>
     <Loggers>
-        <Logger name="com.notelysia.restservices" level="info" additivity="false">
-            <AppenderRef ref="rollingFile" level="info"/>
-        </Logger>
         <!-- Log everything in hibernate -->
         <Logger name="org.hibernate" level="info" additivity="false">
             <AppenderRef ref="hibernateFile" level="info"/>
-        </Logger>
-        <Logger name="com.zaxxer.hikari" level="info">
-            <AppenderRef ref="rollingFile" level="info"/>
         </Logger>
         <!-- Log all SQL statements -->
         <Logger name="org.hibernate.SQL" level="debug" additivity="false">
