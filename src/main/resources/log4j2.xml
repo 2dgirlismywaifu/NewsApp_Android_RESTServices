@@ -28,8 +28,7 @@
                     pattern="[%highlight{%-5level}] %d{DEFAULT} %c{1}.%M() - %msg%n%throwable{short.lineNumber}"/>
         </Console>
         <RollingFile name="rollingFile" fileName="${logPath}/${rollingFileName}.log"
-                     filePattern="${logPath}/${rollingFileName}_%d{MM-dd-yyyy-HH-mm}.log.gz"
-        >
+                     filePattern="${logPath}/${rollingFileName}_%d{MM-dd-yyyy-HH-mm}.log.gz">
             <PatternLayout>
                 <alwaysWriteExceptions>false</alwaysWriteExceptions>
                 <!--[%highlight{%-5level}] %d{DEFAULT} %c{1}.%M() - %msg%n%throwable{short.lineNumber} -->
@@ -45,8 +44,7 @@
         </RollingFile>
 
         <RollingFile name="hibernateFile" fileName="${logPath}/${HibernateLog}.log"
-                     filePattern="${logPath}/${HibernateLog}_%d{MM-dd-yyyy-HH-mm}.log.gz"
-        >
+                     filePattern="${logPath}/${HibernateLog}_%d{MM-dd-yyyy-HH-mm}.log.gz">
             <PatternLayout>
                 <alwaysWriteExceptions>false</alwaysWriteExceptions>
                 <!--[%highlight{%-5level}] %d{DEFAULT} %c{1}.%M() - %msg%n%throwable{short.lineNumber} -->
@@ -60,8 +58,7 @@
         </RollingFile>
 
         <RollingFile name="hibernateSQLFile" fileName="${logPath}/${HibernateSQLLog}.log"
-                     filePattern="${logPath}/${HibernateSQLLog}_%d{MM-dd-yyyy-HH-mm}.log.gz"
-        >
+                     filePattern="${logPath}/${HibernateSQLLog}_%d{MM-dd-yyyy-HH-mm}.log.gz">
             <PatternLayout>
                 <alwaysWriteExceptions>false</alwaysWriteExceptions>
                 <!--[%highlight{%-5level}] %d{DEFAULT} %c{1}.%M() - %msg%n%throwable{short.lineNumber} -->
@@ -78,7 +75,6 @@
     <Loggers>
         <Logger name="com.notelysia.restservices" level="info" additivity="false">
             <AppenderRef ref="rollingFile" level="info"/>
-            <AppenderRef ref="console" level="info"/>
         </Logger>
         <!-- Log everything in hibernate -->
         <Logger name="org.hibernate" level="info" additivity="false">
