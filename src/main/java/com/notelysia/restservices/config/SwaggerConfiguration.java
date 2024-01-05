@@ -44,22 +44,29 @@ public class SwaggerConfiguration {
             this.in = new FileInputStream("spring_conf/authkey.properties");
             this.props.load(this.in);
             this.in.close();
+            Components components = new Components();
+            SecurityRequirement securityRequirement = new SecurityRequirement();
+            components.addSecuritySchemes("News-App-Header", new SecurityScheme()
+                                    .type(SecurityScheme.Type.APIKEY)
+                                    .in(SecurityScheme.In.HEADER)
+                                    .name(new String(Base64.getDecoder().decode(this.props.getProperty("auth-token-header-news-app")))));
+            components.addSecuritySchemes("BookStore-Header", new SecurityScheme()
+                                    .type(SecurityScheme.Type.APIKEY)
+                                    .in(SecurityScheme.In.HEADER)
+                                    .name(new String(Base64.getDecoder().decode(this.props.getProperty("auth-token-header-bookstore")))));
+            securityRequirement.addList("News-App-Header");
+            securityRequirement.addList("BookStore-Header");
             return new OpenAPI()
                     //Edit footer, change /v3/api-docs
                     .externalDocs(new io.swagger.v3.oas.models.ExternalDocumentation()
                             .description("Open Source Project NewsApp-RESTServices")
-                            .url("https://github.com/2dgirlismywaifu/NewsApp-RESTServices"))
+                            .url("https://github.com/2dgirlismywaifu/My-REST-Services"))
                     .info(new Info().title("NewsApp Reset API").version("2.0.0"))
                     //HTTP or HTTPS
-                    // Components section defines Security Scheme "mySecretHeader"
-                    .components(new Components()
-                            .addSecuritySchemes("mySecretHeader", new SecurityScheme()
-                                    .type(SecurityScheme.Type.APIKEY)
-                                    .in(SecurityScheme.In.HEADER)
-                                    .name(new String(Base64.getDecoder().decode(this.props.getProperty("auth-token-header-name"))))))
-
+                    // Components section defines Security Scheme
+                    .components(components)
                     // AddSecurityItem section applies created scheme globally
-                    .addSecurityItem(new SecurityRequirement().addList("mySecretHeader"));
+                    .addSecurityItem(securityRequirement);
         } catch (IOException e) {
             logger.error("Error : " + e, e);
             return null;

@@ -17,7 +17,6 @@
 
 package com.notelysia.restservices;
 
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
@@ -27,16 +26,12 @@ import org.springframework.web.servlet.config.annotation.ContentNegotiationConfi
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-
-//@SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
 @SpringBootApplication(exclude = {UserDetailsServiceAutoConfiguration.class})
 @EnableWebMvc
 public class MyRestApplication {
     public static void main(String[] args) {
 
         SpringApplication app = new SpringApplication(MyRestApplication.class);
-        //replace 2984 with your desired port number
-        app.setDefaultProperties(java.util.Collections.singletonMap("server.port", "2984"));
         app.run(args);
     }
 

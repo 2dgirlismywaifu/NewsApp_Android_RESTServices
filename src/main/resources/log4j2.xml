@@ -28,35 +28,74 @@
                     pattern="[%highlight{%-5level}] %d{DEFAULT} %c{1}.%M() - %msg%n%throwable{short.lineNumber}"/>
         </Console>
         <RollingFile name="rollingFile" fileName="${logPath}/${rollingFileName}.log"
-                     filePattern="${logPath}/${rollingFileName}_%d{MM-dd-yyyy-HH-mm}.log.gz">
+                     filePattern="${logPath}/${rollingFileName}_%d{MM-dd-yyyy-HH-mm}.log.gz"
+        >
             <PatternLayout>
-                <alwaysWriteExceptions>true</alwaysWriteExceptions>
+                <alwaysWriteExceptions>false</alwaysWriteExceptions>
                 <!--[%highlight{%-5level}] %d{DEFAULT} %c{1}.%M() - %msg%n%throwable{short.lineNumber} -->
                 <pattern>%d{dd-MM-yyyy HH:mm} %level %c.%m %ex{full} %n</pattern>
             </PatternLayout>
             <Policies>
+                <!-- Causes a rollover if the log file is older than the current JVM's start time -->
+                <OnStartupTriggeringPolicy/>
+                <!-- Causes a rollover once the date/time pattern no longer applies to the active file -->
                 <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+            </Policies>
+        </RollingFile>
+
+        <RollingFile name="hibernateFile" fileName="${logPath}/${HibernateLog}.log"
+                     filePattern="${logPath}/${HibernateLog}_%d{MM-dd-yyyy-HH-mm}.log.gz"
+        >
+            <PatternLayout>
+                <alwaysWriteExceptions>false</alwaysWriteExceptions>
+                <!--[%highlight{%-5level}] %d{DEFAULT} %c{1}.%M() - %msg%n%throwable{short.lineNumber} -->
+                <pattern>%d{yyyy-MM-dd HH:mm} %p %m%n %level %c.%m %ex{full} %n</pattern>
+            </PatternLayout>
+            <Policies>
+                <!-- Causes a rollover once the date/time pattern no longer applies to the active file -->
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+            </Policies>
+        </RollingFile>
+
+        <RollingFile name="hibernateSQLFile" fileName="${logPath}/${HibernateSQLLog}.log"
+                     filePattern="${logPath}/${HibernateSQLLog}_%d{MM-dd-yyyy-HH-mm}.log.gz"
+        >
+            <PatternLayout>
+                <alwaysWriteExceptions>false</alwaysWriteExceptions>
+                <!--[%highlight{%-5level}] %d{DEFAULT} %c{1}.%M() - %msg%n%throwable{short.lineNumber} -->
+                <pattern>%d{yyyy-MM-dd HH:mm} %p %m%n %level %c.%m %ex{full} %n</pattern>
+            </PatternLayout>
+            <Policies>
+                <!-- Causes a rollover once the date/time pattern no longer applies to the active file -->
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="10 MB"/>
             </Policies>
         </RollingFile>
 
     </Appenders>
     <Loggers>
-        <Root level="info">
-            <AppenderRef ref="console"/>
-        </Root>
-        <Logger name="com.notelysia.restservices" level="info">
+        <Logger name="com.notelysia.restservices" level="info" additivity="false">
             <AppenderRef ref="rollingFile" level="info"/>
+            <AppenderRef ref="console" level="info"/>
+        </Logger>
+        <!-- Log everything in hibernate -->
+        <Logger name="org.hibernate" level="info" additivity="false">
+            <AppenderRef ref="hibernateFile" level="info"/>
+            <AppenderRef ref="console"/>
         </Logger>
         <Logger name="com.zaxxer.hikari" level="info">
             <AppenderRef ref="rollingFile" level="info"/>
         </Logger>
-        <!-- Log everything in hibernate -->
-        <Logger name="org.hibernate" level="info">
-            <AppenderRef ref="rollingFile" level="info"/>
-        </Logger>
         <!-- Log all SQL statements -->
-        <Logger name="org.hibernate.SQL" level="debug">
-            <AppenderRef ref="rollingFile" level="debug"/>
+        <Logger name="org.hibernate.SQL" level="debug" additivity="false">
+            <AppenderRef ref="hibernateSQLFile" level="debug"/>
+            <AppenderRef ref="console"/>
         </Logger>
+        <Root level="info" additivity="false">
+            <AppenderRef ref="console"/>
+            <AppenderRef ref="rollingFile"/>
+        </Root>
     </Loggers>
 </Configuration>
