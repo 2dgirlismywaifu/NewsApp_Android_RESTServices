@@ -14,15 +14,15 @@
  *  limitations under the License.
  */
 
-package com.notelysia.restservices.service.newsapp;
+package com.notelysia.restservices.service.authkey;
 
-import com.notelysia.restservices.model.dto.newsapp.AuthApiKeyDto;
-import com.notelysia.restservices.repository.newsapp.AuthApiKeyRepo;
+import com.notelysia.restservices.model.dto.AuthApiKeyDto;
+import com.notelysia.restservices.model.entity.authkey.AuthApiKey;
 
-import java.util.Optional;
+import java.util.List;
 
 public interface AuthApiKeyServices {
-    Optional<AuthApiKeyRepo> findByHeader(String headerName, String token);
+    List<AuthApiKey> findByHeader(String headerName);
     void saveAuthApiKey(AuthApiKeyDto authApiKeyDto);
     void disableKey(String headerName, String token);
 }

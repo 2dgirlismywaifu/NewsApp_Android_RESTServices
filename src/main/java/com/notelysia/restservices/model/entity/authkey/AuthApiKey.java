@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package com.notelysia.restservices.model.entity.newsapp;
+package com.notelysia.restservices.model.entity.authkey;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

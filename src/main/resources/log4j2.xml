@@ -83,7 +83,6 @@
         <!-- Log everything in hibernate -->
         <Logger name="org.hibernate" level="info" additivity="false">
             <AppenderRef ref="hibernateFile" level="info"/>
-            <AppenderRef ref="console"/>
         </Logger>
         <Logger name="com.zaxxer.hikari" level="info">
             <AppenderRef ref="rollingFile" level="info"/>
@@ -91,7 +90,6 @@
         <!-- Log all SQL statements -->
         <Logger name="org.hibernate.SQL" level="debug" additivity="false">
             <AppenderRef ref="hibernateSQLFile" level="debug"/>
-            <AppenderRef ref="console"/>
         </Logger>
         <Root level="info" additivity="false">
             <AppenderRef ref="console"/>

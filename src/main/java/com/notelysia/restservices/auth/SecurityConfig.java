@@ -18,8 +18,11 @@
 package com.notelysia.restservices.auth;
 
 
+import com.notelysia.restservices.model.entity.authkey.AuthApiKey;
+import com.notelysia.restservices.service.authkey.AuthApiKeyServices;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -32,6 +35,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import java.io.FileInputStream;
 import java.util.Base64;
+import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
 
@@ -44,6 +48,12 @@ public class SecurityConfig {
     private static final Logger logger = LogManager.getLogger(SecurityConfig.class);
     Properties props = new Properties();
     FileInputStream in;
+    @Autowired
+    private AuthApiKeyServices authApiKeyServices;
+
+    private List<AuthApiKey> getAuthToken(String headerName) {
+        return this.authApiKeyServices.findByHeader(headerName);
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) {
@@ -51,27 +61,33 @@ public class SecurityConfig {
             this.in = new FileInputStream("spring_conf/authkey.properties");
             this.props.load(this.in);
             this.in.close();
-            ApiKeyAuthFilter newsApp = new ApiKeyAuthFilter(new String(Base64.getDecoder().decode(this.props.getProperty("auth-token-header-news-app"))));
-            ApiKeyAuthFilter bookStore = new ApiKeyAuthFilter(new String(Base64.getDecoder().decode(this.props.getProperty("auth-token-header-news-app"))));
+            String newsAppHeader = new String(Base64.getDecoder().decode(this.props.getProperty("auth-token-header-news-app")));
+            String bookStoreHeader = new String(Base64.getDecoder().decode(this.props.getProperty("auth-token-header-news-app")));
+            ApiKeyAuthFilter newsApp = new ApiKeyAuthFilter(newsAppHeader);
+            ApiKeyAuthFilter bookStore = new ApiKeyAuthFilter(bookStoreHeader);
 
             newsApp.setAuthenticationManager(
                     authentication -> {
                         String principal = (String) authentication.getPrincipal();
-                        if (!Objects.equals(new String(Base64.getDecoder().decode(this.props.getProperty("auth-token-news-app"))), principal)) {
-                            throw new BadCredentialsException(
-                                    "The api key does not have permission to access or not found!");
+                        for (AuthApiKey authApiKey : this.getAuthToken(newsAppHeader)) {
+                            if (!Objects.equals(new String(Base64.getDecoder().decode(authApiKey.getToken())), principal)) {
+                                throw new BadCredentialsException(
+                                        "The api key does not have permission to access or not found!");
+                            }
+                            authentication.setAuthenticated(true);
                         }
-                        authentication.setAuthenticated(true);
                         return authentication;
                     });
             bookStore.setAuthenticationManager(
                     authentication -> {
                         String principal = (String) authentication.getPrincipal();
-                        if (!Objects.equals(new String(Base64.getDecoder().decode(this.props.getProperty("auth-token-bookstore"))), principal)) {
-                            throw new BadCredentialsException(
-                                    "The api key does not have permission to access or not found!");
+                        for (AuthApiKey authApiKey : this.getAuthToken(bookStoreHeader)) {
+                            if (!Objects.equals(new String(Base64.getDecoder().decode(authApiKey.getToken())), principal)) {
+                                throw new BadCredentialsException(
+                                        "The api key does not have permission to access or not found!");
+                            }
+                            authentication.setAuthenticated(true);
                         }
-                        authentication.setAuthenticated(true);
                         return authentication;
                     });
 
@@ -87,9 +103,9 @@ public class SecurityConfig {
                     .csrf(AbstractHttpConfigurer::disable);
 
             http.authorizeHttpRequests((request -> request.
-                            //Exclude for Legacy Key Generator
+                    //Exclude for Legacy Key Generator
                             requestMatchers(antMatcher("/legacy-key-generator/**")).permitAll().
-                            //Exclude swagger from authentication
+                    //Exclude swagger from authentication
                             requestMatchers(antMatcher("/v3/api-docs/**"), antMatcher("/swagger-ui/**"), antMatcher("/swagger-ui.html")).permitAll()));
             return http.build();
         } catch (Exception e) {

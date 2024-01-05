@@ -14,9 +14,8 @@
  *  limitations under the License.
  */
 
-package com.notelysia.restservices.model.dto.newsapp;
+package com.notelysia.restservices.model.dto;
 
-import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -42,8 +42,8 @@ import java.util.Properties;
         entityManagerFactoryRef = "BookStoreEntityManagerFactory",
         transactionManagerRef = "BookStoreTransactionManager",
         basePackages = {"com.notelysia.restservices.repository.bookstore"})
-public class BookStoreDatasourceConfig {
-    private static final Logger logger = LogManager.getLogger(BookStoreDatasourceConfig.class);
+public class BookStoreDataSourceConfig {
+    private static final Logger logger = LogManager.getLogger(BookStoreDataSourceConfig.class);
     //Create a bean for DataSource
     Properties props = new Properties();
     FileInputStream in;

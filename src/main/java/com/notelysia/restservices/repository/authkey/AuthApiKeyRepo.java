@@ -14,20 +14,20 @@
  *  limitations under the License.
  */
 
-package com.notelysia.restservices.repository.newsapp;
+package com.notelysia.restservices.repository.authkey;
 
-import com.notelysia.restservices.model.entity.newsapp.AuthApiKey;
+import com.notelysia.restservices.model.entity.authkey.AuthApiKey;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import java.util.List;
 
 public interface AuthApiKeyRepo extends JpaRepository<AuthApiKey, Long> {
-    @Query("select authKey.headerName, authKey.token from AuthApiKey authKey " +
-            "where authKey.headerName = ?1 and authKey.token = ?2 and authKey.isEnable = 1")
-    Optional<AuthApiKeyRepo> findByHeader(String headerName, String token);
+    @Query("select authKey from AuthApiKey authKey " +
+            "where authKey.headerName = ?1 and authKey.isEnable = 1")
+    List<AuthApiKey> findByHeader(String headerName);
 
     @Query("update AuthApiKey authKey set authKey.isEnable = 0 where authKey.headerName = ?1 and authKey.token = ?2")
     @Modifying
