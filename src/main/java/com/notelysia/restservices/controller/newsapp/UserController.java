@@ -35,7 +35,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
 @RestController
-@RequestMapping("/news-app")
+@RequestMapping("/news-app/user")
 @Tag(name = "User Pass Login", description = "API for User Pass Login")
 public class UserController {
     private final DecodeString decodeString = new DecodeString();
@@ -142,7 +142,7 @@ public class UserController {
     }
 
     //Show recovery code to user
-    @GetMapping(value = "/recoverycode", params = {"email"})
+    @GetMapping(value = "/recovery-code", params = {"email"})
     public ResponseEntity<HashMap<String, String>> recoveryCode(
             @RequestParam(name = "email") String email) throws ResourceNotFound {
         this.userPassLogin = this.userServices.findByRecovery(this.getDecode(email.getBytes(StandardCharsets.UTF_8)))
@@ -153,7 +153,7 @@ public class UserController {
     }
 
     //Generate recovery code from user
-    @PostMapping(value = "/generaterecoverycode", params = {"userid"})
+    @PostMapping(value = "/generate-recovery", params = {"userid"})
     public ResponseEntity<HashMap<String, String>> generateRecoveryCode(
             @RequestParam(value = "userId") String userId) {
         String new_recovery_code = java.util.UUID.randomUUID().toString();
@@ -168,7 +168,7 @@ public class UserController {
     //Other settings is: Avatar Account, User Information like real name, birthday, gender, etc
     //Most important is user can change password
     //Before allow change password, first check old password is correct or not
-    @GetMapping("/account/password/check")
+    @GetMapping("/password/check")
     public ResponseEntity<HashMap<String, String>> checkOldPassword(
             @RequestParam(name = "userid") String userId,
             @RequestParam(name = "email") String email,
@@ -191,7 +191,7 @@ public class UserController {
     }
 
     //Update user name
-    @PostMapping("/account/username/update")
+    @PostMapping("/username/update")
     public ResponseEntity<HashMap<String, String>> updateUserName(
             @RequestParam(value = "userid") String userid,
             @RequestParam(value = "username") String username) {
@@ -217,7 +217,7 @@ public class UserController {
     }
 
     //Update user birthday
-    @PostMapping("/account/birthday/update")
+    @PostMapping("/birthday/update")
     public ResponseEntity<HashMap<String, String>> updateUserBirthday(
             @RequestParam(value = "userid") String userid,
             @RequestParam(value = "birthday") String birthday) {
@@ -230,7 +230,7 @@ public class UserController {
     }
 
     //Update user gender
-    @PostMapping(value = "/account/gender/update")
+    @PostMapping(value = "/gender/update")
     public ResponseEntity<HashMap<String, String>> updateUserGender(
             @RequestParam(value = "userid") String userid,
             @RequestParam(value = "gender") String gender) {
@@ -243,7 +243,7 @@ public class UserController {
     }
 
     //Update user avatar
-    @PostMapping(value = "/account/avatar/update")
+    @PostMapping(value = "/avatar/update")
     public ResponseEntity<HashMap<String, String>> updateUserAvatar(
             @RequestParam(value = "userid") String userid,
             @RequestParam(value = "avatar") String avatar) {
@@ -256,7 +256,7 @@ public class UserController {
     }
 
     //Recovery account with recovery code
-    @GetMapping(value = "/account/recovery", params = {"code"})
+    @GetMapping(value = "/recovery", params = {"code"})
     public ResponseEntity<HashMap<String, String>> RecoveryAccount(
             @RequestParam(name = "code") String code) throws ResourceNotFound {
         this.userPassLogin = this.userServices.findByRecovery(this.getDecode(code.getBytes(StandardCharsets.UTF_8)))
