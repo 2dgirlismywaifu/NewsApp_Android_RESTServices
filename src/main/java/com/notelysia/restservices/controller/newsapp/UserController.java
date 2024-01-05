@@ -103,7 +103,7 @@ public class UserController {
         String salt = this.userPassLogin.getSalt();
         String password_check = BCrypt.hashpw(this.getDecode(password.getBytes(StandardCharsets.UTF_8)), salt);
         if (password_check.equals(password_hash)) {
-            userFound.put("user_id", String.valueOf(this.userPassLogin.getUserId()));
+            userFound.put("userId", String.valueOf(this.userPassLogin.getUserId()));
             userFound.put("email", this.userPassLogin.getEmail());
             userFound.put("nickname", this.userPassLogin.getNickname());
             userFound.put("verify", this.userPassLogin.getVerify());
@@ -205,14 +205,14 @@ public class UserController {
 
     //Update user fullName
     @PostMapping("/account/full-name/update")
-    public ResponseEntity<HashMap<String, String>> updateUserFullName(
+    public ResponseEntity<HashMap<String, String>> updateUserfullName(
             @RequestParam(value = "userid") String userid,
-            @RequestParam(value = "fullname") String fullname) {
-        this.userServices.updateFullName(this.getDecode(fullname.getBytes(StandardCharsets.UTF_8)),
+            @RequestParam(value = "fullName") String fullName) {
+        this.userServices.updateFullName(this.getDecode(fullName.getBytes(StandardCharsets.UTF_8)),
                 this.getDecode(userid.getBytes(StandardCharsets.UTF_8)));
         return ResponseEntity.ok().body(new HashMap<>() {{
             this.put("status", "pass");
-            this.put("username", fullname);
+            this.put("username", fullName);
         }});
     }
 
@@ -262,7 +262,7 @@ public class UserController {
         this.userPassLogin = this.userServices.findByRecovery(this.getDecode(code.getBytes(StandardCharsets.UTF_8)))
                 .orElseThrow(() -> new ResourceNotFound("Failed"));
         return ResponseEntity.ok().body(new HashMap<>() {{
-            this.put("user_id", String.valueOf(UserController.this.userPassLogin.getUserId()));
+            this.put("userId", String.valueOf(UserController.this.userPassLogin.getUserId()));
             this.put("email", UserController.this.userPassLogin.getEmail());
             this.put("password", UserController.this.userPassLogin.getPassword());
             this.put("salt", UserController.this.userPassLogin.getSalt());
@@ -282,14 +282,14 @@ public class UserController {
      @RequestParam(value = "email") String email,
      @RequestParam(value = "nickname") String nickname,
      @RequestParam(value = "avatar") String avatar) {
-        String user_id_random = new RandomNumber().generateSSONumber();
-        this.userSSO = new UserSSO(Integer.parseInt(user_id_random), this.getDecode(email.getBytes()), this.getDecode(nickname.getBytes()), this.verify);
-        this.userInformation = new UserInformation(Integer.parseInt(user_id_random), this.getDecode(fullName.getBytes()), "not_input", this.date, this.getDecode(avatar.getBytes()));
+        String userId_random = new RandomNumber().generateSSONumber();
+        this.userSSO = new UserSSO(Integer.parseInt(userId_random), this.getDecode(email.getBytes()), this.getDecode(nickname.getBytes()), this.verify);
+        this.userInformation = new UserInformation(Integer.parseInt(userId_random), this.getDecode(fullName.getBytes()), "not_input", this.date, this.getDecode(avatar.getBytes()));
         this.userServices.saveSSO(this.userSSO);
         this.userServices.saveInformation(this.userInformation);
         return ResponseEntity.ok().body(new HashMap<>() {{
-            this.put("user_id", String.valueOf(UserController.this.userSSO.getUserId()));
-            this.put("fullname", UserController.this.userInformation.getName());
+            this.put("userId", String.valueOf(UserController.this.userSSO.getUserId()));
+            this.put("fullName", UserController.this.userInformation.getName());
             this.put("email", UserController.this.userSSO.getEmail());
             this.put("nickname", UserController.this.userSSO.getNickname());
             this.put("verify", UserController.this.verify);
@@ -300,13 +300,13 @@ public class UserController {
     //Update user information
     @PostMapping(value = "/sso/update")
     public ResponseEntity<HashMap<String, String>> updateUser(
-            @RequestParam(value = "user_id") String user_id,
+            @RequestParam(value = "userId") String userId,
             @RequestParam(value = "name") String name,
             @RequestParam(value = "avatar") String avatar) {
-        this.userServices.updateNickname(this.getDecode(name.getBytes()), this.getDecode(user_id.getBytes()));
-        this.userServices.updateAvatar(this.getDecode(avatar.getBytes()), this.getDecode(user_id.getBytes()));
+        this.userServices.updateNickname(this.getDecode(name.getBytes()), this.getDecode(userId.getBytes()));
+        this.userServices.updateAvatar(this.getDecode(avatar.getBytes()), this.getDecode(userId.getBytes()));
         return ResponseEntity.ok().body(new HashMap<>() {{
-            this.put("user_id", UserController.this.getDecode(user_id.getBytes()));
+            this.put("userId", UserController.this.getDecode(userId.getBytes()));
             this.put("nickname", UserController.this.getDecode(name.getBytes()));
             this.put("avatar", UserController.this.getDecode(avatar.getBytes()));
             this.put("status", "pass");
