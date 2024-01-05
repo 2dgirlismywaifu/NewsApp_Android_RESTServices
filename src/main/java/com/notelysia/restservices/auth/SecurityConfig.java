@@ -44,34 +44,53 @@ public class SecurityConfig {
     private static final Logger logger = LogManager.getLogger(SecurityConfig.class);
     Properties props = new Properties();
     FileInputStream in;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) {
         try {
             this.in = new FileInputStream("spring_conf/authkey.properties");
             this.props.load(this.in);
             this.in.close();
-            ApiKeyAuthFilter filter = new ApiKeyAuthFilter(new String(Base64.getDecoder().decode(this.props.getProperty("auth-token-header-name"))));
-            filter.setAuthenticationManager(
+            ApiKeyAuthFilter newsApp = new ApiKeyAuthFilter(new String(Base64.getDecoder().decode(this.props.getProperty("auth-token-header-news-app"))));
+            ApiKeyAuthFilter bookStore = new ApiKeyAuthFilter(new String(Base64.getDecoder().decode(this.props.getProperty("auth-token-header-news-app"))));
+
+            newsApp.setAuthenticationManager(
                     authentication -> {
                         String principal = (String) authentication.getPrincipal();
-                        if (!Objects.equals(new String(Base64.getDecoder().decode(this.props.getProperty("auth-token"))), principal)) {
+                        if (!Objects.equals(new String(Base64.getDecoder().decode(this.props.getProperty("auth-token-news-app"))), principal)) {
                             throw new BadCredentialsException(
                                     "The api key does not have permission to access or not found!");
                         }
                         authentication.setAuthenticated(true);
                         return authentication;
                     });
+            bookStore.setAuthenticationManager(
+                    authentication -> {
+                        String principal = (String) authentication.getPrincipal();
+                        if (!Objects.equals(new String(Base64.getDecoder().decode(this.props.getProperty("auth-token-bookstore"))), principal)) {
+                            throw new BadCredentialsException(
+                                    "The api key does not have permission to access or not found!");
+                        }
+                        authentication.setAuthenticated(true);
+                        return authentication;
+                    });
+
             http.authorizeHttpRequests((request -> request
-                            //Exclude swagger from authentication
-                            .requestMatchers(antMatcher("/v3/api-docs/**"), antMatcher("/swagger-ui/**"), antMatcher("/swagger-ui.html")).permitAll()
-                            //Exclude for Legacy Key Generator
-                            .requestMatchers(antMatcher("/legacy-key-generator/**")).permitAll()
                             .requestMatchers(antMatcher("/news-api/**"), antMatcher("/news-app/**")).authenticated()))
-                    .addFilter(filter)
+                    .addFilter(newsApp)
                     .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                    .addFilter(filter)
+                    .csrf(AbstractHttpConfigurer::disable);
+            http.authorizeHttpRequests((request -> request
+                            .requestMatchers(antMatcher("/book-store/**")).authenticated()))
+                    .addFilter(bookStore)
+                    .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                     .csrf(AbstractHttpConfigurer::disable);
 
+            http.authorizeHttpRequests((request -> request.
+                            //Exclude for Legacy Key Generator
+                            requestMatchers(antMatcher("/legacy-key-generator/**")).permitAll().
+                            //Exclude swagger from authentication
+                            requestMatchers(antMatcher("/v3/api-docs/**"), antMatcher("/swagger-ui/**"), antMatcher("/swagger-ui.html")).permitAll()));
             return http.build();
         } catch (Exception e) {
             logger.error("Error: " + e, e);
