@@ -17,6 +17,7 @@
 package com.notelysia.restservices.repository.newsapp;
 
 import com.notelysia.restservices.model.entity.newsapp.NewsSource;
+import org.springframework.data.domain.Limit;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -27,10 +28,9 @@ import java.util.Optional;
 @Repository
 public interface NewsSourceRepo extends JpaRepository<NewsSource, Long> {
     //Query to get all news source
-    @Query(
-            "FROM NewsSource newsSource, ImageInformation imageInfo " +
-                    "WHERE newsSource.sourceId = imageInfo.sourceId LIMIT 5")
-    List<NewsSource> findAllNewsSource();
+    @Query("select newsSource, imageInfo.image FROM NewsSource newsSource, ImageInformation imageInfo " +
+            "WHERE newsSource.sourceId = imageInfo.sourceId")
+    List<NewsSource> findAllNewsSource(Limit limit);
 
     //Query to get all news source for the user login with email and password
     @Query(

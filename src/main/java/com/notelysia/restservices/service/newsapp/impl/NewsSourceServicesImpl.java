@@ -7,6 +7,7 @@ import com.notelysia.restservices.repository.newsapp.NewsDetailRepo;
 import com.notelysia.restservices.repository.newsapp.NewsSourceRepo;
 import com.notelysia.restservices.service.newsapp.NewsSourceServices;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Limit;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public class NewsSourceServicesImpl implements NewsSourceServices {
 
     @Override
     public List<NewsSource> findAllNewsSource() {
-        return this.newsSourceRepo.findAllNewsSource();
+        return this.newsSourceRepo.findAllNewsSource(Limit.of(3));
     }
 
     @Override
