@@ -49,9 +49,7 @@ public class NewsDetailController {
     //This is only for guest user, follow subscribe only for logined user
     @GetMapping("/guest/news-details")
     public ResponseEntity<HashMap<String, List<NewsDetail>>> allNewsSource(
-            @Parameter(name = "type", description = "Encode it to BASE64 before input", required = true)
             @RequestParam(value = "type") String type,
-            @Parameter(name = "name", description = "Encode it to BASE64 before input", required = true)
             @RequestParam(value = "name") String name) {
         List<NewsDetail> newsDetailList = this.newsSourceServices.findByUrlTypeAndSourceName(this.getDecode(type.getBytes()), this.getDecode(name.getBytes()));
         return new ResponseEntity<>(new HashMap<>() {
@@ -62,27 +60,26 @@ public class NewsDetailController {
     }
 
     //This is list url for each source
-    @GetMapping("/user/news-details/list")
-    public ResponseEntity<HashMap<String, List<NewsDetail>>> allNewsSource(
-            @Parameter(name = "name", description = "Encode it to BASE64 before input", required = true)
+    @GetMapping("/account/news-details/list-url")
+    public ResponseEntity<HashMap<String, List<NewsDetail>>> getTypeOfEachUrlNewsSource(
             @RequestParam(value = "name") String name) {
         List<NewsDetail> newsDetailList = this.newsSourceServices.findBySourceName(this.getDecode(name.getBytes()));
         return new ResponseEntity<>(new HashMap<>() {
             {
-                this.put("List" + NewsDetailController.this.getDecode(name.getBytes()), newsDetailList);
+                this.put("List of URL" + NewsDetailController.this.getDecode(name.getBytes()), newsDetailList);
             }
         }, HttpStatus.OK);
     }
 
     //GET URL RSS LIST FOLLOW SOURCE_NAME
-    @GetMapping(value = "/user/news-details/rss/list")
-    public ResponseEntity<HashMap<String, List<RSSList>>> allRSSList(
+    @GetMapping(value = "/account/news-details/list-rss")
+    public ResponseEntity<HashMap<String, List<RSSList>>> getRssListEachSourceName(
             @Parameter(name = "name", description = "Encode it to BASE64 before input", required = true)
             @RequestParam(value = "name") String name) {
         List<RSSList> rssList = this.newsSourceServices.findUrlBySourceName(this.getDecode(name.getBytes()));
         return new ResponseEntity<>(new HashMap<>() {
             {
-                this.put("RSSList", rssList);
+                this.put("List of RSS", rssList);
             }
         }, HttpStatus.OK);
     }

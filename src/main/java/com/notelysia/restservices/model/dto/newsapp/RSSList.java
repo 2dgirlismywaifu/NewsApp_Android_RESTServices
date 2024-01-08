@@ -22,7 +22,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RSSList {
-    private String url_type;
+    private String urlType;
     private String url;
-    private String url_image;
+    private String urlImage;
 }
