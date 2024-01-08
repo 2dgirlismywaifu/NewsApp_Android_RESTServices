@@ -23,6 +23,7 @@ import java.util.List;
 
 public interface AuthApiKeyServices {
     List<AuthApiKey> findByHeader(String headerName);
+    String findByNewsApiKey(String headerName);
     void saveAuthApiKey(AuthApiKeyDto authApiKeyDto);
     void disableKey(String headerName, String token);
 }

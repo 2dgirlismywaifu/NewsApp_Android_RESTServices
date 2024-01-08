@@ -17,6 +17,11 @@ public class AuthApiKeyServicesImpl implements AuthApiKeyServices{
     }
 
     @Override
+    public String findByNewsApiKey(String headerName) {
+        return this.authApiKeyRepo.findByNewsApiKey(headerName);
+    }
+
+    @Override
     public void saveAuthApiKey(AuthApiKeyDto authApiKeyDto) {
         AuthApiKey authApiKey = new AuthApiKey();
         authApiKey.setId(authApiKeyDto.getId());

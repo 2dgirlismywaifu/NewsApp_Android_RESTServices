@@ -20,7 +20,6 @@ import com.notelysia.restservices.config.DecodeString;
 import com.notelysia.restservices.model.dto.newsapp.RSSList;
 import com.notelysia.restservices.model.entity.newsapp.NewsDetail;
 import com.notelysia.restservices.service.newsapp.NewsSourceServices;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,7 +45,7 @@ public class NewsDetailController {
         return this.decodeString.decodeString(data);
     }
 
-    //This is only for guest user, follow subscribe only for logined user
+    //This is only for guest user, follow subscribe only for login user
     @GetMapping("/guest/news-details")
     public ResponseEntity<HashMap<String, List<NewsDetail>>> allNewsSource(
             @RequestParam(value = "type") String type,
@@ -74,7 +73,6 @@ public class NewsDetailController {
     //GET URL RSS LIST FOLLOW SOURCE_NAME
     @GetMapping(value = "/account/news-details/list-rss")
     public ResponseEntity<HashMap<String, List<RSSList>>> getRssListEachSourceName(
-            @Parameter(name = "name", description = "Encode it to BASE64 before input", required = true)
             @RequestParam(value = "name") String name) {
         List<RSSList> rssList = this.newsSourceServices.findUrlBySourceName(this.getDecode(name.getBytes()));
         return new ResponseEntity<>(new HashMap<>() {

@@ -35,6 +35,12 @@
         <java.version>17</java.version>
         <packaging>jar</packaging>
     </properties>
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -149,6 +155,23 @@
             <artifactId>jakarta.servlet-api</artifactId>
             <version>6.1.0-M1</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.KwabenBerko</groupId>
+            <artifactId>News-API-Java</artifactId>
+            <version>1.0.2</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.json</groupId>
+                    <artifactId>json</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.json/json -->
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20231013</version>
         </dependency>
 
         <dependency>

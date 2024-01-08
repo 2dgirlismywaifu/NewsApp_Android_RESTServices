@@ -29,6 +29,10 @@ public interface AuthApiKeyRepo extends JpaRepository<AuthApiKey, Long> {
             "where authKey.headerName = ?1 and authKey.isEnable = 1")
     List<AuthApiKey> findByHeader(String headerName);
 
+    @Query("select authKey.token from AuthApiKey authKey " +
+            "where authKey.headerName = ?1 and authKey.isEnable = 1")
+    String findByNewsApiKey(String headerName);
+
     @Query("update AuthApiKey authKey set authKey.isEnable = 0 where authKey.headerName = ?1 and authKey.token = ?2")
     @Modifying
     @Transactional
