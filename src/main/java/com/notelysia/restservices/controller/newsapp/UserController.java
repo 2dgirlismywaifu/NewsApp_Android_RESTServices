@@ -173,22 +173,25 @@ public class UserController {
         }});
     }
 
-
-    //Other settings is: Avatar Account, User Information like real name, birthday, gender, etc
-    //Most important is user can change password
-    //Before allow change password, first check old password is correct or not
-    @GetMapping("/password/check")
-    public ResponseEntity<HashMap<String, String>> checkOldPassword(
+    //Update password form request forgot password and change password form in settings
+    @PostMapping("/change-password")
+    public ResponseEntity<HashMap<String, String>> changePassword(
             @RequestParam(name = "userid") String userId,
             @RequestParam(name = "email") String email,
-            @RequestParam(name = "oldPass") String oldPass) throws ResourceNotFound {
-        this.userPassLogin = this.userServices.findByEmailOrUserid(this.getDecode(email.getBytes(StandardCharsets.UTF_8)),
+            @RequestParam(name = "oldPass") String oldPass,
+            @RequestParam(name = "newPass") String newPass) throws ResourceNotFound {
+         this.userPassLogin = this.userServices.findByEmailOrUserid(this.getDecode(email.getBytes(StandardCharsets.UTF_8)),
                         this.getDecode(userId.getBytes(StandardCharsets.UTF_8)))
                 .orElseThrow(() -> new ResourceNotFound("Failed"));
-        String password_hash = this.userPassLogin.getPassword();
+        String oldPasswordHash = this.userPassLogin.getPassword();
         String salt = this.userPassLogin.getSalt();
-        String password_check = BCrypt.hashpw(this.getDecode(oldPass.getBytes(StandardCharsets.UTF_8)), salt);
-        if (password_check.equals(password_hash)) {
+        String passwordCheck = BCrypt.hashpw(this.getDecode(oldPass.getBytes(StandardCharsets.UTF_8)), salt);
+        String recoveryCode = java.util.UUID.randomUUID().toString();
+        //Bcrypt password
+        String Salt = BCrypt.gensalt();
+        String newPasswordHash = BCrypt.hashpw(this.getDecode(newPass.getBytes(StandardCharsets.UTF_8)), Salt);
+        if (passwordCheck.equals(oldPasswordHash)) {
+            this.userServices.updatePassword(newPasswordHash, Salt, recoveryCode, this.getDecode(email.getBytes(StandardCharsets.UTF_8)));
             return ResponseEntity.ok().body(new HashMap<>() {{
                 this.put("status", "success");
             }});
@@ -197,18 +200,6 @@ public class UserController {
                 this.put("status", "fail");
             }});
         }
-    }
-
-    //Update password form request forgot password and change password form in settings
-    @PostMapping("/change-password")
-    public void changePassword(
-            @RequestParam(name = "email") String email,
-            @RequestParam(name = "password") String password) {
-        String recovery_code = java.util.UUID.randomUUID().toString();
-        //Bcrypt password
-        String Salt = BCrypt.gensalt();
-        String password_hash = BCrypt.hashpw(this.getDecode(password.getBytes(StandardCharsets.UTF_8)), Salt);
-        this.userServices.updatePassword(password_hash, Salt, recovery_code, this.getDecode(email.getBytes(StandardCharsets.UTF_8)));
     }
 
     //Update user information
@@ -264,11 +255,9 @@ public class UserController {
         return ResponseEntity.ok().body(new HashMap<>() {{
             this.put("userId", String.valueOf(UserController.this.userPassLogin.getUserId()));
             this.put("email", UserController.this.userPassLogin.getEmail());
-            this.put("password", UserController.this.userPassLogin.getPassword());
-            this.put("salt", UserController.this.userPassLogin.getSalt());
             this.put("nickname", UserController.this.userPassLogin.getNickname());
             this.put("verify", UserController.this.userPassLogin.getVerify());
-            this.put("recovery", UserController.this.userPassLogin.getVerify());
+            this.put("recovery", UserController.this.userPassLogin.getRecovery());
             this.put("status", "success");
         }});
     }
