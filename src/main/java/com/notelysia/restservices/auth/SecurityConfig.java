@@ -70,7 +70,7 @@ public class SecurityConfig {
                     authentication -> {
                         String principal = (String) authentication.getPrincipal();
                         for (AuthApiKey authApiKey : this.getAuthToken(newsAppHeader)) {
-                            if (!Objects.equals(new String(Base64.getDecoder().decode(authApiKey.getToken())), principal)) {
+                            if (!Objects.equals(authApiKey.getToken(), principal)) {
                                 throw new BadCredentialsException(
                                         "The api key does not have permission to access or not found!");
                             }
@@ -82,7 +82,7 @@ public class SecurityConfig {
                     authentication -> {
                         String principal = (String) authentication.getPrincipal();
                         for (AuthApiKey authApiKey : this.getAuthToken(bookStoreHeader)) {
-                            if (!Objects.equals(new String(Base64.getDecoder().decode(authApiKey.getToken())), principal)) {
+                            if (!Objects.equals(authApiKey.getToken(), principal)) {
                                 throw new BadCredentialsException(
                                         "The api key does not have permission to access or not found!");
                             }
