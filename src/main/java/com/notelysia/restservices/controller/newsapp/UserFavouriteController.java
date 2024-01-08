@@ -65,7 +65,7 @@ public class UserFavouriteController {
 
     //Unsubscribe source from user
     //services will use params: userId, source_id
-    @DeleteMapping(value = "/account/unsubscribe-news", params = {"userId", "sourceid"})
+    @DeleteMapping(value = "/account/unsubscribe-sources", params = {"userId", "sourceid"})
     public ResponseEntity<HashMap<String, String>> userSourceUnsubscribe(
             @RequestParam(value = "userId") String userId,
             @RequestParam(value = "sourceId") String sourceId) {
