@@ -23,7 +23,6 @@ import com.notelysia.restservices.model.entity.newsapp.UserInformation;
 import com.notelysia.restservices.model.entity.newsapp.UserPassLogin;
 import com.notelysia.restservices.model.entity.newsapp.UserSSO;
 import com.notelysia.restservices.service.newsapp.UserServices;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -53,8 +52,6 @@ public class UserController {
 
     @PostMapping("/register")
     //Create user account
-    //Add description to each RequestParam
-    //Post method not show RequestParam in swagger, use @RequestBody instead
     public ResponseEntity<HashMap<String, String>> registerUser
             (@RequestParam(name = "fullName") String fullName,
              @RequestParam(name = "email") String email,
@@ -74,7 +71,31 @@ public class UserController {
             this.put("email", UserController.this.userPassLogin.getEmail());
             this.put("nickname", UserController.this.userPassLogin.getNickname());
             this.put("verify", UserController.this.userPassLogin.getVerify());
-            this.put("status", "pass");
+            this.put("status", "success");
+        }});
+    }
+
+    //Create user account
+    //Why gender and birthday not input? Because it is private information about each user.
+    // Firebase do not have function to get the user's gender/birthdate
+    @PostMapping("/register-by-google")
+    public ResponseEntity<HashMap<String, String>> registerByGoogle
+    (@RequestParam(value = "fullName") String fullName,
+     @RequestParam(value = "email") String email,
+     @RequestParam(value = "nickname") String nickname,
+     @RequestParam(value = "avatar") String avatar) {
+        String userId_random = new RandomNumber().generateSSONumber();
+        this.userSSO = new UserSSO(Integer.parseInt(userId_random), this.getDecode(email.getBytes()), this.getDecode(nickname.getBytes()), this.verify);
+        this.userInformation = new UserInformation(Integer.parseInt(userId_random), this.getDecode(fullName.getBytes()), "not_input", this.date, this.getDecode(avatar.getBytes()));
+        this.userServices.saveSSO(this.userSSO);
+        this.userServices.saveInformation(this.userInformation);
+        return ResponseEntity.ok().body(new HashMap<>() {{
+            this.put("userId", String.valueOf(UserController.this.userSSO.getUserId()));
+            this.put("fullName", fullName);
+            this.put("email", email);
+            this.put("nickname", nickname);
+            this.put("verify", UserController.this.verify);
+            this.put("status", "success");
         }});
     }
 
@@ -85,7 +106,7 @@ public class UserController {
         return ResponseEntity.ok().body(new HashMap<>() {
             {
                 this.put("email", UserController.this.getDecode(email.getBytes(StandardCharsets.UTF_8)));
-                this.put("status", "pass");
+                this.put("status", "success");
             }
         });
     }
@@ -107,24 +128,12 @@ public class UserController {
             userFound.put("email", this.userPassLogin.getEmail());
             userFound.put("nickname", this.userPassLogin.getNickname());
             userFound.put("verify", this.userPassLogin.getVerify());
-            userFound.put("status", "pass");
+            userFound.put("status", "success");
             return ResponseEntity.ok().body(userFound);
         } else {
             userFound.put("status", "fail");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(userFound);
         }
-    }
-
-    //Update password form request forgot password and change password form in settings
-    @PostMapping("/change-password")
-    public void changePassword(
-            @RequestParam(name = "email") String email,
-            @RequestParam(name = "password") String password) {
-        String recovery_code = java.util.UUID.randomUUID().toString();
-        //Bcrypt password
-        String Salt = BCrypt.gensalt();
-        String password_hash = BCrypt.hashpw(this.getDecode(password.getBytes(StandardCharsets.UTF_8)), Salt);
-        this.userServices.updatePassword(password_hash, Salt, recovery_code, this.getDecode(email.getBytes(StandardCharsets.UTF_8)));
     }
 
     //Make sure nickname and email is available to use
@@ -160,7 +169,7 @@ public class UserController {
         this.userServices.updateRecovery(new_recovery_code, userId);
         return ResponseEntity.ok().body(new HashMap<>() {{
             this.put("recovery", new_recovery_code);
-            this.put("status", "pass");
+            this.put("status", "success");
         }});
     }
 
@@ -181,7 +190,7 @@ public class UserController {
         String password_check = BCrypt.hashpw(this.getDecode(oldPass.getBytes(StandardCharsets.UTF_8)), salt);
         if (password_check.equals(password_hash)) {
             return ResponseEntity.ok().body(new HashMap<>() {{
-                this.put("status", "pass");
+                this.put("status", "success");
             }});
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new HashMap<>() {{
@@ -190,69 +199,60 @@ public class UserController {
         }
     }
 
-    //Update user name
-    @PostMapping("/username/update")
-    public ResponseEntity<HashMap<String, String>> updateUserName(
-            @RequestParam(value = "userid") String userid,
-            @RequestParam(value = "username") String username) {
-        this.userServices.updateNickname(this.getDecode(username.getBytes(StandardCharsets.UTF_8)),
-                this.getDecode(userid.getBytes(StandardCharsets.UTF_8)));
-        return ResponseEntity.ok().body(new HashMap<>() {{
-            this.put("status", "pass");
-            this.put("username", username);
-        }});
+    //Update password form request forgot password and change password form in settings
+    @PostMapping("/change-password")
+    public void changePassword(
+            @RequestParam(name = "email") String email,
+            @RequestParam(name = "password") String password) {
+        String recovery_code = java.util.UUID.randomUUID().toString();
+        //Bcrypt password
+        String Salt = BCrypt.gensalt();
+        String password_hash = BCrypt.hashpw(this.getDecode(password.getBytes(StandardCharsets.UTF_8)), Salt);
+        this.userServices.updatePassword(password_hash, Salt, recovery_code, this.getDecode(email.getBytes(StandardCharsets.UTF_8)));
     }
 
-    //Update user fullName
-    @PostMapping("/account/full-name/update")
-    public ResponseEntity<HashMap<String, String>> updateUserfullName(
+    //Update user information
+    @PostMapping("/update")
+    public ResponseEntity<HashMap<String, String>> updateUserInformation(
             @RequestParam(value = "userid") String userid,
-            @RequestParam(value = "fullName") String fullName) {
-        this.userServices.updateFullName(this.getDecode(fullName.getBytes(StandardCharsets.UTF_8)),
+            @RequestParam(value = "username", required = false) String username,
+            @RequestParam(value = "fullName", required = false) String fullName,
+            @RequestParam(value = "birthday", required = false) String birthday,
+            @RequestParam(value = "gender", required = false) String gender,
+            @RequestParam(value = "avatar", required = false) String avatar) {
+        HashMap<String, String> resultRespond = new HashMap<>();
+        if (username != null) {
+            this.userServices.updateNickname(this.getDecode(username.getBytes(StandardCharsets.UTF_8)),
                 this.getDecode(userid.getBytes(StandardCharsets.UTF_8)));
-        return ResponseEntity.ok().body(new HashMap<>() {{
-            this.put("status", "pass");
-            this.put("username", fullName);
-        }});
-    }
+            resultRespond.put("UserName", username);
+        }
 
-    //Update user birthday
-    @PostMapping("/birthday/update")
-    public ResponseEntity<HashMap<String, String>> updateUserBirthday(
-            @RequestParam(value = "userid") String userid,
-            @RequestParam(value = "birthday") String birthday) {
-        this.userServices.updateBirthday(this.getDecode(birthday.getBytes(StandardCharsets.UTF_8)),
+        if (fullName != null) {
+            this.userServices.updateFullName(this.getDecode(fullName.getBytes(StandardCharsets.UTF_8)),
                 this.getDecode(userid.getBytes(StandardCharsets.UTF_8)));
-        return ResponseEntity.ok().body(new HashMap<>() {{
-            this.put("status", "pass");
-            this.put("birthday", birthday);
-        }});
-    }
+            resultRespond.put("fullName", fullName);
+        }
 
-    //Update user gender
-    @PostMapping(value = "/gender/update")
-    public ResponseEntity<HashMap<String, String>> updateUserGender(
-            @RequestParam(value = "userid") String userid,
-            @RequestParam(value = "gender") String gender) {
-        this.userServices.updateGender(this.getDecode(gender.getBytes(StandardCharsets.UTF_8)),
+        if (birthday != null) {
+            this.userServices.updateBirthday(this.getDecode(birthday.getBytes(StandardCharsets.UTF_8)),
                 this.getDecode(userid.getBytes(StandardCharsets.UTF_8)));
-        return ResponseEntity.ok().body(new HashMap<>() {{
-            this.put("status", "pass");
-            this.put("gender", gender);
-        }});
-    }
+            resultRespond.put("birthday", birthday);
+        }
 
-    //Update user avatar
-    @PostMapping(value = "/avatar/update")
-    public ResponseEntity<HashMap<String, String>> updateUserAvatar(
-            @RequestParam(value = "userid") String userid,
-            @RequestParam(value = "avatar") String avatar) {
-        this.userServices.updateAvatar(this.getDecode(avatar.getBytes(StandardCharsets.UTF_8)),
+        if (gender != null) {
+            this.userServices.updateGender(this.getDecode(gender.getBytes(StandardCharsets.UTF_8)),
                 this.getDecode(userid.getBytes(StandardCharsets.UTF_8)));
-        return ResponseEntity.ok().body(new HashMap<>() {{
-            this.put("status", "pass");
-            this.put("avatar", avatar);
-        }});
+            resultRespond.put("gender", gender);
+        }
+
+        if (avatar != null) {
+            this.userServices.updateAvatar(this.getDecode(avatar.getBytes(StandardCharsets.UTF_8)),
+                this.getDecode(userid.getBytes(StandardCharsets.UTF_8)));
+            resultRespond.put("avatar", avatar);
+        }
+
+        resultRespond.put("status", "success");
+        return ResponseEntity.ok().body(resultRespond);
     }
 
     //Recovery account with recovery code
@@ -269,75 +269,7 @@ public class UserController {
             this.put("nickname", UserController.this.userPassLogin.getNickname());
             this.put("verify", UserController.this.userPassLogin.getVerify());
             this.put("recovery", UserController.this.userPassLogin.getVerify());
-            this.put("status", "pass");
-        }});
-    }
-
-    //Create user account
-    //Why gender and birthday not input? Because it is private information about each user.
-    // Firebase do not have function to get the user's gender/birthdate
-    @PostMapping("/sso")
-    public ResponseEntity<HashMap<String, String>> registerUserSso
-    (@RequestParam(value = "fullName") String fullName,
-     @RequestParam(value = "email") String email,
-     @RequestParam(value = "nickname") String nickname,
-     @RequestParam(value = "avatar") String avatar) {
-        String userId_random = new RandomNumber().generateSSONumber();
-        this.userSSO = new UserSSO(Integer.parseInt(userId_random), this.getDecode(email.getBytes()), this.getDecode(nickname.getBytes()), this.verify);
-        this.userInformation = new UserInformation(Integer.parseInt(userId_random), this.getDecode(fullName.getBytes()), "not_input", this.date, this.getDecode(avatar.getBytes()));
-        this.userServices.saveSSO(this.userSSO);
-        this.userServices.saveInformation(this.userInformation);
-        return ResponseEntity.ok().body(new HashMap<>() {{
-            this.put("userId", String.valueOf(UserController.this.userSSO.getUserId()));
-            this.put("fullName", UserController.this.userInformation.getName());
-            this.put("email", UserController.this.userSSO.getEmail());
-            this.put("nickname", UserController.this.userSSO.getNickname());
-            this.put("verify", UserController.this.verify);
             this.put("status", "success");
-        }});
-    }
-
-    //Update user information
-    @PostMapping(value = "/sso/update")
-    public ResponseEntity<HashMap<String, String>> updateUser(
-            @RequestParam(value = "userId") String userId,
-            @RequestParam(value = "name") String name,
-            @RequestParam(value = "avatar") String avatar) {
-        this.userServices.updateNickname(this.getDecode(name.getBytes()), this.getDecode(userId.getBytes()));
-        this.userServices.updateAvatar(this.getDecode(avatar.getBytes()), this.getDecode(userId.getBytes()));
-        return ResponseEntity.ok().body(new HashMap<>() {{
-            this.put("userId", UserController.this.getDecode(userId.getBytes()));
-            this.put("nickname", UserController.this.getDecode(name.getBytes()));
-            this.put("avatar", UserController.this.getDecode(avatar.getBytes()));
-            this.put("status", "pass");
-        }});
-    }
-
-    //Update user birthday
-    @PostMapping(value = "/sso/birthday/update")
-    public ResponseEntity<HashMap<String, String>> updateSSOBirthday(
-            @Parameter(name = "userid", description = "Encode it to BASE64 before input")
-            @RequestParam(value = "userid") String userid,
-            @Parameter(name = "birthday", description = "Encode it to BASE64 before input")
-            @RequestParam(value = "birthday") String birthday) {
-        this.userServices.updateBirthday(this.getDecode(birthday.getBytes(StandardCharsets.UTF_8)), this.getDecode(userid.getBytes(StandardCharsets.UTF_8)));
-        return ResponseEntity.ok().body(new HashMap<>() {{
-            this.put("status", "pass");
-            this.put("birthday", birthday);
-        }});
-    }
-
-    //Update user gender
-    @PostMapping(value = "/sso/gender/update")
-    public ResponseEntity<HashMap<String, String>> updateSSOGender(
-            @Parameter(name = "userid", description = "Encode it to BASE64 before input")
-            @RequestParam(value = "userid") String userid,
-            @Parameter(name = "gender", description = "Encode it to BASE64 before input")
-            @RequestParam(value = "gender") String gender) {
-        this.userServices.updateGender(this.getDecode(gender.getBytes(StandardCharsets.UTF_8)), this.getDecode(userid.getBytes(StandardCharsets.UTF_8)));
-        return ResponseEntity.ok().body(new HashMap<>() {{
-            this.put("status", "pass");
-            this.put("gender", gender);
         }});
     }
 }

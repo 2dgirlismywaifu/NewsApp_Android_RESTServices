@@ -37,15 +37,14 @@ import java.util.Map;
 @RequestMapping("/news-app")
 @Tag(name = "News Source", description = "API for News Source")
 public class NewsSourceController {
-    private Map<String, NewsSource> respond;
     @Autowired
     private NewsSourceServices newsSourceServices;
 
     @GetMapping(value = "/guest/news-source")
     public ResponseEntity<Map<String, List<NewsSource>>> allNewsSource() {
-        Map<String, List<NewsSource>> listrespond = new HashMap<>();
-        listrespond.put("newsSource", this.newsSourceServices.findAllNewsSource());
-        return new ResponseEntity<>(listrespond, HttpStatus.OK);
+        Map<String, List<NewsSource>> listRespond = new HashMap<>();
+        listRespond.put("newsSource", this.newsSourceServices.findAllNewsSource());
+        return new ResponseEntity<>(listRespond, HttpStatus.OK);
     }
 
     //For user login
@@ -53,11 +52,11 @@ public class NewsSourceController {
     public ResponseEntity<Map<String, NewsSource>> userNewsSource(
             @RequestParam(value = "userid") int userid
     ) throws ResourceNotFound {
-        this.respond = new HashMap<>();
+        Map<String, NewsSource> respond = new HashMap<>();
         NewsSource newsSources = this.newsSourceServices.findByUserId(userid)
                 .orElseThrow(() -> new ResourceNotFound("Failed"));
-        this.respond.put("newsSource", newsSources);
-        return new ResponseEntity<>(this.respond, HttpStatus.OK);
+        respond.put("newsSource", newsSources);
+        return new ResponseEntity<>(respond, HttpStatus.OK);
     }
 
 }
