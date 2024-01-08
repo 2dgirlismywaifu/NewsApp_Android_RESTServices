@@ -109,24 +109,16 @@ public class UserFavouriteController {
         }, org.springframework.http.HttpStatus.OK);
     }
 
-
-    //Delete news favourite from user (use params: userId, url, title, imageUrl, sourceName)
-    @RequestMapping(value = "/account/delete-news-favourite", params = {"userId", "url", "title", "imageurl", "sourcename"}, method = RequestMethod.DELETE)
+    //Delete news favourite from user
+    @DeleteMapping(value = "/account/delete-news-favourite")
     public ResponseEntity<HashMap<String, String>> userNewsFavouriteDelete(
             @RequestParam(value = "userId") String userId,
-            @RequestParam(value = "url") String url,
-            @RequestParam(value = "title") String title,
-            @RequestParam(value = "imageUrl") String imageUrl,
-            @RequestParam(value = "sourceName") String sourceName) {
-        this.syncServices.deleteNewsFavourite(this.getDecode(userId.getBytes()), this.getDecode(url.getBytes()),
-                this.getDecode(title.getBytes()), this.getDecode(imageUrl.getBytes()), this.getDecode(sourceName.getBytes()));
+            @RequestParam(value = "favouriteId") String favouriteId) {
+        this.syncServices.deleteNewsFavourite(this.getDecode(userId.getBytes()), this.getDecode(favouriteId.getBytes()));
         return new ResponseEntity<>(new HashMap<>() {
             {
                 this.put("userId", UserFavouriteController.this.getDecode(userId.getBytes()));
-                this.put("url", UserFavouriteController.this.getDecode(url.getBytes()));
-                this.put("title", UserFavouriteController.this.getDecode(title.getBytes()));
-                this.put("imageUrl", UserFavouriteController.this.getDecode(imageUrl.getBytes()));
-                this.put("sourceName", UserFavouriteController.this.getDecode(sourceName.getBytes()));
+                this.put("url", UserFavouriteController.this.getDecode(favouriteId.getBytes()));
                 this.put("status", "deleted");
             }
         }, org.springframework.http.HttpStatus.OK);

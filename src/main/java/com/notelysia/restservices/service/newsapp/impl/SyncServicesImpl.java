@@ -23,8 +23,8 @@ public class SyncServicesImpl implements SyncServices {
     }
 
     @Override
-    public void deleteNewsFavourite(String userId, String url, String title, String imageUrl, String sourceName) {
-        this.syncNewsFavRepo.deleteNewsFavourite(userId, url, title, imageUrl, sourceName);
+    public void deleteNewsFavourite(String userId, String favouriteId) {
+        this.syncNewsFavRepo.deleteNewsFavourite(userId, favouriteId);
     }
 
     @Override

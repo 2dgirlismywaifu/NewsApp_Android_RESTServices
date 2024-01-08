@@ -30,9 +30,9 @@ public interface SyncNewsFavRepo extends JpaRepository<SyncNewsFavourite, Intege
     //Delete news favourite by user_id, url, title, image_url, source_name
     @Transactional
     @Modifying
-    @Query("update SyncNewsFavourite s set s.isDeleted = 1 WHERE s.userId = ?1 AND s.url = ?2 AND s.title = ?3 " +
-            "AND s.imageUrl = ?4 AND s.sourceName = ?5")
-    void deleteNewsFavourite(String userId, String url, String title, String imageUrl, String sourceName);
+    @Query("update SyncNewsFavourite s set s.isDeleted = 1 WHERE s.userId = ?1 AND " +
+            "s.favouriteId = ?2")
+    void deleteNewsFavourite(String userId, String favouriteId);
 
     //Get news favourite by user_id
     @Query("SELECT s FROM SyncNewsFavourite s WHERE s.userId = ?1 and s.isDeleted = 0")
