@@ -33,11 +33,6 @@ public class SyncServicesImpl implements SyncServices {
     }
 
     @Override
-    public SyncNewsFavourite findSyncNewsFavouriteBy(int userId, String sourceId, String title, String imageUrl, String sourceName) {
-        return this.syncNewsFavRepo.findSyncNewsFavouriteBy(userId, sourceId, title, imageUrl, sourceName);
-    }
-
-    @Override
     public void saveSubscribe(SyncSubscribe syncSubscribe) {
         this.syncSubscribeRepo.save(syncSubscribe);
     }

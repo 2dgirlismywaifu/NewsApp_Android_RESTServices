@@ -46,4 +46,8 @@ public class SyncSubscribe implements Serializable {
     private int userId;
     @Column(name = "source_id")
     private int sourceId;
+    @Column(name = "is_deleted")
+    private int isDeleted;
+    @Column(name = "is_checked")
+    private int isChecked;
 }

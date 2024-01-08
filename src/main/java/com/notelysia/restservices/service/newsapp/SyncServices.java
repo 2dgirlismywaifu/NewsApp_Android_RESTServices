@@ -12,8 +12,6 @@ public interface SyncServices {
 
     List<SyncNewsFavourite> findByUserId(int userId);
 
-    SyncNewsFavourite findSyncNewsFavouriteBy(int userId, String sourceId, String title, String imageUrl, String sourceName);
-
     void saveSubscribe(SyncSubscribe syncSubscribe);
 
     void deleteByUserIdAndSourceId(int userId, String sourceId);

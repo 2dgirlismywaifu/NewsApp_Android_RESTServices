@@ -29,7 +29,7 @@ public interface NewsSourceRepo extends JpaRepository<NewsSource, Long> {
     //Query to get all news source
     @Query(
             "FROM NewsSource newsSource, ImageInformation imageInfo " +
-                    "WHERE newsSource.sourceId = imageInfo.sourceId")
+                    "WHERE newsSource.sourceId = imageInfo.sourceId LIMIT 5")
     List<NewsSource> findAllNewsSource();
 
     //Query to get all news source for the user login with email and password

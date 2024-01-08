@@ -51,4 +51,6 @@ public class SyncNewsFavourite implements Serializable {
     private String pubDate;
     @Column(name = "source_name")
     private String sourceName;
+    @Column(name = "is_deleted")
+    private int isDeleted;
 }

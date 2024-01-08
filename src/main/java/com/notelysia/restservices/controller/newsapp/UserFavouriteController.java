@@ -21,7 +21,6 @@ import com.notelysia.restservices.config.RandomNumber;
 import com.notelysia.restservices.model.entity.newsapp.SyncNewsFavourite;
 import com.notelysia.restservices.model.entity.newsapp.SyncSubscribe;
 import com.notelysia.restservices.service.newsapp.SyncServices;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -45,47 +44,56 @@ public class UserFavouriteController {
     }
 
     //Insert source subscribe from user
-    @PostMapping(value = "/account/favourite/add")
+    @PostMapping(value = "/account/subscribe-source")
     public ResponseEntity<HashMap<String, String>> userSourceSubscribe(
-            @Parameter(name = "userId", description = "Encode it to BASE64 before input", required = true)
             @RequestParam(value = "userId") String userId,
-            @Parameter(name = "sourceId", description = "Encode it to BASE64 before input", required = true)
             @RequestParam(value = "sourceId") String source_id) {
-        String sync_id_random = new RandomNumber().generateSSONumber();
-        this.syncSubscribe = new SyncSubscribe(Integer.parseInt(this.getDecode(sync_id_random.getBytes())),
-                Integer.parseInt(this.getDecode(userId.getBytes())), Integer.parseInt(this.getDecode(source_id.getBytes())));
+        String syncIdRandom = new RandomNumber().generateSSONumber();
+        this.syncSubscribe = new SyncSubscribe(Integer.parseInt(this.getDecode(syncIdRandom.getBytes())),
+                Integer.parseInt(this.getDecode(userId.getBytes())), Integer.parseInt(this.getDecode(source_id.getBytes())), 0, 1);
         this.syncServices.saveSubscribe(this.syncSubscribe);
         return new ResponseEntity<>(new HashMap<>() {
             {
-                this.put("sync_id", String.valueOf(UserFavouriteController.this.syncSubscribe.getSyncId()));
+                this.put("syncId", String.valueOf(UserFavouriteController.this.syncSubscribe.getSyncId()));
                 this.put("userId", String.valueOf(UserFavouriteController.this.syncSubscribe.getUserId()));
-                this.put("source_id", String.valueOf(UserFavouriteController.this.syncSubscribe.getSourceId()));
+                this.put("isChecked", "1");
+                this.put("sourceId", String.valueOf(UserFavouriteController.this.syncSubscribe.getSourceId()));
                 this.put("status", "success");
+            }
+        }, org.springframework.http.HttpStatus.OK);
+    }
+
+    //Unsubscribe source from user
+    //services will use params: userId, source_id
+    @DeleteMapping(value = "/account/unsubscribe-news", params = {"userId", "sourceid"})
+    public ResponseEntity<HashMap<String, String>> userSourceUnsubscribe(
+            @RequestParam(value = "userId") String userId,
+            @RequestParam(value = "sourceId") String sourceId) {
+        this.syncServices.deleteByUserIdAndSourceId(Integer.parseInt(this.getDecode(userId.getBytes())), this.getDecode(sourceId.getBytes()));
+        return new ResponseEntity<>(new HashMap<>() {
+            {
+                this.put("userId", UserFavouriteController.this.getDecode(userId.getBytes()));
+                this.put("sourceId", UserFavouriteController.this.getDecode(sourceId.getBytes()));
+                this.put("status", "deleted");
             }
         }, org.springframework.http.HttpStatus.OK);
     }
 
     //insert news favourite
     //services will use params: userId, url, title, imageUrl, sourceName
-    @PostMapping(value = "/account/favourite/news/add")
+    @PostMapping(value = "/account/save-news-favourite")
     public ResponseEntity<HashMap<String, String>> userNewsFavourite(
-            @Parameter(name = "userId", description = "Encode it to BASE64 before input", required = true)
-            String userId,
-            @Parameter(name = "url", description = "Encode it to BASE64 before input", required = true)
-            String url,
-            @Parameter(name = "title", description = "Encode it to BASE64 before input", required = true)
-            String title,
-            @Parameter(name = "imageUrl", description = "Encode it to BASE64 before input", required = true)
-            String imageUrl,
-            @Parameter(name = "pubDate", description = "Encode it to BASE64 before input", required = true)
-            String pubDate,
-            @Parameter(name = "sourceName", description = "Encode it to BASE64 before input", required = true)
-            String sourceName) {
+            @RequestParam(name = "userId") String userId,
+            @RequestParam(name = "url") String url,
+            @RequestParam(name = "title") String title,
+            @RequestParam(name = "imageUrl") String imageUrl,
+            @RequestParam(name = "pubDate") String pubDate,
+            @RequestParam(name = "sourceName") String sourceName) {
 
-        String favourite_id_random = new RandomNumber().generateSSONumber();
-        this.syncNewsFavourite = new SyncNewsFavourite(Integer.parseInt(this.getDecode(favourite_id_random.getBytes())),
+        String favouriteIdRandom = new RandomNumber().generateSSONumber();
+        this.syncNewsFavourite = new SyncNewsFavourite(Integer.parseInt(this.getDecode(favouriteIdRandom.getBytes())),
                 Integer.parseInt(this.getDecode(userId.getBytes())), this.getDecode(url.getBytes()), this.getDecode(title.getBytes()),
-                this.getDecode(imageUrl.getBytes()), this.getDecode(pubDate.getBytes()), this.getDecode(sourceName.getBytes()));
+                this.getDecode(imageUrl.getBytes()), this.getDecode(pubDate.getBytes()), this.getDecode(sourceName.getBytes()), 0);
         this.syncServices.saveNewsFavourite(this.syncNewsFavourite);
         return new ResponseEntity<>(new HashMap<>() {
             {
@@ -94,43 +102,21 @@ public class UserFavouriteController {
                 this.put("url", UserFavouriteController.this.syncNewsFavourite.getUrl());
                 this.put("title", UserFavouriteController.this.syncNewsFavourite.getTitle());
                 this.put("imageUrl", UserFavouriteController.this.syncNewsFavourite.getImageUrl());
-                this.put("pubdate", UserFavouriteController.this.syncNewsFavourite.getPubDate());
+                this.put("pubDate", UserFavouriteController.this.syncNewsFavourite.getPubDate());
                 this.put("sourceName", UserFavouriteController.this.syncNewsFavourite.getSourceName());
                 this.put("status", "success");
             }
         }, org.springframework.http.HttpStatus.OK);
     }
 
-    //Unsubscribe source from user (delete from tabale)
-    //services will use params: userId, source_id
-    @DeleteMapping(value = "/account/favourite/delete", params = {"userId", "sourceid"})
-    public ResponseEntity<HashMap<String, String>> userSourceUnsubscribe(
-            @Parameter(name = "userId", description = "Encode it to BASE64 before input", required = true)
-            @RequestParam(value = "userId") String userId,
-            @Parameter(name = "sourceid", description = "Encode it to BASE64 before input", required = true)
-            @RequestParam(value = "sourceid") String sourceId) {
-        this.syncServices.deleteByUserIdAndSourceId(Integer.parseInt(this.getDecode(userId.getBytes())), this.getDecode(sourceId.getBytes()));
-        return new ResponseEntity<>(new HashMap<>() {
-            {
-                this.put("userId", UserFavouriteController.this.getDecode(userId.getBytes()));
-                this.put("source_id", UserFavouriteController.this.getDecode(sourceId.getBytes()));
-                this.put("status", "deleted");
-            }
-        }, org.springframework.http.HttpStatus.OK);
-    }
 
     //Delete news favourite from user (use params: userId, url, title, imageUrl, sourceName)
-    @RequestMapping(value = "/account/favourite/news/delete", params = {"userId", "url", "title", "imageurl", "sourcename"}, method = RequestMethod.DELETE)
+    @RequestMapping(value = "/account/delete-news-favourite", params = {"userId", "url", "title", "imageurl", "sourcename"}, method = RequestMethod.DELETE)
     public ResponseEntity<HashMap<String, String>> userNewsFavouriteDelete(
-            @Parameter(name = "userId", description = "Encode it to BASE64 before input", required = true)
             @RequestParam(value = "userId") String userId,
-            @Parameter(name = "url", description = "Encode it to BASE64 before input", required = true)
             @RequestParam(value = "url") String url,
-            @Parameter(name = "title", description = "Encode it to BASE64 before input", required = true)
             @RequestParam(value = "title") String title,
-            @Parameter(name = "imageUrl", description = "Encode it to BASE64 before input", required = true)
             @RequestParam(value = "imageUrl") String imageUrl,
-            @Parameter(name = "sourceName", description = "Encode it to BASE64 before input", required = true)
             @RequestParam(value = "sourceName") String sourceName) {
         this.syncServices.deleteNewsFavourite(this.getDecode(userId.getBytes()), this.getDecode(url.getBytes()),
                 this.getDecode(title.getBytes()), this.getDecode(imageUrl.getBytes()), this.getDecode(sourceName.getBytes()));
@@ -147,54 +133,30 @@ public class UserFavouriteController {
     }
 
     //show favourite news with params: userId in sync_news_favourite
-    @GetMapping(value = "/account/favourite/news/show", params = {"userId"})
+    @GetMapping(value = "/account/show-news-favourite", params = {"userId"})
     public ResponseEntity<HashMap<String, List<SyncNewsFavourite>>> userNewsFavouriteShow(
             @RequestParam(value = "userId") String userId) {
         this.syncServices.findByUserId(Integer.parseInt(this.getDecode(userId.getBytes())));
+        List<SyncNewsFavourite> syncNewsFavourites = this.syncServices.findByUserId(Integer.parseInt(UserFavouriteController.this.getDecode(userId.getBytes())));
         return new ResponseEntity<>(new HashMap<>() {
             {
-                this.put("news_favourite", UserFavouriteController.this.syncServices.findByUserId(Integer.parseInt(UserFavouriteController.this.getDecode(userId.getBytes()))));
-            }
-        }, org.springframework.http.HttpStatus.OK);
-    }
-
-    //check news is favourite or not (use params: userId, url, title, imageUrl, sourceName)
-    @GetMapping("/sso/favourite/news/check")
-    public ResponseEntity<HashMap<String, String>> userSourceFavouriteCheck(
-            @Parameter(name = "userId", description = "Encode it to BASE64 before input", required = true)
-            @RequestParam(value = "userId") String userId,
-            @Parameter(name = "url", description = "Encode it to BASE64 before input", required = true)
-            @RequestParam(value = "url") String url,
-            @Parameter(name = "title", description = "Encode it to BASE64 before input", required = true)
-            @RequestParam(value = "title") String title,
-            @Parameter(name = "imageUrl", description = "Encode it to BASE64 before input", required = true)
-            @RequestParam(value = "imageUrl") String imageUrl,
-            @Parameter(name = "sourceName", description = "Encode it to BASE64 before input", required = true)
-            @RequestParam(value = "sourceName") String sourceName) {
-        this.syncNewsFavourite = this.syncServices.findSyncNewsFavouriteBy(Integer.parseInt(this.getDecode(userId.getBytes())), this.getDecode(url.getBytes()),
-                this.getDecode(title.getBytes()), this.getDecode(imageUrl.getBytes()), this.getDecode(sourceName.getBytes()));
-        return new ResponseEntity<>(new HashMap<>() {
-            {
-                this.put("userId", String.valueOf(UserFavouriteController.this.syncNewsFavourite.getUserId()));
-                this.put("url", UserFavouriteController.this.syncNewsFavourite.getUrl());
-                this.put("title", UserFavouriteController.this.syncNewsFavourite.getTitle());
-                this.put("imageUrl", UserFavouriteController.this.syncNewsFavourite.getImageUrl());
-                this.put("sourceName", UserFavouriteController.this.syncNewsFavourite.getSourceName());
-                this.put("status", "found");
+                this.put("newsFavourite", syncNewsFavourites);
             }
         }, org.springframework.http.HttpStatus.OK);
     }
 
     //Check source news in SYNC_SUBSCRIBE table. use params: userId, source_id. DO NOT USE SYNC_NEWS_FAVOURITE TABLE
-    @GetMapping("/account/subscribe/check")
+    @GetMapping("/account/check-subscribe")
     public ResponseEntity<HashMap<String, String>> userSourceSubscribeCheck(
             @RequestParam(value = "userId") String userId,
-            @RequestParam(value = "sourceid") String source_id) {
+            @RequestParam(value = "sourceId") String source_id) {
         this.syncSubscribe = this.syncServices.findByUserIdAndSourceId(Integer.parseInt(this.getDecode(userId.getBytes())), this.getDecode(source_id.getBytes()));
         return new ResponseEntity<>(new HashMap<>() {
             {
                 this.put("userId", String.valueOf(UserFavouriteController.this.syncSubscribe.getUserId()));
-                this.put("source_id", String.valueOf(UserFavouriteController.this.syncSubscribe.getSourceId()));
+                this.put("sourceId", String.valueOf(UserFavouriteController.this.syncSubscribe.getSourceId()));
+                this.put("isChecked",String.valueOf(UserFavouriteController.this.syncSubscribe.getIsChecked()));
+                this.put("isDeleted",String.valueOf(UserFavouriteController.this.syncSubscribe.getIsDeleted()));
                 this.put("status", "found");
             }
         }, org.springframework.http.HttpStatus.OK);
