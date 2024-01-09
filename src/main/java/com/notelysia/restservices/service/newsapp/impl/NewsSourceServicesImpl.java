@@ -56,6 +56,11 @@ public class NewsSourceServicesImpl implements NewsSourceServices {
     }
 
     @Override
+    public List<String> findAllRssUrlByTypeWithSynSubscribe(Integer userId, String type) {
+        return this.newsDetailRepo.findAllRssUrlByTypeWithSynSubscribe(userId, type);
+    }
+
+    @Override
     public List<String> guestAllRssUrl() {
         return this.newsDetailRepo.guestAllRssUrl();
     }
@@ -63,5 +68,10 @@ public class NewsSourceServicesImpl implements NewsSourceServices {
     @Override
     public List<String> findAllRssUrl() {
         return this.newsDetailRepo.findAllRssUrl();
+    }
+
+    @Override
+    public List<String> findAllRssUrlWithSyncSubscribe(Integer userId) {
+        return this.newsDetailRepo.findAllRssUrlWithSyncSubscribe(userId);
     }
 }

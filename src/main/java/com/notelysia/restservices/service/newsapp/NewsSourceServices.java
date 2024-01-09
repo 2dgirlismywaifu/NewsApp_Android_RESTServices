@@ -19,6 +19,8 @@ public interface NewsSourceServices {
     List<RSSList> findUrlBySourceName(String sourceName);
     List<String> guestRssUrlByType(String type);
     List<String> findAllRssUrlByType(String type);
+    List<String> findAllRssUrlByTypeWithSynSubscribe(Integer userId, String type);
     List<String> guestAllRssUrl();
     List<String> findAllRssUrl();
+    List<String> findAllRssUrlWithSyncSubscribe(Integer userId);
 }

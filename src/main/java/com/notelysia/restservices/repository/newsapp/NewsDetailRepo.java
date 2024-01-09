@@ -53,8 +53,20 @@ public interface NewsDetailRepo extends JpaRepository<NewsDetail, Long> {
     List<String> findAllRssUrlByType(String type);
     @Query("select nd.url from NewsDetail nd " +
             "inner join NewsSource ns on nd.sourceId = ns.sourceId " +
+            "inner join SyncSubscribe s on ns.sourceId = s.sourceId " +
+            "where s.userId = ?1 and nd.urlType = ?2 and NOT nd.url = 'not_available'")
+    List<String> findAllRssUrlByTypeWithSynSubscribe(Integer userId, String type);
+    @Query("select nd.url from NewsDetail nd " +
+            "inner join NewsSource ns on nd.sourceId = ns.sourceId " +
             "where ns.source_name = 'VNExpress' and NOT nd.url = 'not_available'")
     List<String> guestAllRssUrl();
-    @Query("select nd.url from NewsDetail nd where NOT nd.url = 'not_available'")
+    @Query(value = "select nd.url from news_detail nd where " +
+            "nd.source_id in (select ns.source_id  from news_source ns limit 3) " +
+            "and not nd.url = 'not_available'", nativeQuery = true)
     List<String> findAllRssUrl();
+    @Query("select nd.url from NewsDetail nd " +
+            "inner join NewsSource ns on nd.sourceId = ns.sourceId " +
+            "inner join SyncSubscribe s on ns.sourceId = s.sourceId " +
+            "where s.userId = ?1 and nd.url = 'not_available'")
+    List<String> findAllRssUrlWithSyncSubscribe(Integer userId);
 }

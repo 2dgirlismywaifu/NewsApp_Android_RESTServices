@@ -78,22 +78,30 @@ public class NewsSourceController {
     //Convert RSS to JSON
     @GetMapping("/rss-to-json")
     public ResponseEntity<Map<String, List<RssDto>>> convertRSS2JSON(
-            @RequestParam(value = "userId") String userId,
+            @RequestParam(value = "userId", required = false) String userId,
             @RequestParam(value = "type") String type
     ) {
+        Stream<Item> rssFeed;
         List<String> rssUrls;
-        if (userId.equals("guest")) {
+        List<String> rssSynSubscribe = null;
+        if (userId != null) {
+            rssUrls = this.newsSourceServices.findAllRssUrlByType(this.getDecode(type.getBytes()));
+            rssSynSubscribe = this.newsSourceServices.
+                    findAllRssUrlByTypeWithSynSubscribe(Integer.valueOf(userId), type);
+        } else {
             //Guest only use one news source
             rssUrls = this.newsSourceServices.guestRssUrlByType(this.getDecode(type.getBytes()));
-        } else {
-            rssUrls = this.newsSourceServices.findAllRssUrlByType(this.getDecode(type.getBytes()));
         }
         RssReader rssReader = new RssReader();
         Map<String, List<RssDto>> respond = new ConcurrentHashMap<>();
         List<RssDto> rssDtos = new ArrayList<>();
         try {
             CountDownLatch latch = new CountDownLatch(1);
-            Stream<Item> rssFeed = rssReader.read(rssUrls);
+            if (rssSynSubscribe != null) {
+                rssFeed = rssSynSubscribe.isEmpty() ? rssReader.read(rssUrls) : rssReader.read(rssSynSubscribe);
+            } else {
+                rssFeed = rssReader.read(rssUrls);
+            }
             List<Item> items = rssFeed.toList();
             for (Item item : items) {
                 String title = item.getTitle().get();
@@ -115,22 +123,33 @@ public class NewsSourceController {
     //Search from all rss url type 'breaking news'
     @GetMapping("/search-news")
     public ResponseEntity<Map<String, List<RssDto>>> searchAllNews(
-            @RequestParam(value = "userId") String userId,
+            @RequestParam(value = "userId", required = false) String userId,
             @RequestParam(value = "keyWord") String keyWord) {
+        Map<String, List<RssDto>> respond = new ConcurrentHashMap<>();
+        Stream<Item> rssFeed;
         List<String> urls;
-        if (userId.equals("guest")) {
+        List<String> rssSynSubscribe = null;
+        RssReader rssReader = new RssReader();
+        List<RssDto> rssDtos = new ArrayList<>();
+        if (userId != null) {
+            urls = this.newsSourceServices.findAllRssUrl();
+            rssSynSubscribe = this.newsSourceServices.
+                    findAllRssUrlWithSyncSubscribe(Integer.valueOf(userId));
+        } else {
             //Guest only use one news source
             urls = this.newsSourceServices.guestAllRssUrl();
-        } else {
-            urls = this.newsSourceServices.findAllRssUrl();
         }
-        RssReader rssReader = new RssReader();
-        Map<String, List<RssDto>> respond = new ConcurrentHashMap<>();
-        List<RssDto> rssDtos = new ArrayList<>();
         try {
             CountDownLatch latch = new CountDownLatch(1);
-            Stream<Item> rssFeed = rssReader.read(urls).sorted()
-                    .filter(i -> i.getTitle().get().contains(this.getDecode(keyWord.getBytes())));
+            if (rssSynSubscribe != null) {
+                rssFeed = rssSynSubscribe.isEmpty() ? rssReader.read(urls).sorted()
+                        .filter(i -> i.getTitle().get().contains(this.getDecode(keyWord.getBytes()))) :
+                        rssReader.read(rssSynSubscribe).sorted()
+                        .filter(i -> i.getTitle().get().contains(this.getDecode(keyWord.getBytes())));
+            } else {
+                rssFeed = rssReader.read(urls).sorted()
+                        .filter(i -> i.getTitle().get().contains(this.getDecode(keyWord.getBytes())));
+            }
             List<Item> items = rssFeed.toList();
             for (Item item : items) {
                 String title = item.getTitle().get();
