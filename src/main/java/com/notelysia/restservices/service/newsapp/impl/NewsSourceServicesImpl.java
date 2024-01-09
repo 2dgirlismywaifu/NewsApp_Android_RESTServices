@@ -44,4 +44,24 @@ public class NewsSourceServicesImpl implements NewsSourceServices {
     public List<RSSList> findUrlBySourceName(String sourceName) {
         return this.newsDetailRepo.findUrlBySourceName(sourceName);
     }
+
+    @Override
+    public List<String> guestRssUrlByType(String type) {
+        return this.newsDetailRepo.guestRssUrlByType(type);
+    }
+
+    @Override
+    public List<String> findAllRssUrlByType(String type) {
+        return this.newsDetailRepo.findAllRssUrlByType(type);
+    }
+
+    @Override
+    public List<String> guestAllRssUrl() {
+        return this.newsDetailRepo.guestAllRssUrl();
+    }
+
+    @Override
+    public List<String> findAllRssUrl() {
+        return this.newsDetailRepo.findAllRssUrl();
+    }
 }

@@ -41,4 +41,20 @@ public interface NewsDetailRepo extends JpaRepository<NewsDetail, Long> {
             "FROM NewsDetail n, NewsSource ns, NewsTypeImage ni " +
             "WHERE n.urlType = ni.urlType AND n.sourceId = ns.sourceId AND ns.source_name = ?1")
     List<RSSList> findUrlBySourceName(String sourceName);
+
+    @Query("select nd.url from NewsDetail nd " +
+            "inner join NewsSource ns on nd.sourceId = ns.sourceId " +
+            "where nd.urlType = ?1 and ns.source_name = 'VNExpress'" +
+            "and NOT nd.url = 'not_available'")
+    List<String> guestRssUrlByType(String type);
+    @Query("select nd.url from NewsDetail nd " +
+            "inner join NewsSource ns on nd.sourceId = ns.sourceId " +
+            "where nd.urlType = ?1 and NOT nd.url = 'not_available'")
+    List<String> findAllRssUrlByType(String type);
+    @Query("select nd.url from NewsDetail nd " +
+            "inner join NewsSource ns on nd.sourceId = ns.sourceId " +
+            "where ns.source_name = 'VNExpress' and NOT nd.url = 'not_available'")
+    List<String> guestAllRssUrl();
+    @Query("select nd.url from NewsDetail nd where NOT nd.url = 'not_available'")
+    List<String> findAllRssUrl();
 }
