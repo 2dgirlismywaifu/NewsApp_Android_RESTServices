@@ -25,17 +25,18 @@ import java.util.Objects;
 @Getter
 @Setter
 public class NewsDetailPK implements Serializable {
+    private int id;
     private int sourceId;
-    private String urlType;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof NewsDetailPK that)) return false;
-        return this.getSourceId() == that.getSourceId() && Objects.equals(this.getUrlType(), that.getUrlType());
+        return this.getId() == that.getId() && this.getSourceId() == that.getSourceId();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.getSourceId(), this.getUrlType());
+        return Objects.hash(this.getId(), this.getSourceId());
     }
 }

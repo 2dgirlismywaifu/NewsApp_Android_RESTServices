@@ -36,10 +36,11 @@ public class NewsDetail implements Serializable {
     //Instance variables
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
+    @Column(name = "id")
+    private int id;
+    @Id
     @Column(name = "source_id")
     private int sourceId;
-    //private String source_name;
-    @Id
     @Column(name = "url_type")
     private String urlType;
     @Column(name = "url", nullable = false)
