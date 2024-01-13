@@ -91,7 +91,7 @@ public class NewsApiCountryController {
     public ResponseEntity<Map<String, List<Article>>> getTopHeadlinesNews(
             @RequestParam(value = "keyWord") String keyWord,
             @RequestParam(value = "country") String country,
-            @RequestParam(value = "category") String category
+            @RequestParam(value = "category", required = false) String category
     ) throws IOException, InterruptedException {
         Map<String, List<Article>> respond = new ConcurrentHashMap<>();
         CountDownLatch latch = new CountDownLatch(1);
