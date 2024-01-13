@@ -23,6 +23,11 @@ public class SyncServicesImpl implements SyncServices {
     }
 
     @Override
+    public String findFavoriteId(String userId, String title) {
+        return this.syncNewsFavRepo.findFavoriteId(userId, title);
+    }
+
+    @Override
     public void saveNewsFavourite(SyncNewsFavourite syncNewsFavourite) {
         this.syncNewsFavRepo.save(syncNewsFavourite);
     }
@@ -50,5 +55,10 @@ public class SyncServicesImpl implements SyncServices {
     @Override
     public SyncSubscribe findByUserIdAndSourceId(int userId, String sourceId) {
         return this.syncSubscribeRepo.findByUserIdAndSourceId(userId, sourceId);
+    }
+
+    @Override
+    public SyncNewsFavourite checkNewsFavouriteOrNot(String userId, String title) {
+        return this.syncNewsFavRepo.checkNewsFavouriteOrNot(userId, title);
     }
 }

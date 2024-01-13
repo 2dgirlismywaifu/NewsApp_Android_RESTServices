@@ -216,7 +216,7 @@ public class UserController {
     //Update password form request forgot password and change password form in settings
     @PostMapping("/change-password")
     public ResponseEntity<HashMap<String, String>> changePassword(
-            @RequestParam(name = "userId") String userId,
+            @RequestParam(name = "userd") String userId,
             @RequestParam(name = "email") String email,
             @RequestParam(name = "oldPass", required = false) String oldPass,
             @RequestParam(name = "newPass") String newPass,
@@ -314,9 +314,12 @@ public class UserController {
             @RequestParam(name = "code") String code) throws ResourceNotFound {
         this.userPassLogin = this.userServices.findByRecovery(this.getDecode(code.getBytes(StandardCharsets.UTF_8)))
                 .orElseThrow(() -> new ResourceNotFound("Failed"));
+        this.userInformation = this.userServices.findInformationByUserId(String.valueOf(this.userPassLogin.getUserId()))
+                .orElseThrow(() -> new ResourceNotFound("Failed"));
         return ResponseEntity.ok().body(new HashMap<>() {{
             this.put("userId", String.valueOf(UserController.this.userPassLogin.getUserId()));
             this.put("email", UserController.this.userPassLogin.getEmail());
+            this.put("fullName", UserController.this.userInformation.getName());
             this.put("nickName", UserController.this.userPassLogin.getNickname());
             this.put("verify", UserController.this.userPassLogin.getVerify());
             this.put("status", "success");

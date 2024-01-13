@@ -40,4 +40,11 @@ public interface SyncNewsFavRepo extends JpaRepository<SyncNewsFavourite, Intege
 
     @Query("SELECT count(s) FROM SyncNewsFavourite s WHERE s.userId = ?1 and s.url = ?2 and s.isDeleted = 0")
     long findByNewsFavourite(String userId, String url);
+
+    @Query("SELECT s.favouriteId FROM SyncNewsFavourite s WHERE s.userId = ?1 and s.title = ?2 and s.isDeleted = 0")
+    String findFavoriteId(String userId, String title);
+
+    //Check news is favourite or not by userId, title
+    @Query("SELECT s FROM SyncNewsFavourite s WHERE s.userId = ?1 and s.title = ?2 and s.isDeleted = 0")
+    SyncNewsFavourite checkNewsFavouriteOrNot(String userId, String title);
 }

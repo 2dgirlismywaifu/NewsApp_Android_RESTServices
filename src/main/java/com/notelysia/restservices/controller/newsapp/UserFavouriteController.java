@@ -100,8 +100,8 @@ public class UserFavouriteController {
 
         } else {
             this.syncNewsFavourite = new SyncNewsFavourite(Integer.parseInt(this.getDecode(favouriteIdRandom.getBytes())),
-                Integer.parseInt(this.getDecode(userId.getBytes())), this.getDecode(url.getBytes()), this.getDecode(title.getBytes()),
-                this.getDecode(imageUrl.getBytes()), this.getDecode(pubDate.getBytes()), this.getDecode(sourceName.getBytes()), 0);
+                    Integer.parseInt(this.getDecode(userId.getBytes())), this.getDecode(url.getBytes()), this.getDecode(title.getBytes()),
+                    this.getDecode(imageUrl.getBytes()), this.getDecode(pubDate.getBytes()), this.getDecode(sourceName.getBytes()), 0);
             this.syncServices.saveNewsFavourite(this.syncNewsFavourite);
             respond.put("favouriteId", String.valueOf(UserFavouriteController.this.syncNewsFavourite.getFavouriteId()));
             respond.put("userId", String.valueOf(UserFavouriteController.this.syncNewsFavourite.getUserId()));
@@ -119,12 +119,17 @@ public class UserFavouriteController {
     @DeleteMapping(value = "/account/delete-news-favourite")
     public ResponseEntity<HashMap<String, String>> userNewsFavouriteDelete(
             @RequestParam(value = "userId") String userId,
-            @RequestParam(value = "favouriteId") String favouriteId) {
+            @RequestParam(value = "favouriteId") String favouriteId,
+            @RequestParam(value = "title", required = false) String title) {
+        if (favouriteId == null || favouriteId.isEmpty()) {
+            favouriteId = this.syncServices.findFavoriteId(this.getDecode(userId.getBytes()), this.getDecode(title.getBytes()));
+        }
         this.syncServices.deleteNewsFavourite(this.getDecode(userId.getBytes()), this.getDecode(favouriteId.getBytes()));
+        String finalFavouriteId = favouriteId;
         return new ResponseEntity<>(new HashMap<>() {
             {
                 this.put("userId", UserFavouriteController.this.getDecode(userId.getBytes()));
-                this.put("favouriteId", UserFavouriteController.this.getDecode(favouriteId.getBytes()));
+                this.put("favouriteId", UserFavouriteController.this.getDecode(finalFavouriteId.getBytes()));
                 this.put("status", "deleted");
             }
         }, org.springframework.http.HttpStatus.OK);
@@ -158,6 +163,28 @@ public class UserFavouriteController {
             respond.put("sourceId", String.valueOf(UserFavouriteController.this.syncSubscribe.getSourceId()));
             respond.put("isChecked", String.valueOf(UserFavouriteController.this.syncSubscribe.getIsChecked()));
             respond.put("isDeleted", String.valueOf(UserFavouriteController.this.syncSubscribe.getIsDeleted()));
+            respond.put("status", "found");
+            return new ResponseEntity<>(respond, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/account/check-news-favourite")
+    public ResponseEntity<HashMap<String, String>> userNewsFavouriteCheck(
+            @RequestParam(value = "userId") String userId,
+            @RequestParam(value = "title") String title) {
+        HashMap<String, String> respond = new HashMap<>();
+        this.syncNewsFavourite = this.syncServices.checkNewsFavouriteOrNot(this.getDecode(userId.getBytes()), this.getDecode(title.getBytes()));
+        if (syncNewsFavourite == null) {
+            respond.put("status", "not-found");
+            return new ResponseEntity<>(respond, HttpStatus.BAD_REQUEST);
+        } else {
+            respond.put("favouriteId", String.valueOf(UserFavouriteController.this.syncNewsFavourite.getFavouriteId()));
+            respond.put("userId", String.valueOf(UserFavouriteController.this.syncNewsFavourite.getUserId()));
+            respond.put("url", UserFavouriteController.this.syncNewsFavourite.getUrl());
+            respond.put("title", UserFavouriteController.this.syncNewsFavourite.getTitle());
+            respond.put("imageUrl", UserFavouriteController.this.syncNewsFavourite.getImageUrl());
+            respond.put("pubDate", UserFavouriteController.this.syncNewsFavourite.getPubDate());
+            respond.put("sourceName", UserFavouriteController.this.syncNewsFavourite.getSourceName());
             respond.put("status", "found");
             return new ResponseEntity<>(respond, HttpStatus.OK);
         }
