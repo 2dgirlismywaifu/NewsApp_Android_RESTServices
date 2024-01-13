@@ -37,7 +37,7 @@ public interface NewsDetailRepo extends JpaRepository<NewsDetail, Long> {
     //GET URL RSS LIST FOLLOW SOURCE_NAME
     //Query example: SELECT NEWS_DETAIL.url_type, NEWS_DETAIL.url, NEWSTYPE_IMAGE.url_image FROM NEWS_DETAIL, NEWS_SOURCE, NEWSTYPE_IMAGE " +
     ////                    "WHERE NEWS_DETAIL.url_type = NEWSTYPE_IMAGE.url_type and NEWS_DETAIL.source_id = NEWS_SOURCE.source_id and NEWS_SOURCE.source_name = ?
-    @Query("SELECT RSSList(n.urlType, n.url, ni.urlImage) " +
+    @Query("SELECT n.urlType, n.url, ni.urlImage " +
             "FROM NewsDetail n, NewsSource ns, NewsTypeImage ni " +
             "WHERE n.urlType = ni.urlType AND n.sourceId = ns.sourceId AND ns.source_name = ?1")
     List<RSSList> findUrlBySourceName(String sourceName);
