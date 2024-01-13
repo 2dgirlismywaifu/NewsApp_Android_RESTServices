@@ -1,5 +1,5 @@
 /*
- * Copyright By @2dgirlismywaifu (2023) .
+ * Copyright By @2dgirlismywaifu (2024) .
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,12 +16,16 @@
 
 package com.notelysia.restservices.model.dto.newsapp;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class RSSList {
+@NoArgsConstructor
+@AllArgsConstructor
+public class RssList {
     private String urlType;
     private String url;
     private String urlImage;

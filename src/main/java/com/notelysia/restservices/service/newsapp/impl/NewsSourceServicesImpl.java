@@ -1,6 +1,6 @@
 package com.notelysia.restservices.service.newsapp.impl;
 
-import com.notelysia.restservices.model.dto.newsapp.RSSList;
+import com.notelysia.restservices.model.dto.newsapp.RssList;
 import com.notelysia.restservices.model.entity.newsapp.NewsDetail;
 import com.notelysia.restservices.model.entity.newsapp.NewsSource;
 import com.notelysia.restservices.repository.newsapp.NewsDetailRepo;
@@ -41,7 +41,7 @@ public class NewsSourceServicesImpl implements NewsSourceServices {
     }
 
     @Override
-    public List<RSSList> findUrlBySourceName(String sourceName) {
+    public List<RssList> findUrlBySourceName(String sourceName) {
         return this.newsDetailRepo.findUrlBySourceName(sourceName);
     }
 

@@ -17,7 +17,7 @@
 package com.notelysia.restservices.controller.newsapp;
 
 import com.notelysia.restservices.config.DecodeString;
-import com.notelysia.restservices.model.dto.newsapp.RSSList;
+import com.notelysia.restservices.model.dto.newsapp.RssList;
 import com.notelysia.restservices.model.entity.newsapp.NewsDetail;
 import com.notelysia.restservices.service.newsapp.NewsSourceServices;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -72,9 +72,9 @@ public class NewsDetailController {
 
     //GET URL RSS LIST FOLLOW SOURCE_NAME
     @GetMapping(value = "/account/news-details/list-rss")
-    public ResponseEntity<HashMap<String, List<RSSList>>> getRssListEachSourceName(
+    public ResponseEntity<HashMap<String, List<RssList>>> getRssListEachSourceName(
             @RequestParam(value = "name") String name) {
-        List<RSSList> rssList = this.newsSourceServices.findUrlBySourceName(this.getDecode(name.getBytes()));
+        List<RssList> rssList = this.newsSourceServices.findUrlBySourceName(this.getDecode(name.getBytes()));
         return new ResponseEntity<>(new HashMap<>() {
             {
                 this.put("List of RSS", rssList);
