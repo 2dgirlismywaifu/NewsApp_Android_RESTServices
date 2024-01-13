@@ -46,8 +46,8 @@ import java.util.concurrent.CountDownLatch;
 @RestController
 @RequestMapping("/news-api")
 @Tag(name = "NewsAPI Country", description = "API for NewsAPI Country List")
-public class NewsApiCountryController {
-    private static final Logger logger = LogManager.getLogger(NewsApiCountryController.class);
+public class NewsApiController {
+    private static final Logger logger = LogManager.getLogger(NewsApiController.class);
     DecodeString decodeString = new DecodeString();
     @Autowired
     private NewsApiServices newsApiServices;
@@ -89,7 +89,7 @@ public class NewsApiCountryController {
 
     @GetMapping("/top-headlines")
     public ResponseEntity<Map<String, List<Article>>> getTopHeadlinesNews(
-            @RequestParam(value = "keyWord") String keyWord,
+            @RequestParam(value = "keyWord", required = false) String keyWord,
             @RequestParam(value = "country") String country,
             @RequestParam(value = "category", required = false) String category
     ) throws IOException, InterruptedException {
@@ -123,8 +123,8 @@ public class NewsApiCountryController {
 
     @GetMapping("/everything")
     public ResponseEntity<Map<String, List<Article>>> getEverythingNews(
-            @RequestParam(value = "keyWord") String keyWord,
-            @RequestParam(value = "sortBy") String sortBy
+            @RequestParam(value = "keyWord", required = false) String keyWord,
+            @RequestParam(value = "sortBy", required = false) String sortBy
     ) throws IOException, InterruptedException {
         Map<String, List<Article>> respond = new ConcurrentHashMap<>();
         CountDownLatch latch = new CountDownLatch(1);
