@@ -84,7 +84,7 @@ public class NewsSourceController {
         Stream<Item> rssFeed;
         List<String> rssUrls;
         List<String> rssSynSubscribe = null;
-        if (userId != null) {
+        if (userId != null && !userId.isEmpty()) {
             rssUrls = this.newsSourceServices.findAllRssUrlByType(this.getDecode(type.getBytes()));
             rssSynSubscribe = this.newsSourceServices.
                     findAllRssUrlByTypeWithSynSubscribe(Integer.valueOf(userId), type);
@@ -131,7 +131,7 @@ public class NewsSourceController {
         List<String> rssSynSubscribe = null;
         RssReader rssReader = new RssReader();
         List<RssDto> rssDtos = new ArrayList<>();
-        if (userId != null) {
+        if (userId != null && !userId.isEmpty()) {
             urls = this.newsSourceServices.findAllRssUrl();
             rssSynSubscribe = this.newsSourceServices.
                     findAllRssUrlWithSyncSubscribe(Integer.valueOf(userId));
