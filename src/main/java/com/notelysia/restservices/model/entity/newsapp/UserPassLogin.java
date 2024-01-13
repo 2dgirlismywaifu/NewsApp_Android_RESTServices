@@ -51,4 +51,18 @@ public class UserPassLogin implements Serializable {
     private String verify;
     @Column(name = "recovery")
     private String recovery;
+
+    /**
+     * Constructor for UserPassLogin if user use Google account to log in
+     * @param userId : User Id
+     * @param email: User Email
+     * @param nickname: User Nickname
+     * @param verify: User Verify Status (Default will be "true")
+     */
+    public UserPassLogin(int userId, String email, String nickname, String verify) {
+        this.userId = userId;
+        this.email = email;
+        this.nickname = nickname;
+        this.verify = verify;
+    }
 }

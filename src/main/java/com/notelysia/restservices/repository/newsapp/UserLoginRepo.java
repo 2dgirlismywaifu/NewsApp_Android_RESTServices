@@ -52,8 +52,8 @@ public interface UserLoginRepo extends JpaRepository<UserPassLogin, Long> {
     void updatePassword(String password, String salt, String recovery, String email);
 
     //Check nickname
-    @Query("FROM UserPassLogin userPassLogin WHERE userPassLogin.nickname = ?1 and userPassLogin.email = ?2")
-    Optional<UserPassLogin> findByNickname(String nickname, String email);
+    @Query("select count(userPassLogin) FROM UserPassLogin userPassLogin WHERE userPassLogin.nickname = ?1 and userPassLogin.email = ?2")
+    long countNickName(String nickname, String email);
 
     //Get Recovery Code from email
     @Query("FROM UserPassLogin userPassLogin WHERE userPassLogin.email = ?1")

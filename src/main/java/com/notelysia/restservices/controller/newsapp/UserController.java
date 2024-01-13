@@ -21,7 +21,6 @@ import com.notelysia.restservices.config.RandomNumber;
 import com.notelysia.restservices.exception.ResourceNotFound;
 import com.notelysia.restservices.model.entity.newsapp.UserInformation;
 import com.notelysia.restservices.model.entity.newsapp.UserPassLogin;
-import com.notelysia.restservices.model.entity.newsapp.UserSSO;
 import com.notelysia.restservices.service.newsapp.UserServices;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +31,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/news-app/user")
@@ -41,7 +41,6 @@ public class UserController {
     private final String verify = "false";
     private final String date = new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date());
     private UserPassLogin userPassLogin;
-    private UserSSO userSSO;
     private UserInformation userInformation;
     @Autowired
     private UserServices userServices;
@@ -58,49 +57,27 @@ public class UserController {
              @RequestParam(name = "password") String password,
              @RequestParam(name = "nickname") String nickname) {
         int userIdRandom = Integer.parseInt(new RandomNumber().generateRandomNumber());
-        String recovery_code = java.util.UUID.randomUUID().toString();
+        String recoveryCode = java.util.UUID.randomUUID().toString();
         //Bcrypt password
         String Salt = BCrypt.gensalt();
         String passwordHash = BCrypt.hashpw(this.getDecode(password.getBytes(StandardCharsets.UTF_8)), Salt);
-        this.userPassLogin = new UserPassLogin(userIdRandom, this.getDecode(email.getBytes(StandardCharsets.UTF_8)), passwordHash, Salt, this.getDecode(nickname.getBytes(StandardCharsets.UTF_8)), this.verify, recovery_code);
+        this.userPassLogin = new UserPassLogin(userIdRandom, this.getDecode(email.getBytes(StandardCharsets.UTF_8)), passwordHash, Salt, this.getDecode(nickname.getBytes(StandardCharsets.UTF_8)), this.verify, recoveryCode);
         this.userInformation = new UserInformation(userIdRandom, this.getDecode(fullName.getBytes(StandardCharsets.UTF_8)), "not_input", this.date, "not_available");
         this.userServices.saveUser(this.userPassLogin);
         this.userServices.saveInformation(this.userInformation);
         return ResponseEntity.ok().body(new HashMap<>() {{
             this.put("userId", String.valueOf(UserController.this.userPassLogin.getUserId()));
+            this.put("fullName", UserController.this.userInformation.getName());
             this.put("email", UserController.this.userPassLogin.getEmail());
             this.put("nickname", UserController.this.userPassLogin.getNickname());
             this.put("verify", UserController.this.userPassLogin.getVerify());
-            this.put("status", "success");
-        }});
-    }
-
-    //Create user account
-    //Why gender and birthday not input? Because it is private information about each user.
-    // Firebase do not have function to get the user's gender/birthdate
-    @PostMapping("/register-by-google")
-    public ResponseEntity<HashMap<String, String>> registerByGoogle
-    (@RequestParam(value = "fullName") String fullName,
-     @RequestParam(value = "email") String email,
-     @RequestParam(value = "nickname") String nickname,
-     @RequestParam(value = "avatar") String avatar) {
-        String userId_random = new RandomNumber().generateSSONumber();
-        this.userSSO = new UserSSO(Integer.parseInt(userId_random), this.getDecode(email.getBytes()), this.getDecode(nickname.getBytes()), this.verify);
-        this.userInformation = new UserInformation(Integer.parseInt(userId_random), this.getDecode(fullName.getBytes()), "not_input", this.date, this.getDecode(avatar.getBytes()));
-        this.userServices.saveSSO(this.userSSO);
-        this.userServices.saveInformation(this.userInformation);
-        return ResponseEntity.ok().body(new HashMap<>() {{
-            this.put("userId", String.valueOf(UserController.this.userSSO.getUserId()));
-            this.put("fullName", fullName);
-            this.put("email", email);
-            this.put("nickname", nickname);
-            this.put("verify", UserController.this.verify);
+            this.put("recovery", UserController.this.userPassLogin.getRecovery());
             this.put("status", "success");
         }});
     }
 
     //Verify email from Firebase Authentication, if true, update verify to true
-    @PostMapping("/verify")
+    @PostMapping("/verify-email")
     public ResponseEntity<HashMap<String, String>> verifyEmail(@RequestParam(name = "email") String email) {
         this.userServices.updateVerify("true", this.getDecode(email.getBytes(StandardCharsets.UTF_8)));
         return ResponseEntity.ok().body(new HashMap<>() {
@@ -120,14 +97,20 @@ public class UserController {
         HashMap<String, String> userFound = new HashMap<>();
         this.userPassLogin = this.userServices.findByEmailOrNickname(this.getDecode(account.getBytes(StandardCharsets.UTF_8)), this.getDecode(account.getBytes(StandardCharsets.UTF_8)))
                 .orElseThrow(() -> new ResourceNotFound("Failed"));
+        this.userInformation = this.userServices.findInformationByUserId(String.valueOf(this.userPassLogin.getUserId()))
+                .orElseThrow(() -> new ResourceNotFound("Failed"));
         String password_hash = this.userPassLogin.getPassword();
         String salt = this.userPassLogin.getSalt();
         String password_check = BCrypt.hashpw(this.getDecode(password.getBytes(StandardCharsets.UTF_8)), salt);
         if (password_check.equals(password_hash)) {
             userFound.put("userId", String.valueOf(this.userPassLogin.getUserId()));
             userFound.put("email", this.userPassLogin.getEmail());
-            userFound.put("nickname", this.userPassLogin.getNickname());
+            userFound.put("nickName", this.userPassLogin.getNickname());
             userFound.put("verify", this.userPassLogin.getVerify());
+            userFound.put("fullName", this.userInformation.getName());
+            userFound.put("birthday", this.userInformation.getBirthday());
+            userFound.put("gender", this.userInformation.getGender());
+            userFound.put("avatar", this.userInformation.getAvatar());
             userFound.put("status", "success");
             return ResponseEntity.ok().body(userFound);
         } else {
@@ -136,18 +119,74 @@ public class UserController {
         }
     }
 
+    //Sign in with Google account
+    //Why gender and birthday not input? Because it is private information about each user.
+    // Firebase do not have function to get the user's gender/birthday
+    @GetMapping("/sign-in-by-google")
+    public ResponseEntity<HashMap<String, String>> signInByGoogle
+    (@RequestParam(value = "fullName") String fullName,
+     @RequestParam(value = "email") String email,
+     @RequestParam(value = "nickName") String nickname,
+     @RequestParam(value = "avatar") String avatar) throws ResourceNotFound {
+        //First, check if user already have account or not
+        //If not, create new account
+        HashMap<String, String> userFound = new HashMap<>();
+        Optional<UserPassLogin> userPassLoginOption = this.userServices.findByEmailOrNickname(
+                this.getDecode(email.getBytes()),
+                this.getDecode(nickname.getBytes()));
+        if (userPassLoginOption.isPresent()) {
+            //Sign in into system
+            this.userInformation = this.userServices.findInformationByUserId(
+                            String.valueOf(userPassLoginOption.get().getUserId()))
+                    .orElseThrow(() -> new ResourceNotFound("Failed"));
+            userFound.put("userId", String.valueOf(userPassLoginOption.get().getUserId()));
+            userFound.put("email", userPassLoginOption.get().getEmail());
+            userFound.put("nickname", userPassLoginOption.get().getNickname());
+            userFound.put("verify", userPassLoginOption.get().getVerify());
+            userFound.put("fullName", this.userInformation.getName());
+            userFound.put("birthday", this.userInformation.getBirthday());
+            userFound.put("gender", this.userInformation.getGender());
+            userFound.put("avatar", this.userInformation.getAvatar());
+            userFound.put("status", "success");
+        } else {
+            //Save the user into database, then sign in into system
+            //In the app will get a popup to create the password for the account
+            String userIdRandom = new RandomNumber().generateSSONumber();
+            this.userPassLogin = new UserPassLogin(Integer.parseInt(userIdRandom), this.getDecode(email.getBytes()), this.getDecode(nickname.getBytes()), "true");
+            this.userInformation = new UserInformation(Integer.parseInt(userIdRandom), this.getDecode(fullName.getBytes()), "not_input", this.date, this.getDecode(avatar.getBytes()));
+            this.userServices.saveUser(this.userPassLogin);
+            this.userServices.saveInformation(this.userInformation);
+            userFound.put("userId", String.valueOf(this.userPassLogin.getUserId()));
+            userFound.put("email", this.userPassLogin.getEmail());
+            userFound.put("nickname", this.userPassLogin.getNickname());
+            userFound.put("verify", this.userPassLogin.getVerify());
+            userFound.put("fullName", this.userInformation.getName());
+            userFound.put("birthday", this.userInformation.getBirthday());
+            userFound.put("gender", this.userInformation.getGender());
+            userFound.put("avatar", this.userInformation.getAvatar());
+            userFound.put("status", "success");
+        }
+        return ResponseEntity.ok().body(userFound);
+    }
+
     //Make sure nickname and email is available to use
     @GetMapping("/verify-nickname")
     public ResponseEntity<HashMap<String, String>> CheckNickname(
             @RequestParam(name = "nickname") String nickname,
-            @RequestParam(name = "email") String email) throws ResourceNotFound {
-        this.userPassLogin = this.userServices.findByNickname(this.getDecode(nickname.getBytes(StandardCharsets.UTF_8)),
-                        this.getDecode(email.getBytes(StandardCharsets.UTF_8)))
-                .orElseThrow(() -> new ResourceNotFound("Failed"));
-        return ResponseEntity.ok().body(new HashMap<>() {{
-            this.put("nickname", UserController.this.userPassLogin.getNickname());
-            this.put("email", UserController.this.userPassLogin.getEmail());
-        }});
+            @RequestParam(name = "email") String email) {
+        HashMap<String, String> resultRespond = new HashMap<>();
+        long numberOfNickName = this.userServices.countNickName(this.getDecode(nickname.getBytes(StandardCharsets.UTF_8)),
+                this.getDecode(email.getBytes(StandardCharsets.UTF_8)));
+        if (numberOfNickName == 0) {
+            resultRespond.put("nickName", this.getDecode(nickname.getBytes(StandardCharsets.UTF_8)));
+            resultRespond.put("status", "success");
+            return ResponseEntity.ok().body(resultRespond);
+        } else {
+            resultRespond.put("nickName", this.getDecode(nickname.getBytes(StandardCharsets.UTF_8)));
+            resultRespond.put("status", "fail");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(resultRespond);
+        }
+
     }
 
     //Show recovery code to user
@@ -169,7 +208,6 @@ public class UserController {
         this.userServices.updateRecovery(new_recovery_code, userId);
         return ResponseEntity.ok().body(new HashMap<>() {{
             this.put("recovery", new_recovery_code);
-            this.put("status", "success");
         }});
     }
 
@@ -180,7 +218,7 @@ public class UserController {
             @RequestParam(name = "email") String email,
             @RequestParam(name = "oldPass") String oldPass,
             @RequestParam(name = "newPass") String newPass) throws ResourceNotFound {
-         this.userPassLogin = this.userServices.findByEmailOrUserid(this.getDecode(email.getBytes(StandardCharsets.UTF_8)),
+        this.userPassLogin = this.userServices.findByEmailOrUserid(this.getDecode(email.getBytes(StandardCharsets.UTF_8)),
                         this.getDecode(userId.getBytes(StandardCharsets.UTF_8)))
                 .orElseThrow(() -> new ResourceNotFound("Failed"));
         String oldPasswordHash = this.userPassLogin.getPassword();
@@ -214,31 +252,31 @@ public class UserController {
         HashMap<String, String> resultRespond = new HashMap<>();
         if (username != null) {
             this.userServices.updateNickname(this.getDecode(username.getBytes(StandardCharsets.UTF_8)),
-                this.getDecode(userid.getBytes(StandardCharsets.UTF_8)));
+                    this.getDecode(userid.getBytes(StandardCharsets.UTF_8)));
             resultRespond.put("UserName", username);
         }
 
         if (fullName != null) {
             this.userServices.updateFullName(this.getDecode(fullName.getBytes(StandardCharsets.UTF_8)),
-                this.getDecode(userid.getBytes(StandardCharsets.UTF_8)));
+                    this.getDecode(userid.getBytes(StandardCharsets.UTF_8)));
             resultRespond.put("fullName", fullName);
         }
 
         if (birthday != null) {
             this.userServices.updateBirthday(this.getDecode(birthday.getBytes(StandardCharsets.UTF_8)),
-                this.getDecode(userid.getBytes(StandardCharsets.UTF_8)));
+                    this.getDecode(userid.getBytes(StandardCharsets.UTF_8)));
             resultRespond.put("birthday", birthday);
         }
 
         if (gender != null) {
             this.userServices.updateGender(this.getDecode(gender.getBytes(StandardCharsets.UTF_8)),
-                this.getDecode(userid.getBytes(StandardCharsets.UTF_8)));
+                    this.getDecode(userid.getBytes(StandardCharsets.UTF_8)));
             resultRespond.put("gender", gender);
         }
 
         if (avatar != null) {
             this.userServices.updateAvatar(this.getDecode(avatar.getBytes(StandardCharsets.UTF_8)),
-                this.getDecode(userid.getBytes(StandardCharsets.UTF_8)));
+                    this.getDecode(userid.getBytes(StandardCharsets.UTF_8)));
             resultRespond.put("avatar", avatar);
         }
 
