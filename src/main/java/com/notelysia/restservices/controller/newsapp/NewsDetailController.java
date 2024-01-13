@@ -77,7 +77,7 @@ public class NewsDetailController {
         List<RssList> rssList = this.newsSourceServices.findUrlBySourceName(this.getDecode(name.getBytes()));
         return new ResponseEntity<>(new HashMap<>() {
             {
-                this.put("List of RSS", rssList);
+                this.put("ListOfRSS", rssList);
             }
         }, HttpStatus.OK);
     }

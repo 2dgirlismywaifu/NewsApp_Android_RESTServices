@@ -6,6 +6,7 @@ import com.notelysia.restservices.model.entity.newsapp.SyncSubscribe;
 import java.util.List;
 
 public interface SyncServices {
+    long findByNewsFavourite(String userId, String url);
     void saveNewsFavourite(SyncNewsFavourite syncNewsFavourite);
 
     void deleteNewsFavourite(String userId, String favouriteId);

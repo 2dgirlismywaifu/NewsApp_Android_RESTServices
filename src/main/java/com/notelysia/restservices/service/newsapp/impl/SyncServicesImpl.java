@@ -18,6 +18,11 @@ public class SyncServicesImpl implements SyncServices {
     private SyncSubscribeRepo syncSubscribeRepo;
 
     @Override
+    public long findByNewsFavourite(String userId, String url) {
+        return this.syncNewsFavRepo.findByNewsFavourite(userId, url);
+    }
+
+    @Override
     public void saveNewsFavourite(SyncNewsFavourite syncNewsFavourite) {
         this.syncNewsFavRepo.save(syncNewsFavourite);
     }

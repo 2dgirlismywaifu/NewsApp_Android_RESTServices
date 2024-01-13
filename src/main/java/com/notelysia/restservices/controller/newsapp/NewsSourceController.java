@@ -34,10 +34,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.stream.Stream;
@@ -65,14 +62,17 @@ public class NewsSourceController {
 
     //For user login
     @GetMapping(value = "/account/news-source", params = {"userid"})
-    public ResponseEntity<Map<String, NewsSource>> userNewsSource(
+    public ResponseEntity<Map<String, List<NewsSource>>> userNewsSource(
             @RequestParam(value = "userid") int userid
     ) throws ResourceNotFound {
-        Map<String, NewsSource> respond = new HashMap<>();
-        NewsSource newsSources = this.newsSourceServices.findByUserId(userid)
-                .orElseThrow(() -> new ResourceNotFound("Failed"));
-        respond.put("newsSource", newsSources);
-        return new ResponseEntity<>(respond, HttpStatus.OK);
+        Map<String, List<NewsSource>> respond = new HashMap<>();
+        Optional<NewsSource> newsSource = this.newsSourceServices.findByUserId(userid);
+        if (newsSource.isPresent()) {
+            respond.put("newsSource", newsSource.stream().toList());
+            return new ResponseEntity<>(respond, HttpStatus.OK);
+        } else {
+            throw new ResourceNotFound("User id " + userid + " not found");
+        }
     }
 
     //Convert RSS to JSON

@@ -23,6 +23,7 @@ import com.notelysia.restservices.model.entity.newsapp.SyncSubscribe;
 import com.notelysia.restservices.service.newsapp.SyncServices;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -65,7 +66,7 @@ public class UserFavouriteController {
 
     //Unsubscribe source from user
     //services will use params: userId, source_id
-    @DeleteMapping(value = "/account/unsubscribe-sources", params = {"userId", "sourceid"})
+    @DeleteMapping(value = "/account/unsubscribe-sources")
     public ResponseEntity<HashMap<String, String>> userSourceUnsubscribe(
             @RequestParam(value = "userId") String userId,
             @RequestParam(value = "sourceId") String sourceId) {
@@ -73,6 +74,7 @@ public class UserFavouriteController {
         return new ResponseEntity<>(new HashMap<>() {
             {
                 this.put("userId", UserFavouriteController.this.getDecode(userId.getBytes()));
+                this.put("isChecked", "0");
                 this.put("sourceId", UserFavouriteController.this.getDecode(sourceId.getBytes()));
                 this.put("status", "deleted");
             }
@@ -89,24 +91,28 @@ public class UserFavouriteController {
             @RequestParam(name = "imageUrl") String imageUrl,
             @RequestParam(name = "pubDate") String pubDate,
             @RequestParam(name = "sourceName") String sourceName) {
-
+        HashMap<String, String> respond = new HashMap<>();
         String favouriteIdRandom = new RandomNumber().generateSSONumber();
-        this.syncNewsFavourite = new SyncNewsFavourite(Integer.parseInt(this.getDecode(favouriteIdRandom.getBytes())),
+        long total = this.syncServices.findByNewsFavourite(this.getDecode(userId.getBytes()), this.getDecode(url.getBytes()));
+        if (total > 0) {
+            respond.put("status", "found");
+            return new ResponseEntity<>(respond, HttpStatus.BAD_REQUEST);
+
+        } else {
+            this.syncNewsFavourite = new SyncNewsFavourite(Integer.parseInt(this.getDecode(favouriteIdRandom.getBytes())),
                 Integer.parseInt(this.getDecode(userId.getBytes())), this.getDecode(url.getBytes()), this.getDecode(title.getBytes()),
                 this.getDecode(imageUrl.getBytes()), this.getDecode(pubDate.getBytes()), this.getDecode(sourceName.getBytes()), 0);
-        this.syncServices.saveNewsFavourite(this.syncNewsFavourite);
-        return new ResponseEntity<>(new HashMap<>() {
-            {
-                this.put("favourite_id", String.valueOf(UserFavouriteController.this.syncNewsFavourite.getFavouriteId()));
-                this.put("userId", String.valueOf(UserFavouriteController.this.syncNewsFavourite.getUserId()));
-                this.put("url", UserFavouriteController.this.syncNewsFavourite.getUrl());
-                this.put("title", UserFavouriteController.this.syncNewsFavourite.getTitle());
-                this.put("imageUrl", UserFavouriteController.this.syncNewsFavourite.getImageUrl());
-                this.put("pubDate", UserFavouriteController.this.syncNewsFavourite.getPubDate());
-                this.put("sourceName", UserFavouriteController.this.syncNewsFavourite.getSourceName());
-                this.put("status", "success");
-            }
-        }, org.springframework.http.HttpStatus.OK);
+            this.syncServices.saveNewsFavourite(this.syncNewsFavourite);
+            respond.put("favouriteId", String.valueOf(UserFavouriteController.this.syncNewsFavourite.getFavouriteId()));
+            respond.put("userId", String.valueOf(UserFavouriteController.this.syncNewsFavourite.getUserId()));
+            respond.put("url", UserFavouriteController.this.syncNewsFavourite.getUrl());
+            respond.put("title", UserFavouriteController.this.syncNewsFavourite.getTitle());
+            respond.put("imageUrl", UserFavouriteController.this.syncNewsFavourite.getImageUrl());
+            respond.put("pubDate", UserFavouriteController.this.syncNewsFavourite.getPubDate());
+            respond.put("sourceName", UserFavouriteController.this.syncNewsFavourite.getSourceName());
+            respond.put("status", "success");
+            return new ResponseEntity<>(respond, HttpStatus.OK);
+        }
     }
 
     //Delete news favourite from user
@@ -118,14 +124,14 @@ public class UserFavouriteController {
         return new ResponseEntity<>(new HashMap<>() {
             {
                 this.put("userId", UserFavouriteController.this.getDecode(userId.getBytes()));
-                this.put("url", UserFavouriteController.this.getDecode(favouriteId.getBytes()));
+                this.put("favouriteId", UserFavouriteController.this.getDecode(favouriteId.getBytes()));
                 this.put("status", "deleted");
             }
         }, org.springframework.http.HttpStatus.OK);
     }
 
     //show favourite news with params: userId in sync_news_favourite
-    @GetMapping(value = "/account/show-news-favourite", params = {"userId"})
+    @GetMapping(value = "/account/show-news-favourite")
     public ResponseEntity<HashMap<String, List<SyncNewsFavourite>>> userNewsFavouriteShow(
             @RequestParam(value = "userId") String userId) {
         this.syncServices.findByUserId(Integer.parseInt(this.getDecode(userId.getBytes())));
@@ -142,15 +148,18 @@ public class UserFavouriteController {
     public ResponseEntity<HashMap<String, String>> userSourceSubscribeCheck(
             @RequestParam(value = "userId") String userId,
             @RequestParam(value = "sourceId") String source_id) {
+        HashMap<String, String> respond = new HashMap<>();
         this.syncSubscribe = this.syncServices.findByUserIdAndSourceId(Integer.parseInt(this.getDecode(userId.getBytes())), this.getDecode(source_id.getBytes()));
-        return new ResponseEntity<>(new HashMap<>() {
-            {
-                this.put("userId", String.valueOf(UserFavouriteController.this.syncSubscribe.getUserId()));
-                this.put("sourceId", String.valueOf(UserFavouriteController.this.syncSubscribe.getSourceId()));
-                this.put("isChecked",String.valueOf(UserFavouriteController.this.syncSubscribe.getIsChecked()));
-                this.put("isDeleted",String.valueOf(UserFavouriteController.this.syncSubscribe.getIsDeleted()));
-                this.put("status", "found");
-            }
-        }, org.springframework.http.HttpStatus.OK);
+        if (this.syncSubscribe == null) {
+            respond.put("status", "not-found");
+            return new ResponseEntity<>(respond, HttpStatus.BAD_REQUEST);
+        } else {
+            respond.put("userId", String.valueOf(UserFavouriteController.this.syncSubscribe.getUserId()));
+            respond.put("sourceId", String.valueOf(UserFavouriteController.this.syncSubscribe.getSourceId()));
+            respond.put("isChecked", String.valueOf(UserFavouriteController.this.syncSubscribe.getIsChecked()));
+            respond.put("isDeleted", String.valueOf(UserFavouriteController.this.syncSubscribe.getIsDeleted()));
+            respond.put("status", "found");
+            return new ResponseEntity<>(respond, HttpStatus.OK);
+        }
     }
 }
