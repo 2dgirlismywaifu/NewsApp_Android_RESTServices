@@ -33,8 +33,8 @@ public class UserServicesImpl implements UserServices {
     }
 
     @Override
-    public Optional<UserLogin> findByEmailAndToken(String email, String nickname) {
-        return this.userLoginRepo.findByEmailAndToken(email, nickname);
+    public Optional<UserLogin> findByEmail(String email) {
+        return this.userLoginRepo.findByEmail(email);
     }
 
     @Override
