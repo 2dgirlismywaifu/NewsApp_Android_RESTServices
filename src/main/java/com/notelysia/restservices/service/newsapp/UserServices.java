@@ -1,25 +1,25 @@
 package com.notelysia.restservices.service.newsapp;
 
 import com.notelysia.restservices.model.entity.newsapp.UserInformation;
-import com.notelysia.restservices.model.entity.newsapp.UserPassLogin;
+import com.notelysia.restservices.model.entity.newsapp.UserLogin;
 
 import java.util.Optional;
 
 public interface UserServices {
-    void saveUser(UserPassLogin userPassLogin);
+    void saveUser(UserLogin userLogin);
 
-    Optional<UserPassLogin> findByEmailOrUserid(String email, String userId);
+    Optional<UserLogin> findByEmailOrUserid(String email, String userId);
 
     void updateVerify(String verify, String email);
 
-    Optional<UserPassLogin> findByEmailOrNickname(String email, String nickname);
+    Optional<UserLogin> findByEmailOrNickname(String email, String nickname);
     Optional<UserInformation> findInformationByUserId(String userId);
 
-    void updatePassword(String password, String salt, String recovery, String email);
+    void updateUserToken(String userToken, String salt, String recovery, String email);
 
     long countNickName(String nickname, String email);
 
-    Optional<UserPassLogin> findByRecovery(String recovery);
+    Optional<UserLogin> findByRecovery(String recovery);
 
     void updateRecovery(String recovery, String userId);
 
@@ -34,4 +34,5 @@ public interface UserServices {
     void updateGender(String gender, String userId);
 
     void updateAvatar(String avatar, String userId);
+
 }

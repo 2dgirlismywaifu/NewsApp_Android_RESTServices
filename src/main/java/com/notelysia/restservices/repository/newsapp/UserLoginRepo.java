@@ -16,7 +16,7 @@
 
 package com.notelysia.restservices.repository.newsapp;
 
-import com.notelysia.restservices.model.entity.newsapp.UserPassLogin;
+import com.notelysia.restservices.model.entity.newsapp.UserLogin;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -26,50 +26,50 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @Repository
-public interface UserLoginRepo extends JpaRepository<UserPassLogin, Long> {
+public interface UserLoginRepo extends JpaRepository<UserLogin, Long> {
     //Get password_hash from email and user_id
-    @Query("FROM UserPassLogin userPassLogin WHERE userPassLogin.email = ?1 OR userPassLogin.userId = ?2")
-    Optional<UserPassLogin> findByEmailOrUserid(String email, String userId);
+    @Query("FROM UserLogin userLogin WHERE userLogin.email = ?1 OR userLogin.userId = ?2")
+    Optional<UserLogin> findByEmailOrUserid(String email, String userId);
 
     //Verify account
     @Transactional
     @Modifying
-    @Query("UPDATE UserPassLogin userPassLogin " +
-            "SET userPassLogin.verify = ?1 WHERE userPassLogin.email = ?2")
+    @Query("UPDATE UserLogin userLogin " +
+            "SET userLogin.verify = ?1 WHERE userLogin.email = ?2")
     void updateVerify(String verify, String email);
 
     //Sigin in account
-    @Query("FROM UserPassLogin  userPassLogin, UserInformation userInformation " +
-            "WHERE userPassLogin.userId = userInformation.userId AND userPassLogin.email = ?1 OR userPassLogin.nickname = ?2")
-    Optional<UserPassLogin> findByEmailOrNickname(String email, String nickname);
+    @Query("FROM UserLogin  userLogin, UserInformation userInformation " +
+            "WHERE userLogin.userId = userInformation.userId AND userLogin.email = ?1 OR userLogin.nickname = ?2")
+    Optional<UserLogin> findByEmailOrNickname(String email, String nickname);
 
     //Update password from reset password
     @Transactional
     @Modifying
-    @Query("UPDATE UserPassLogin userPassLogin " +
-            "SET userPassLogin.password = ?1, userPassLogin.salt = ?2, userPassLogin.recovery = ?3 " +
-            "WHERE userPassLogin.email = ?4")
+    @Query("UPDATE UserLogin userLogin " +
+            "SET userLogin.userToken = ?1, userLogin.salt = ?2, userLogin.recovery = ?3 " +
+            "WHERE userLogin.email = ?4")
     void updatePassword(String password, String salt, String recovery, String email);
 
     //Check nickname
-    @Query("select count(userPassLogin) FROM UserPassLogin userPassLogin WHERE userPassLogin.nickname = ?1 and userPassLogin.email = ?2")
+    @Query("select count(userLogin) FROM UserLogin userLogin WHERE userLogin.nickname = ?1 and userLogin.email = ?2")
     long countNickName(String nickname, String email);
 
     //Get Recovery Code from email
-    @Query("FROM UserPassLogin userPassLogin WHERE userPassLogin.email = ?1")
-    Optional<UserPassLogin> findByRecovery(String recovery);
+    @Query("FROM UserLogin userLogin WHERE userLogin.email = ?1")
+    Optional<UserLogin> findByRecovery(String recovery);
 
     //Update recovery code with user_id
     @Transactional
     @Modifying
-    @Query("UPDATE UserPassLogin userPassLogin " +
-            "SET userPassLogin.recovery = ?1 WHERE userPassLogin.userId = ?2")
+    @Query("UPDATE UserLogin userLogin " +
+            "SET userLogin.recovery = ?1 WHERE userLogin.userId = ?2")
     void updateRecovery(String recovery, String userId);
 
     //Update nickname user
     @Transactional
     @Modifying
-    @Query("UPDATE UserPassLogin userPassLogin " +
-            "SET userPassLogin.nickname = ?1 WHERE userPassLogin.userId = ?2")
+    @Query("UPDATE UserLogin userLogin " +
+            "SET userLogin.nickname = ?1 WHERE userLogin.userId = ?2")
     void updateNickname(String nickname, String userId);
 }

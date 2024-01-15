@@ -59,9 +59,9 @@ public class SwaggerConfiguration {
             return new OpenAPI()
                     //Edit footer, change /v3/api-docs
                     .externalDocs(new io.swagger.v3.oas.models.ExternalDocumentation()
-                            .description("Open Source Project NewsApp-RESTServices")
+                            .description("My Open Source REST Services")
                             .url("https://github.com/2dgirlismywaifu/My-REST-Services"))
-                    .info(new Info().title("NewsApp Reset API").version("2.0.0"))
+                    .info(new Info().title("My-REST-Services").version("2.1.0"))
                     //HTTP or HTTPS
                     // Components section defines Security Scheme
                     .components(components)

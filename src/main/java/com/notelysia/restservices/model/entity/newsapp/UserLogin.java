@@ -29,20 +29,20 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "user_passlogin")
+@Table(name = "user_login")
 @SecondaryTables({
         @SecondaryTable(name = "sync_subscribe", pkJoinColumns = @PrimaryKeyJoinColumn(name = "user_id")),
         @SecondaryTable(name = "sync_news_favourite", pkJoinColumns = @PrimaryKeyJoinColumn(name = "user_id"))
 })
-public class UserPassLogin implements Serializable {
+public class UserLogin implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
     @Column(name = "user_id")
     private int userId;
     @Column(name = "email")
     private String email;
-    @Column(name = "password")
-    private String password;
+    @Column(name = "user_token")
+    private String userToken;
     @Column(name = "salt")
     private String salt;
     @Column(name = "nickname")
@@ -51,18 +51,4 @@ public class UserPassLogin implements Serializable {
     private String verify;
     @Column(name = "recovery")
     private String recovery;
-
-    /**
-     * Constructor for UserPassLogin if user use Google account to log in
-     * @param userId : User Id
-     * @param email: User Email
-     * @param nickname: User Nickname
-     * @param verify: User Verify Status (Default will be "true")
-     */
-    public UserPassLogin(int userId, String email, String nickname, String verify) {
-        this.userId = userId;
-        this.email = email;
-        this.nickname = nickname;
-        this.verify = verify;
-    }
 }

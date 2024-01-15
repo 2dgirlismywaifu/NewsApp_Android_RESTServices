@@ -1,7 +1,7 @@
 package com.notelysia.restservices.service.newsapp.impl;
 
 import com.notelysia.restservices.model.entity.newsapp.UserInformation;
-import com.notelysia.restservices.model.entity.newsapp.UserPassLogin;
+import com.notelysia.restservices.model.entity.newsapp.UserLogin;
 import com.notelysia.restservices.repository.newsapp.UserInfoRepo;
 import com.notelysia.restservices.repository.newsapp.UserLoginRepo;
 import com.notelysia.restservices.service.newsapp.UserServices;
@@ -18,12 +18,12 @@ public class UserServicesImpl implements UserServices {
     private UserInfoRepo userInfoRepo;
 
     @Override
-    public void saveUser(UserPassLogin userPassLogin) {
-        this.userLoginRepo.save(userPassLogin);
+    public void saveUser(UserLogin userLogin) {
+        this.userLoginRepo.save(userLogin);
     }
 
     @Override
-    public Optional<UserPassLogin> findByEmailOrUserid(String email, String userId) {
+    public Optional<UserLogin> findByEmailOrUserid(String email, String userId) {
         return this.userLoginRepo.findByEmailOrUserid(email, userId);
     }
 
@@ -33,7 +33,7 @@ public class UserServicesImpl implements UserServices {
     }
 
     @Override
-    public Optional<UserPassLogin> findByEmailOrNickname(String email, String nickname) {
+    public Optional<UserLogin> findByEmailOrNickname(String email, String nickname) {
         return this.userLoginRepo.findByEmailOrNickname(email, nickname);
     }
 
@@ -43,8 +43,8 @@ public class UserServicesImpl implements UserServices {
     }
 
     @Override
-    public void updatePassword(String password, String salt, String recovery, String email) {
-        this.userLoginRepo.updatePassword(password, salt, recovery, email);
+    public void updateUserToken(String userToken, String salt, String recovery, String email) {
+        this.userLoginRepo.updatePassword(userToken, salt, recovery, email);
     }
 
     @Override
@@ -53,7 +53,7 @@ public class UserServicesImpl implements UserServices {
     }
 
     @Override
-    public Optional<UserPassLogin> findByRecovery(String recovery) {
+    public Optional<UserLogin> findByRecovery(String recovery) {
         return this.userLoginRepo.findByRecovery(recovery);
     }
 
