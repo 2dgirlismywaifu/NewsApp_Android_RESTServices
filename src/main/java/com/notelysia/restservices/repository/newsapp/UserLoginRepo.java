@@ -40,8 +40,8 @@ public interface UserLoginRepo extends JpaRepository<UserLogin, Long> {
 
     //Sigin in account
     @Query("FROM UserLogin  userLogin, UserInformation userInformation " +
-            "WHERE userLogin.userId = userInformation.userId AND userLogin.email = ?1 OR userLogin.nickname = ?2")
-    Optional<UserLogin> findByEmailOrNickname(String email, String nickname);
+            "WHERE userLogin.userId = userInformation.userId AND userLogin.email = ?1 and userLogin.userToken = ?2")
+    Optional<UserLogin> findByEmailAndToken(String email, String userToken);
 
     //Update password from reset password
     @Transactional

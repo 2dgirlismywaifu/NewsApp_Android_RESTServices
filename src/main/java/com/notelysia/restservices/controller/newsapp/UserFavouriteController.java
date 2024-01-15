@@ -49,7 +49,7 @@ public class UserFavouriteController {
     public ResponseEntity<HashMap<String, String>> userSourceSubscribe(
             @RequestParam(value = "userId") String userId,
             @RequestParam(value = "sourceId") String source_id) {
-        String syncIdRandom = new RandomNumber().generateSSONumber();
+        String syncIdRandom = new RandomNumber().generateRandomNumber();
         this.syncSubscribe = new SyncSubscribe(Integer.parseInt(this.getDecode(syncIdRandom.getBytes())),
                 Integer.parseInt(this.getDecode(userId.getBytes())), Integer.parseInt(this.getDecode(source_id.getBytes())), 0, 1);
         this.syncServices.saveSubscribe(this.syncSubscribe);
@@ -92,7 +92,7 @@ public class UserFavouriteController {
             @RequestParam(name = "pubDate") String pubDate,
             @RequestParam(name = "sourceName") String sourceName) {
         HashMap<String, String> respond = new HashMap<>();
-        String favouriteIdRandom = new RandomNumber().generateSSONumber();
+        String favouriteIdRandom = new RandomNumber().generateRandomNumber();
         long total = this.syncServices.findByNewsFavourite(this.getDecode(userId.getBytes()), this.getDecode(url.getBytes()));
         if (total > 0) {
             respond.put("status", "found");
@@ -174,7 +174,7 @@ public class UserFavouriteController {
             @RequestParam(value = "title") String title) {
         HashMap<String, String> respond = new HashMap<>();
         this.syncNewsFavourite = this.syncServices.checkNewsFavouriteOrNot(this.getDecode(userId.getBytes()), this.getDecode(title.getBytes()));
-        if (syncNewsFavourite == null) {
+        if (this.syncNewsFavourite == null) {
             respond.put("status", "not-found");
             return new ResponseEntity<>(respond, HttpStatus.BAD_REQUEST);
         } else {

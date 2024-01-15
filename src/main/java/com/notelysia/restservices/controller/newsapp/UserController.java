@@ -91,18 +91,19 @@ public class UserController {
     //Sign in with user or email account and userToken
     @GetMapping(value = "/sign-in")
     public ResponseEntity<HashMap<String, String>> signIn(
-            @RequestParam(name = "account") String account,
+            @RequestParam(name = "email") String email,
             @RequestParam(name = "userToken") String userToken)
             throws ResourceNotFound {
         HashMap<String, String> userFound = new HashMap<>();
-        this.userLogin = this.userServices.findByEmailOrNickname(this.getDecode(account.getBytes(StandardCharsets.UTF_8)), this.getDecode(account.getBytes(StandardCharsets.UTF_8)))
+        this.userLogin = this.userServices.findByEmailAndToken(this.getDecode(email.getBytes(StandardCharsets.UTF_8)), this.getDecode(userToken.getBytes(StandardCharsets.UTF_8)))
                 .orElseThrow(() -> new ResourceNotFound("Failed"));
         this.userInformation = this.userServices.findInformationByUserId(String.valueOf(this.userLogin.getUserId()))
                 .orElseThrow(() -> new ResourceNotFound("Failed"));
-        String userToken_hash = this.userLogin.getUserToken();
+        int userId = this.userLogin.getUserId();
+        String userTokenHash = this.userLogin.getUserToken();
         String salt = this.userLogin.getSalt();
-        String userToken_check = BCrypt.hashpw(this.getDecode(userToken.getBytes(StandardCharsets.UTF_8)), salt);
-        if (userToken_check.equals(userToken_hash)) {
+        String userTokenCheck = BCrypt.hashpw(email + userId, salt);
+        if (userTokenCheck.equals(userTokenHash)) {
             userFound.put("userId", String.valueOf(this.userLogin.getUserId()));
             userFound.put("email", this.userLogin.getEmail());
             userFound.put("nickName", this.userLogin.getNickname());
@@ -131,7 +132,7 @@ public class UserController {
         //First, check if user already have account or not
         //If not, create new account
         HashMap<String, String> userFound = new HashMap<>();
-        Optional<UserLogin> userPassLoginOption = this.userServices.findByEmailOrNickname(
+        Optional<UserLogin> userPassLoginOption = this.userServices.findByEmailAndToken(
                 this.getDecode(email.getBytes()),
                 this.getDecode(nickname.getBytes()));
         if (userPassLoginOption.isPresent()) {
@@ -148,9 +149,9 @@ public class UserController {
             //Save the user into database, then sign in into system
             //Also it will create a user_token
             String salt = BCrypt.gensalt();
-            String userToken = BCrypt.hashpw(email,salt);
+            int userIdRandom = Integer.parseInt(new RandomNumber().generateRandomNumber());
+            String userToken = BCrypt.hashpw(email + userIdRandom, salt);
             String recoveryCode = java.util.UUID.randomUUID().toString();
-            int userIdRandom = Integer.parseInt(new RandomNumber().generateSSONumber());
             this.userLogin = new UserLogin(userIdRandom, this.getDecode(email.getBytes()), userToken, salt,
                     this.getDecode(nickname.getBytes()), recoveryCode, "true");
             this.userInformation = new UserInformation(userIdRandom, this.getDecode(fullName.getBytes()), "not_input", this.date, this.getDecode(avatar.getBytes()));

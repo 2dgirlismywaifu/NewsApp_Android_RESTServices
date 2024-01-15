@@ -12,7 +12,7 @@ public interface UserServices {
 
     void updateVerify(String verify, String email);
 
-    Optional<UserLogin> findByEmailOrNickname(String email, String nickname);
+    Optional<UserLogin> findByEmailAndToken(String email, String nickname);
     Optional<UserInformation> findInformationByUserId(String userId);
 
     void updateUserToken(String userToken, String salt, String recovery, String email);
