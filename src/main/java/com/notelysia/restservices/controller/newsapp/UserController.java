@@ -159,7 +159,7 @@ public class UserController {
                     userTokenHash, salt,
                     this.getDecode(nickname.getBytes()),
                     "true", recoveryCode);
-            this.userInformation = new UserInformation(userIdRandom, this.getDecode(fullName.getBytes()), "not_input", this.date, this.getDecode(avatar.getBytes()));
+            this.userInformation = new UserInformation(userIdRandom, this.getDecode(fullName.getBytes()), "not_input", "not_input", this.getDecode(avatar.getBytes()));
             this.userServices.saveUser(this.userLogin);
             this.userServices.saveInformation(this.userInformation);
             userFound.put("userId", String.valueOf(this.userLogin.getUserId()));
