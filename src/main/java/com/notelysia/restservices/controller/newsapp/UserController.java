@@ -152,8 +152,11 @@ public class UserController {
             int userIdRandom = Integer.parseInt(new RandomNumber().generateRandomNumber());
             String userToken = BCrypt.hashpw(email + userIdRandom, salt);
             String recoveryCode = java.util.UUID.randomUUID().toString();
-            this.userLogin = new UserLogin(userIdRandom, this.getDecode(email.getBytes()), userToken, salt,
-                    this.getDecode(nickname.getBytes()), recoveryCode, "true");
+            this.userLogin = new UserLogin(userIdRandom,
+                    this.getDecode(email.getBytes()),
+                    userToken, salt,
+                    this.getDecode(nickname.getBytes()),
+                    "true", recoveryCode);
             this.userInformation = new UserInformation(userIdRandom, this.getDecode(fullName.getBytes()), "not_input", this.date, this.getDecode(avatar.getBytes()));
             this.userServices.saveUser(this.userLogin);
             this.userServices.saveInformation(this.userInformation);
