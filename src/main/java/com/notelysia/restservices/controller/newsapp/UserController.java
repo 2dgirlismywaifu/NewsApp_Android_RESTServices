@@ -105,7 +105,7 @@ public class UserController {
         if (userTokenCheck.equals(userTokenHash)) {
             userFound.put("userId", String.valueOf(this.userLogin.getUserId()));
             userFound.put("email", this.userLogin.getEmail());
-            userFound.put("nickName", this.userLogin.getNickname());
+            userFound.put("nickname", this.userLogin.getNickname());
             userFound.put("verify", this.userLogin.getVerify());
             userFound.put("fullName", this.userInformation.getName());
             userFound.put("birthday", this.userInformation.getBirthday());
