@@ -50,8 +50,8 @@ public class UserFavouriteController {
             @RequestParam(value = "userId") String userId,
             @RequestParam(value = "sourceId") String source_id) {
         String syncIdRandom = new RandomNumber().generateRandomNumber();
-        this.syncSubscribe = new SyncSubscribe(Integer.parseInt(this.getDecode(syncIdRandom.getBytes())),
-                Integer.parseInt(this.getDecode(userId.getBytes())), Integer.parseInt(this.getDecode(source_id.getBytes())), 0, 1);
+        this.syncSubscribe = new SyncSubscribe(Integer.parseInt(syncIdRandom),
+                Integer.parseInt(userId), Integer.parseInt(source_id), 0, 1);
         this.syncServices.saveSubscribe(this.syncSubscribe);
         return new ResponseEntity<>(new HashMap<>() {
             {
@@ -70,12 +70,12 @@ public class UserFavouriteController {
     public ResponseEntity<HashMap<String, String>> userSourceUnsubscribe(
             @RequestParam(value = "userId") String userId,
             @RequestParam(value = "sourceId") String sourceId) {
-        this.syncServices.deleteByUserIdAndSourceId(Integer.parseInt(this.getDecode(userId.getBytes())), this.getDecode(sourceId.getBytes()));
+        this.syncServices.deleteByUserIdAndSourceId(Integer.parseInt(userId), sourceId);
         return new ResponseEntity<>(new HashMap<>() {
             {
-                this.put("userId", UserFavouriteController.this.getDecode(userId.getBytes()));
+                this.put("userId", userId);
                 this.put("isChecked", "0");
-                this.put("sourceId", UserFavouriteController.this.getDecode(sourceId.getBytes()));
+                this.put("sourceId", sourceId);
                 this.put("status", "deleted");
             }
         }, org.springframework.http.HttpStatus.OK);
