@@ -185,20 +185,20 @@ public class UserController {
         Optional<UserNameAndEmailDto> countNickNameOrEmail = this.userServices.countNickNameOrEmail(this.getDecode(nickname.getBytes(StandardCharsets.UTF_8)),
                 this.getDecode(email.getBytes(StandardCharsets.UTF_8)));
         if (countNickNameOrEmail.isPresent()) {
-            if (countNickNameOrEmail.get().getTotalEmail() == 0) {
+            if (countNickNameOrEmail.get().getTotalEmail() > 0) {
                 resultRespond.put("email", this.getDecode(email.getBytes(StandardCharsets.UTF_8)));
-                resultRespond.put("status", "success");
+                resultRespond.put("status", "used");
                 return ResponseEntity.ok().body(resultRespond);
-            }  else if (countNickNameOrEmail.get().getTotalNickName() == 0) {
+            }  else if (countNickNameOrEmail.get().getTotalNickName() > 0) {
                 resultRespond.put("nickname", this.getDecode(nickname.getBytes(StandardCharsets.UTF_8)));
-                resultRespond.put("status", "success");
+                resultRespond.put("status", "used");
                 return ResponseEntity.ok().body(resultRespond);
             } else {
-                resultRespond.put("status", "fail");
+                resultRespond.put("status", "empty");
                 return ResponseEntity.status(HttpStatus.OK).body(resultRespond);
             }
         } else {
-            resultRespond.put("status", "fail");
+            resultRespond.put("status", "empty");
             return ResponseEntity.status(HttpStatus.OK).body(resultRespond);
         }
     }
