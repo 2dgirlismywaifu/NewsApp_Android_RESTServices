@@ -16,7 +16,6 @@
 
 package com.notelysia.restservices.model.entity.newsapp;
 
-import com.notelysia.restservices.model.entity.newsapp.CompositeKey.SyncSubscribePK;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,7 +29,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@IdClass(SyncSubscribePK.class)
 @Table(name = "sync_subscribe")
 @SecondaryTables({
         @SecondaryTable(name="news_source", foreignKey = @ForeignKey(name="source_id")),
