@@ -23,7 +23,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface NewsSourceRepo extends JpaRepository<NewsSource, Long> {
@@ -33,8 +32,11 @@ public interface NewsSourceRepo extends JpaRepository<NewsSource, Long> {
     List<NewsSource> findAllNewsSource(Limit limit);
 
     //Query to get all news source for the user login with email and password
-    @Query(
-            "FROM NewsSource newsSource, ImageInformation imageInfo, SyncSubscribe sync " +
-                    "WHERE newsSource.sourceId = imageInfo.sourceId AND newsSource.sourceId = sync.sourceId AND sync.userId = ?1")
-    Optional<NewsSource> findByUserId(int useId);
+    @Query("SELECT ns " +
+            "FROM NewsSource ns" +
+            "         inner join ImageInformation nsi on ns.sourceId = nsi.sourceId" +
+            "         LEFT JOIN SyncSubscribe sns" +
+            "                   ON ns.sourceId = sns.sourceId" +
+            "                       AND sns.userId = ?1")
+    List<NewsSource> findByUserId(int useId);
 }

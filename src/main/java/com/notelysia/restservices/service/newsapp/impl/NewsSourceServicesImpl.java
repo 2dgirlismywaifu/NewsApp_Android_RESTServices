@@ -11,7 +11,6 @@ import org.springframework.data.domain.Limit;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class NewsSourceServicesImpl implements NewsSourceServices {
@@ -26,7 +25,7 @@ public class NewsSourceServicesImpl implements NewsSourceServices {
     }
 
     @Override
-    public Optional<NewsSource> findByUserId(int useId) {
+    public List<NewsSource> findByUserId(int useId) {
         return this.newsSourceRepo.findByUserId(useId);
     }
 
@@ -61,17 +60,7 @@ public class NewsSourceServicesImpl implements NewsSourceServices {
     }
 
     @Override
-    public List<String> guestAllRssUrl() {
-        return this.newsDetailRepo.guestAllRssUrl();
-    }
-
-    @Override
-    public List<String> findAllRssUrl() {
-        return this.newsDetailRepo.findAllRssUrl();
-    }
-
-    @Override
-    public List<String> findAllRssUrlWithSyncSubscribe(Integer userId) {
-        return this.newsDetailRepo.findAllRssUrlWithSyncSubscribe(userId);
+    public List<String> findAllRssUrlWithSyncSubscribe(Integer userId, String type) {
+        return this.newsDetailRepo.findAllRssUrlWithSyncSubscribe(userId, type);
     }
 }

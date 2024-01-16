@@ -67,8 +67,8 @@ public class NewsSourceController {
             @RequestParam(value = "userid") int userid
     ) throws ResourceNotFound {
         Map<String, List<NewsSource>> respond = new HashMap<>();
-        Optional<NewsSource> newsSource = this.newsSourceServices.findByUserId(userid);
-        if (newsSource.isPresent()) {
+        List<NewsSource> newsSource = this.newsSourceServices.findByUserId(userid);
+        if (!newsSource.isEmpty()) {
             respond.put("newsSource", newsSource.stream().toList());
             return new ResponseEntity<>(respond, HttpStatus.OK);
         } else {
@@ -139,6 +139,7 @@ public class NewsSourceController {
     @GetMapping("/search-news")
     public ResponseEntity<Map<String, List<RssDto>>> searchAllNews(
             @RequestParam(value = "userId", required = false) String userId,
+            @RequestParam(value = "type") String type,
             @RequestParam(value = "keyWord") String keyWord,
             @RequestParam(value = "size") String size) {
         Map<String, List<RssDto>> respond = new ConcurrentHashMap<>();
@@ -149,12 +150,12 @@ public class NewsSourceController {
         RssReader rssReader = new RssReader();
         List<RssDto> rssDtos = new ArrayList<>();
         if (userId != null && !userId.isEmpty()) {
-            urls = this.newsSourceServices.findAllRssUrl();
+            urls = this.newsSourceServices.findAllRssUrlByType(this.getDecode(type.getBytes()));
             rssSynSubscribe = this.newsSourceServices.
-                    findAllRssUrlWithSyncSubscribe(Integer.valueOf(userId));
+                    findAllRssUrlWithSyncSubscribe(Integer.valueOf(userId), this.getDecode(type.getBytes()));
         } else {
             //Guest only use one news source
-            urls = this.newsSourceServices.guestAllRssUrl();
+            urls = this.newsSourceServices.guestRssUrlByType(this.getDecode(type.getBytes()));
         }
         try {
             CountDownLatch latch = new CountDownLatch(1);
