@@ -41,7 +41,6 @@ public class SyncSubscribe implements Serializable {
     @Id
     @Column(name = "sync_id")
     private int syncId;
-    @Id
     @Column(name = "user_id")
     private int userId;
     @Column(name = "source_id")
