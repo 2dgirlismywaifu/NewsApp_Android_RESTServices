@@ -26,6 +26,7 @@ import com.notelysia.restservices.service.newsapp.NewsSourceServices;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
@@ -79,9 +81,11 @@ public class NewsSourceController {
     @GetMapping("/rss-to-json")
     public ResponseEntity<Map<String, List<RssDto>>> convertRSS2JSON(
             @RequestParam(value = "userId", required = false) String userId,
-            @RequestParam(value = "type") String type
+            @RequestParam(value = "type") String type,
+            @RequestParam(value = "size") String size
     ) {
         Stream<Item> rssFeed;
+        List<Item> items = new ArrayList<>();
         List<String> rssUrls;
         List<String> rssSynSubscribe = null;
         if (userId != null && !userId.isEmpty()) {
@@ -98,11 +102,21 @@ public class NewsSourceController {
         try {
             CountDownLatch latch = new CountDownLatch(1);
             if (rssSynSubscribe != null) {
-                rssFeed = rssSynSubscribe.isEmpty() ? rssReader.read(rssUrls) : rssReader.read(rssSynSubscribe);
+                if (rssSynSubscribe.isEmpty()) {
+                    for (String rssUrl : rssUrls) {
+                        rssFeed = rssReader.read(rssUrl);
+                        items.addAll(rssFeed.limit(Long.parseLong(size)).toList());
+                    }
+                } else {
+                    for (String rssUrl : rssSynSubscribe) {
+                        rssFeed = rssReader.read(rssUrl);
+                        items.addAll(rssFeed.limit(Long.parseLong(size)).toList());
+                    }
+                }
             } else {
                 rssFeed = rssReader.read(rssUrls);
+                items.addAll(rssFeed.limit(Long.parseLong(size)).toList());
             }
-            List<Item> items = rssFeed.toList();
             for (Item item : items) {
                 String title = item.getTitle().get();
                 String description = item.getDescription().get();
@@ -116,6 +130,8 @@ public class NewsSourceController {
             latch.await();
         } catch (InterruptedException e) {
             logger.error("Error: " + e, e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
         return new ResponseEntity<>(respond, HttpStatus.OK);
     }
@@ -124,9 +140,11 @@ public class NewsSourceController {
     @GetMapping("/search-news")
     public ResponseEntity<Map<String, List<RssDto>>> searchAllNews(
             @RequestParam(value = "userId", required = false) String userId,
-            @RequestParam(value = "keyWord") String keyWord) {
+            @RequestParam(value = "keyWord") String keyWord,
+            @RequestParam(value = "size") String size) {
         Map<String, List<RssDto>> respond = new ConcurrentHashMap<>();
         Stream<Item> rssFeed;
+        List<Item> items = new ArrayList<>();
         List<String> urls;
         List<String> rssSynSubscribe = null;
         RssReader rssReader = new RssReader();
@@ -142,15 +160,24 @@ public class NewsSourceController {
         try {
             CountDownLatch latch = new CountDownLatch(1);
             if (rssSynSubscribe != null) {
-                rssFeed = rssSynSubscribe.isEmpty() ? rssReader.read(urls).sorted()
-                        .filter(i -> i.getTitle().get().contains(this.getDecode(keyWord.getBytes()))) :
-                        rssReader.read(rssSynSubscribe).sorted()
+                if (rssSynSubscribe.isEmpty()) {
+                    for (String rssUrl : urls) {
+                        rssFeed = rssReader.read(rssUrl).sorted()
                         .filter(i -> i.getTitle().get().contains(this.getDecode(keyWord.getBytes())));
+                        items.addAll(rssFeed.limit(Long.parseLong(size)).toList());
+                    }
+                } else {
+                    for (String rssUrl : rssSynSubscribe) {
+                        rssFeed = rssReader.read(rssUrl).sorted()
+                        .filter(i -> i.getTitle().get().contains(this.getDecode(keyWord.getBytes())));
+                        items.addAll(rssFeed.limit(Long.parseLong(size)).toList());
+                    }
+                }
             } else {
                 rssFeed = rssReader.read(urls).sorted()
                         .filter(i -> i.getTitle().get().contains(this.getDecode(keyWord.getBytes())));
+                items.addAll(rssFeed.limit(Long.parseLong(size)).toList());
             }
-            List<Item> items = rssFeed.toList();
             for (Item item : items) {
                 String title = item.getTitle().get();
                 String description = item.getDescription().get();
@@ -164,6 +191,8 @@ public class NewsSourceController {
             latch.await();
         } catch (InterruptedException e) {
             logger.error("Error: " + e, e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
         return new ResponseEntity<>(respond, HttpStatus.OK);
     }
