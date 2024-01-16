@@ -16,7 +16,6 @@
 
 package com.notelysia.restservices.model.entity.newsapp;
 
-import com.notelysia.restservices.model.entity.newsapp.CompositeKey.SyncNewsFavouritePK;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,7 +29,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@IdClass(SyncNewsFavouritePK.class)
 @Table(name = "sync_news_favourite")
 public class SyncNewsFavourite implements Serializable {
     //Instance variables
@@ -38,7 +36,6 @@ public class SyncNewsFavourite implements Serializable {
     @Id
     @Column(name = "favourite_id")
     private int favouriteId;
-    @Id
     @Column(name = "user_id")
     private int userId;
     @Column(name = "url")
