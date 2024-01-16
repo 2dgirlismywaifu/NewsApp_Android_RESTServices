@@ -89,11 +89,11 @@ public class UserFavouriteController {
             @RequestParam(name = "url") String url,
             @RequestParam(name = "title") String title,
             @RequestParam(name = "imageUrl") String imageUrl,
-            @RequestParam(name = "pubDate") String pubDate,
-            @RequestParam(name = "sourceName") String sourceName) {
+            @RequestParam(name = "pubDate") String pubDate) {
         HashMap<String, String> respond = new HashMap<>();
         String favouriteIdRandom = new RandomNumber().generateRandomNumber();
-        long total = this.syncServices.findByNewsFavourite(this.getDecode(userId.getBytes()), this.getDecode(url.getBytes()));
+        long total = this.syncServices.findByNewsFavourite(this.getDecode(userId.getBytes()),
+                this.getDecode(url.getBytes()));
         if (total > 0) {
             respond.put("status", "found");
             return new ResponseEntity<>(respond, HttpStatus.BAD_REQUEST);
@@ -101,7 +101,7 @@ public class UserFavouriteController {
         } else {
             this.syncNewsFavourite = new SyncNewsFavourite(Integer.parseInt(this.getDecode(favouriteIdRandom.getBytes())),
                     Integer.parseInt(this.getDecode(userId.getBytes())), this.getDecode(url.getBytes()), this.getDecode(title.getBytes()),
-                    this.getDecode(imageUrl.getBytes()), this.getDecode(pubDate.getBytes()), this.getDecode(sourceName.getBytes()), 0);
+                    this.getDecode(imageUrl.getBytes()), this.getDecode(pubDate.getBytes()), 0);
             this.syncServices.saveNewsFavourite(this.syncNewsFavourite);
             respond.put("favouriteId", String.valueOf(UserFavouriteController.this.syncNewsFavourite.getFavouriteId()));
             respond.put("userId", String.valueOf(UserFavouriteController.this.syncNewsFavourite.getUserId()));
@@ -109,7 +109,6 @@ public class UserFavouriteController {
             respond.put("title", UserFavouriteController.this.syncNewsFavourite.getTitle());
             respond.put("imageUrl", UserFavouriteController.this.syncNewsFavourite.getImageUrl());
             respond.put("pubDate", UserFavouriteController.this.syncNewsFavourite.getPubDate());
-            respond.put("sourceName", UserFavouriteController.this.syncNewsFavourite.getSourceName());
             respond.put("status", "success");
             return new ResponseEntity<>(respond, HttpStatus.OK);
         }
@@ -184,7 +183,6 @@ public class UserFavouriteController {
             respond.put("title", UserFavouriteController.this.syncNewsFavourite.getTitle());
             respond.put("imageUrl", UserFavouriteController.this.syncNewsFavourite.getImageUrl());
             respond.put("pubDate", UserFavouriteController.this.syncNewsFavourite.getPubDate());
-            respond.put("sourceName", UserFavouriteController.this.syncNewsFavourite.getSourceName());
             respond.put("status", "found");
             return new ResponseEntity<>(respond, HttpStatus.OK);
         }

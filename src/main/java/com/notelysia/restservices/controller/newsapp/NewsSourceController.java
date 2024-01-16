@@ -26,7 +26,6 @@ import com.notelysia.restservices.service.newsapp.NewsSourceServices;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -163,19 +162,19 @@ public class NewsSourceController {
                 if (rssSynSubscribe.isEmpty()) {
                     for (String rssUrl : urls) {
                         rssFeed = rssReader.read(rssUrl).sorted()
-                        .filter(i -> i.getTitle().get().contains(this.getDecode(keyWord.getBytes())));
+                        .filter(i -> i.getTitle().toString().contains(this.getDecode(keyWord.getBytes())));
                         items.addAll(rssFeed.limit(Long.parseLong(size)).toList());
                     }
                 } else {
                     for (String rssUrl : rssSynSubscribe) {
                         rssFeed = rssReader.read(rssUrl).sorted()
-                        .filter(i -> i.getTitle().get().contains(this.getDecode(keyWord.getBytes())));
+                        .filter(i -> i.getTitle().toString().contains(this.getDecode(keyWord.getBytes())));
                         items.addAll(rssFeed.limit(Long.parseLong(size)).toList());
                     }
                 }
             } else {
                 rssFeed = rssReader.read(urls).sorted()
-                        .filter(i -> i.getTitle().get().contains(this.getDecode(keyWord.getBytes())));
+                        .filter(i -> i.getTitle().toString().contains(this.getDecode(keyWord.getBytes())));
                 items.addAll(rssFeed.limit(Long.parseLong(size)).toList());
             }
             for (Item item : items) {
