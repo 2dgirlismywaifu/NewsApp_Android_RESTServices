@@ -99,8 +99,9 @@ public class UserFavouriteController {
             return new ResponseEntity<>(respond, HttpStatus.BAD_REQUEST);
 
         } else {
-            this.syncNewsFavourite = new SyncNewsFavourite(Integer.parseInt(this.getDecode(favouriteIdRandom.getBytes())),
-                    Integer.parseInt(this.getDecode(userId.getBytes())), this.getDecode(url.getBytes()), this.getDecode(title.getBytes()),
+            this.syncNewsFavourite = new SyncNewsFavourite(Integer.parseInt(favouriteIdRandom),
+                    Integer.parseInt(this.getDecode(userId.getBytes())),
+                    this.getDecode(url.getBytes()), this.getDecode(title.getBytes()),
                     this.getDecode(imageUrl.getBytes()), this.getDecode(pubDate.getBytes()), 0);
             this.syncServices.saveNewsFavourite(this.syncNewsFavourite);
             respond.put("favouriteId", String.valueOf(UserFavouriteController.this.syncNewsFavourite.getFavouriteId()));
