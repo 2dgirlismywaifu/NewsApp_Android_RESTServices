@@ -91,7 +91,8 @@ public class NewsApiController {
     public ResponseEntity<Map<String, List<Article>>> getTopHeadlinesNews(
             @RequestParam(value = "keyWord", required = false) String keyWord,
             @RequestParam(value = "country") String country,
-            @RequestParam(value = "category", required = false) String category
+            @RequestParam(value = "category", required = false) String category,
+            @RequestParam(value = "size", required = false) String size
     ) throws IOException, InterruptedException {
         Map<String, List<Article>> respond = new ConcurrentHashMap<>();
         CountDownLatch latch = new CountDownLatch(1);
@@ -101,6 +102,7 @@ public class NewsApiController {
                         .category(category)
                         .language("en")
                         .country(country)
+                        .page(Integer.parseInt(size))
                         .build(),
                 new NewsApiClient.ArticlesResponseCallback() {
                     @Override
@@ -124,7 +126,8 @@ public class NewsApiController {
     @GetMapping("/everything")
     public ResponseEntity<Map<String, List<Article>>> getEverythingNews(
             @RequestParam(value = "keyWord", required = false) String keyWord,
-            @RequestParam(value = "sortBy", required = false) String sortBy
+            @RequestParam(value = "sortBy", required = false) String sortBy,
+            @RequestParam(value = "size", required = false) String size
     ) throws IOException, InterruptedException {
         Map<String, List<Article>> respond = new ConcurrentHashMap<>();
         CountDownLatch latch = new CountDownLatch(1);
@@ -133,6 +136,7 @@ public class NewsApiController {
                         .q(keyWord)
                         .sortBy(sortBy)
                         .language("en")
+                        .page(Integer.parseInt(size))
                         .build(),
                 new NewsApiClient.ArticlesResponseCallback() {
                     @Override
