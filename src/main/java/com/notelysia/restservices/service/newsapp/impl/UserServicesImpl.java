@@ -1,5 +1,6 @@
 package com.notelysia.restservices.service.newsapp.impl;
 
+import com.notelysia.restservices.model.dto.newsapp.UserNameAndEmailDto;
 import com.notelysia.restservices.model.entity.newsapp.UserInformation;
 import com.notelysia.restservices.model.entity.newsapp.UserLogin;
 import com.notelysia.restservices.repository.newsapp.UserInfoRepo;
@@ -48,8 +49,8 @@ public class UserServicesImpl implements UserServices {
     }
 
     @Override
-    public long countNickName(String nickname, String email) {
-        return this.userLoginRepo.countNickName(nickname, email);
+    public Optional<UserNameAndEmailDto> countNickNameOrEmail(String nickname, String email) {
+        return this.userLoginRepo.countNickNameOrEmail(nickname, email);
     }
 
     @Override

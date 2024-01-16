@@ -16,6 +16,7 @@
 
 package com.notelysia.restservices.repository.newsapp;
 
+import com.notelysia.restservices.model.dto.newsapp.UserNameAndEmailDto;
 import com.notelysia.restservices.model.entity.newsapp.UserLogin;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -52,8 +53,10 @@ public interface UserLoginRepo extends JpaRepository<UserLogin, Long> {
     void updatePassword(String password, String salt, String recovery, String email);
 
     //Check nickname
-    @Query("select count(userLogin) FROM UserLogin userLogin WHERE userLogin.nickname = ?1 and userLogin.email = ?2")
-    long countNickName(String nickname, String email);
+    @Query(value = "select new com.notelysia.restservices.model.dto.newsapp.UserNameAndEmailDto(count_nickName.totalNickName, count_email.totalEmail) from" +
+            " (select count(ul.nickname) as totalNickName from UserLogin ul where ul.nickname = ?1) as count_nickName," +
+            "     (select count(ul.email) as totalEmail from UserLogin ul where ul.email = ?2) as count_email")
+    Optional<UserNameAndEmailDto> countNickNameOrEmail(String nickname, String email);
 
     //Get Recovery Code from email
     @Query("FROM UserLogin userLogin WHERE userLogin.email = ?1")

@@ -19,6 +19,7 @@ package com.notelysia.restservices.controller.newsapp;
 import com.notelysia.restservices.config.DecodeString;
 import com.notelysia.restservices.config.RandomNumber;
 import com.notelysia.restservices.exception.ResourceNotFound;
+import com.notelysia.restservices.model.dto.newsapp.UserNameAndEmailDto;
 import com.notelysia.restservices.model.entity.newsapp.UserInformation;
 import com.notelysia.restservices.model.entity.newsapp.UserLogin;
 import com.notelysia.restservices.service.newsapp.UserServices;
@@ -176,22 +177,30 @@ public class UserController {
     }
 
     //Make sure nickname and email is available to use
-    @GetMapping("/verify-nickname")
+    @GetMapping("/verify-nickname-email")
     public ResponseEntity<HashMap<String, String>> CheckNickname(
             @RequestParam(name = "nickname") String nickname,
             @RequestParam(name = "email") String email) {
         HashMap<String, String> resultRespond = new HashMap<>();
-        long numberOfNickName = this.userServices.countNickName(this.getDecode(nickname.getBytes(StandardCharsets.UTF_8)),
+        Optional<UserNameAndEmailDto> countNickNameOrEmail = this.userServices.countNickNameOrEmail(this.getDecode(nickname.getBytes(StandardCharsets.UTF_8)),
                 this.getDecode(email.getBytes(StandardCharsets.UTF_8)));
-        resultRespond.put("nickName", this.getDecode(nickname.getBytes(StandardCharsets.UTF_8)));
-        if (numberOfNickName == 0) {
-            resultRespond.put("status", "success");
-            return ResponseEntity.ok().body(resultRespond);
+        if (countNickNameOrEmail.isPresent()) {
+            if (countNickNameOrEmail.get().getTotalEmail() == 0) {
+                resultRespond.put("email", this.getDecode(email.getBytes(StandardCharsets.UTF_8)));
+                resultRespond.put("status", "success");
+                return ResponseEntity.ok().body(resultRespond);
+            }  else if (countNickNameOrEmail.get().getTotalNickName() == 0) {
+                resultRespond.put("nickname", this.getDecode(nickname.getBytes(StandardCharsets.UTF_8)));
+                resultRespond.put("status", "success");
+                return ResponseEntity.ok().body(resultRespond);
+            } else {
+                resultRespond.put("status", "fail");
+                return ResponseEntity.status(HttpStatus.OK).body(resultRespond);
+            }
         } else {
             resultRespond.put("status", "fail");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(resultRespond);
+            return ResponseEntity.status(HttpStatus.OK).body(resultRespond);
         }
-
     }
 
     //Show recovery code to user

@@ -1,5 +1,6 @@
 package com.notelysia.restservices.service.newsapp;
 
+import com.notelysia.restservices.model.dto.newsapp.UserNameAndEmailDto;
 import com.notelysia.restservices.model.entity.newsapp.UserInformation;
 import com.notelysia.restservices.model.entity.newsapp.UserLogin;
 
@@ -17,7 +18,7 @@ public interface UserServices {
 
     void updateUserToken(String userToken, String salt, String recovery, String email);
 
-    long countNickName(String nickname, String email);
+    Optional<UserNameAndEmailDto> countNickNameOrEmail(String nickname, String email);
 
     Optional<UserLogin> findByRecovery(String recovery);
 
