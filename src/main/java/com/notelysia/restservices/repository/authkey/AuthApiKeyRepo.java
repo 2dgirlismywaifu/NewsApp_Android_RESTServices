@@ -22,12 +22,10 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 public interface AuthApiKeyRepo extends JpaRepository<AuthApiKey, Long> {
-    @Query("select authKey from AuthApiKey authKey " +
-            "where authKey.headerName = ?1 and authKey.isEnable = 1")
-    List<AuthApiKey> findByHeader(String headerName);
+    @Query("select count(authKey) from AuthApiKey authKey " +
+            "where authKey.headerName = ?1 and authKey.token = ?2 and authKey.isEnable = 1")
+    long findByHeader(String headerName, String authToken);
 
     @Query("select authKey.token from AuthApiKey authKey " +
             "where authKey.headerName = ?1 and authKey.isEnable = 1")

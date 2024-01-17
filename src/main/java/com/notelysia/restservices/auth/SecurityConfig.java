@@ -18,7 +18,6 @@
 package com.notelysia.restservices.auth;
 
 
-import com.notelysia.restservices.model.entity.authkey.AuthApiKey;
 import com.notelysia.restservices.service.authkey.AuthApiKeyServices;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,8 +34,6 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import java.io.FileInputStream;
 import java.util.Base64;
-import java.util.List;
-import java.util.Objects;
 import java.util.Properties;
 
 import static org.springframework.security.web.util.matcher.AntPathRequestMatcher.antMatcher;
@@ -51,8 +48,8 @@ public class SecurityConfig {
     @Autowired
     private AuthApiKeyServices authApiKeyServices;
 
-    private List<AuthApiKey> getAuthToken(String headerName) {
-        return this.authApiKeyServices.findByHeader(headerName);
+    private long getAuthToken(String headerName, String authToken) {
+        return this.authApiKeyServices.findByHeaderAndAuthToken(headerName, authToken);
     }
 
     @Bean
@@ -69,24 +66,24 @@ public class SecurityConfig {
             newsApp.setAuthenticationManager(
                     authentication -> {
                         String principal = (String) authentication.getPrincipal();
-                        for (AuthApiKey authApiKey : this.getAuthToken(newsAppHeader)) {
-                            if (!Objects.equals(authApiKey.getToken(), principal)) {
-                                throw new BadCredentialsException(
-                                        "The api key does not have permission to access or not found!");
-                            }
+                        long count = this.getAuthToken(newsAppHeader, principal);
+                        if (count > 0) {
                             authentication.setAuthenticated(true);
+                        } else {
+                            throw new BadCredentialsException(
+                                        "The api key does not have permission to access or not found!");
                         }
                         return authentication;
                     });
             bookStore.setAuthenticationManager(
                     authentication -> {
                         String principal = (String) authentication.getPrincipal();
-                        for (AuthApiKey authApiKey : this.getAuthToken(bookStoreHeader)) {
-                            if (!Objects.equals(authApiKey.getToken(), principal)) {
-                                throw new BadCredentialsException(
-                                        "The api key does not have permission to access or not found!");
-                            }
+                        long count = this.getAuthToken(newsAppHeader, principal);
+                        if (count > 0) {
                             authentication.setAuthenticated(true);
+                        } else {
+                            throw new BadCredentialsException(
+                                        "The api key does not have permission to access or not found!");
                         }
                         return authentication;
                     });
