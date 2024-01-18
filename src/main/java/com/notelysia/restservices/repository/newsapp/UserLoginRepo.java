@@ -59,7 +59,7 @@ public interface UserLoginRepo extends JpaRepository<UserLogin, Long> {
     Optional<UserNameAndEmailDto> countNickNameOrEmail(String nickname, String email);
 
     //Get Recovery Code from email
-    @Query("FROM UserLogin userLogin WHERE userLogin.recovery = ?1 or userLogin.email=?2")
+    @Query("FROM UserLogin userLogin WHERE userLogin.recovery = ?1 or userLogin.email=?1")
     Optional<UserLogin> findByRecovery(String recovery);
 
     //Update recovery code with user_id
