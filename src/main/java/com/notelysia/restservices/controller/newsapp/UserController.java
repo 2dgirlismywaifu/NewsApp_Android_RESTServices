@@ -208,7 +208,7 @@ public class UserController {
     @GetMapping(value = "/recovery-code", params = {"email"})
     public ResponseEntity<HashMap<String, String>> recoveryCode(
             @RequestParam(name = "email") String email) throws ResourceNotFound {
-        this.userLogin = this.userServices.findByRecovery(this.getDecode(email.getBytes(StandardCharsets.UTF_8)))
+        this.userLogin = this.userServices.findByRecovery(email)
                 .orElseThrow(() -> new ResourceNotFound("Failed"));
         return ResponseEntity.ok().body(new HashMap<>() {{
             this.put("recovery", UserController.this.userLogin.getRecovery());
