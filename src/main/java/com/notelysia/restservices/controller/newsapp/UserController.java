@@ -60,9 +60,9 @@ public class UserController {
         String recoveryCode = java.util.UUID.randomUUID().toString();
         //Bcrypt userToken
         String Salt = BCrypt.gensalt();
-        String userTokenHash = BCrypt.hashpw(this.getDecode(userToken.getBytes(StandardCharsets.UTF_8)), Salt);
+        String userTokenHash = BCrypt.hashpw(userToken, Salt);
         String verify = "false";
-        this.userLogin = new UserLogin(userIdRandom, this.getDecode(email.getBytes(StandardCharsets.UTF_8)), userTokenHash, Salt, this.getDecode(nickname.getBytes(StandardCharsets.UTF_8)), verify, recoveryCode);
+        this.userLogin = new UserLogin(userIdRandom, email, userTokenHash, Salt, this.getDecode(nickname.getBytes(StandardCharsets.UTF_8)), verify, recoveryCode);
         this.userInformation = new UserInformation(userIdRandom, this.getDecode(fullName.getBytes(StandardCharsets.UTF_8)), "not_input", this.date, "not_available");
         this.userServices.saveUser(this.userLogin);
         this.userServices.saveInformation(this.userInformation);
@@ -80,10 +80,10 @@ public class UserController {
     //Verify email from Firebase Authentication, if true, update verify to true
     @PostMapping("/verify-email")
     public ResponseEntity<HashMap<String, String>> verifyEmail(@RequestParam(name = "email") String email) {
-        this.userServices.updateVerify("true", this.getDecode(email.getBytes(StandardCharsets.UTF_8)));
+        this.userServices.updateVerify("true", email);
         return ResponseEntity.ok().body(new HashMap<>() {
             {
-                this.put("email", UserController.this.getDecode(email.getBytes(StandardCharsets.UTF_8)));
+                this.put("email", email);
                 this.put("status", "success");
             }
         });
