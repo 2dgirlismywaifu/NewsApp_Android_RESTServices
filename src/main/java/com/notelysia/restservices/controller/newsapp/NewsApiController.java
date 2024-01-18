@@ -102,7 +102,8 @@ public class NewsApiController {
                         .category(category)
                         .language("en")
                         .country(country)
-                        .page(Integer.parseInt(size))
+                        .pageSize(20)
+                        .page(1)
                         .build(),
                 new NewsApiClient.ArticlesResponseCallback() {
                     @Override
@@ -136,7 +137,8 @@ public class NewsApiController {
                         .q(keyWord)
                         .sortBy(sortBy)
                         .language("en")
-                        .page(Integer.parseInt(size))
+                        .pageSize(20)
+                        .page(1)
                         .build(),
                 new NewsApiClient.ArticlesResponseCallback() {
                     @Override
