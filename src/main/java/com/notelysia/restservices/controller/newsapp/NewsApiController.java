@@ -53,13 +53,12 @@ public class NewsApiController {
     private NewsApiServices newsApiServices;
     @Autowired
     private AuthApiKeyServices authApiKeyServices;
-    Properties props = new Properties();
-    FileInputStream in;
+    private final Properties props = new Properties();
 
     private NewsApiClient newsApiClient() throws IOException {
-        this.in = new FileInputStream("spring_conf/authkey.properties");
-        this.props.load(this.in);
-        this.in.close();
+        FileInputStream in = new FileInputStream("spring_conf/authkey.properties");
+        this.props.load(in);
+        in.close();
         String newApiHeader = new String(Base64.getDecoder().decode(this.props.getProperty("news-api-header-name")));
         String newsApiKey = this.authApiKeyServices.findByNewsApiKey(newApiHeader);
         return new NewsApiClient(newsApiKey);
@@ -100,7 +99,6 @@ public class NewsApiController {
                 new TopHeadlinesRequest.Builder()
                         .q(keyWord)
                         .category(category)
-                        .language("en")
                         .country(country)
                         .pageSize(20)
                         .page(1)
@@ -136,7 +134,6 @@ public class NewsApiController {
                 new EverythingRequest.Builder()
                         .q(keyWord)
                         .sortBy(sortBy)
-                        .language("en")
                         .pageSize(20)
                         .page(1)
                         .build(),
