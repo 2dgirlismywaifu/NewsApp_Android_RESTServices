@@ -51,4 +51,6 @@ public class UserLogin implements Serializable {
     private String verify;
     @Column(name = "recovery")
     private String recovery;
+    @Column(name = "is_deleted")
+    private int isDeleted;
 }

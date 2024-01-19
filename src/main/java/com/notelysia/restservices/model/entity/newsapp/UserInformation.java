@@ -44,4 +44,6 @@ public class UserInformation implements Serializable {
     private String gender;
     @Column(name = "avatar")
     private String avatar;
+    @Column(name = "is_deleted")
+    private int isDeleted;
 }
