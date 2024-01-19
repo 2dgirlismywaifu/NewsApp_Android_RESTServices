@@ -63,8 +63,8 @@ public class UserController {
         String userTokenHash = BCrypt.hashpw(userToken, Salt);
         String verify = "false";
         this.userLogin = new UserLogin(userIdRandom, email,
-                userTokenHash, Salt, nickname, verify, recoveryCode);
-        this.userInformation = new UserInformation(userIdRandom, fullName, "not_input", this.date, "not_available");
+                userTokenHash, Salt, nickname, verify, recoveryCode, 0);
+        this.userInformation = new UserInformation(userIdRandom, fullName, "not_input", this.date, "not_available", 0);
         this.userServices.saveUser(this.userLogin);
         this.userServices.saveInformation(this.userInformation);
         return ResponseEntity.ok().body(new HashMap<>() {{
@@ -160,8 +160,8 @@ public class UserController {
                     this.getDecode(email.getBytes()),
                     userTokenHash, salt,
                     this.getDecode(nickname.getBytes()),
-                    "true", recoveryCode);
-            this.userInformation = new UserInformation(userIdRandom, this.getDecode(fullName.getBytes()), "not_input", "not_input", this.getDecode(avatar.getBytes()));
+                    "true", recoveryCode, 0);
+            this.userInformation = new UserInformation(userIdRandom, this.getDecode(fullName.getBytes()), "not_input", "not_input", this.getDecode(avatar.getBytes()),0);
             this.userServices.saveUser(this.userLogin);
             this.userServices.saveInformation(this.userInformation);
             userFound.put("userId", String.valueOf(this.userLogin.getUserId()));
