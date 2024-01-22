@@ -36,7 +36,6 @@ jobs:
         username: ${{ secrets.HOMELAB_USER }}
         port: 5435
         key: ${{ secrets.HOMELAB_KEY }}
-        pubkey: ${{ secrets.HOMELAB_PUBKEY }}
         source: "target/lib target/restservices-2.0.jar"
         target: "/home/${{ secrets.HOMELAB_USER }}/Documents/RESTComplied"
 
