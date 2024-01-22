@@ -28,12 +28,13 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
-      run: mvn -B package -DskipTest --file pom.xml
+      run: mvn -B package -DskipTests --file pom.xml
     - name: Upload code to homelab server
       uses: appleboy/scp-action@master
       with:
         host: ${{ secrets.HOMELAB_HOST }}
         username: ${{ secrets.HOMELAB_USER }}
+        port: 5435
         key: ${{ secrets.HOMELAB_KEY }}
         pubkey: ${{ secrets.HOMELAB_PUBKEY }}
         source: "target/lib target/restservices-2.0.jar"
