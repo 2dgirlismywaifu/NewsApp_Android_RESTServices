@@ -39,8 +39,7 @@ jobs:
         key: ${{ secrets.HOMELAB_KEY }}
         source: "target/lib,target/restservices-2.0.jar"
         target: "/home/${{ secrets.HOMELAB_USER }}/Documents/RESTComplied"
-        rsync_extra: "--exclude=target"
-        post_exec: "sudo systemctl restart notelysiarest.service"
+        script: "/home/${{ secrets.HOMELAB_USER }}/Documents/RESTComplied/postconfig.sh"
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     - name: Update dependency graph
