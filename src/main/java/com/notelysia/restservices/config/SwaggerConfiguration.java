@@ -47,13 +47,13 @@ public class SwaggerConfiguration {
             Components components = new Components();
             SecurityRequirement securityRequirement = new SecurityRequirement();
             components.addSecuritySchemes("News-App-Header", new SecurityScheme()
-                                    .type(SecurityScheme.Type.APIKEY)
-                                    .in(SecurityScheme.In.HEADER)
-                                    .name(new String(Base64.getDecoder().decode(this.props.getProperty("auth-token-header-news-app")))));
+                    .type(SecurityScheme.Type.APIKEY)
+                    .in(SecurityScheme.In.HEADER)
+                    .name(new String(Base64.getDecoder().decode(this.props.getProperty("auth-token-header-news-app")))));
             components.addSecuritySchemes("BookStore-Header", new SecurityScheme()
-                                    .type(SecurityScheme.Type.APIKEY)
-                                    .in(SecurityScheme.In.HEADER)
-                                    .name(new String(Base64.getDecoder().decode(this.props.getProperty("auth-token-header-bookstore")))));
+                    .type(SecurityScheme.Type.APIKEY)
+                    .in(SecurityScheme.In.HEADER)
+                    .name(new String(Base64.getDecoder().decode(this.props.getProperty("auth-token-header-bookstore")))));
             securityRequirement.addList("News-App-Header");
             securityRequirement.addList("BookStore-Header");
             return new OpenAPI()

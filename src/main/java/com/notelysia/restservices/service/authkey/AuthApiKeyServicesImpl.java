@@ -5,10 +5,12 @@ import com.notelysia.restservices.model.entity.authkey.AuthApiKey;
 import com.notelysia.restservices.repository.authkey.AuthApiKeyRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 @Service
-public class AuthApiKeyServicesImpl implements AuthApiKeyServices{
+public class AuthApiKeyServicesImpl implements AuthApiKeyServices {
     @Autowired
     private AuthApiKeyRepo authApiKeyRepo;
+
     @Override
     public long findByHeaderAndAuthToken(String headerName, String authToken) {
         return this.authApiKeyRepo.findByHeader(headerName, authToken);
