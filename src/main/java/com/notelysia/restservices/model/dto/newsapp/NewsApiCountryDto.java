@@ -1,5 +1,5 @@
 /*
- * Copyright By @2dgirlismywaifu (2023) .
+ * Copyright By @2dgirlismywaifu (2024) .
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -14,16 +14,23 @@
  *  limitations under the License.
  */
 
-package com.notelysia.restservices.repository.newsapp;
+package com.notelysia.restservices.model.dto.newsapp;
 
 import com.notelysia.restservices.model.entity.newsapp.NewsAPICountry;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Repository
-public interface NewsApiRepo extends JpaRepository<NewsAPICountry, Long> {
-    @Query("Select newsapi.countryCode from NewsAPICountry newsapi " +
-            "where newsapi.countryName = ?1")
-    String findByCountry(String country);
+import java.util.List;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class NewsApiCountryDto {
+    private String status;
+    private String time;
+    private String totalResults;
+    private List<NewsAPICountry> newsAPICountryList;
 }

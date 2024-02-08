@@ -71,7 +71,7 @@ public class SecurityConfig {
                             authentication.setAuthenticated(true);
                         } else {
                             throw new BadCredentialsException(
-                                        "The api key does not have permission to access or not found!");
+                                    "The api key does not have permission to access or not found!");
                         }
                         return authentication;
                     });
@@ -83,7 +83,7 @@ public class SecurityConfig {
                             authentication.setAuthenticated(true);
                         } else {
                             throw new BadCredentialsException(
-                                        "The api key does not have permission to access or not found!");
+                                    "The api key does not have permission to access or not found!");
                         }
                         return authentication;
                     });

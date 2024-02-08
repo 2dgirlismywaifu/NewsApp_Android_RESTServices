@@ -7,7 +7,9 @@ import java.util.List;
 
 public interface SyncServices {
     long findByNewsFavourite(String userId, String url);
+
     String findFavoriteId(String userId, String title);
+
     void saveNewsFavourite(SyncNewsFavourite syncNewsFavourite);
 
     void deleteNewsFavourite(String userId, String favouriteId);
@@ -19,6 +21,7 @@ public interface SyncServices {
     void deleteByUserIdAndSourceId(int userId, String sourceId);
 
     SyncSubscribe findByUserIdAndSourceId(int userId, String sourceId);
+
     SyncNewsFavourite checkNewsFavouriteOrNot(String userId, String title);
 
 }
