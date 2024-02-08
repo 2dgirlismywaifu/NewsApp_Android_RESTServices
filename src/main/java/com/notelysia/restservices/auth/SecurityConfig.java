@@ -58,7 +58,7 @@ public class SecurityConfig {
             this.props.load(this.in);
             this.in.close();
             String newsAppHeader = new String(Base64.getDecoder().decode(this.props.getProperty("auth-token-header-news-app")));
-            String bookStoreHeader = new String(Base64.getDecoder().decode(this.props.getProperty("auth-token-header-news-app")));
+            String bookStoreHeader = new String(Base64.getDecoder().decode(this.props.getProperty("auth-token-header-bookstore")));
             ApiKeyAuthFilter newsApp = new ApiKeyAuthFilter(newsAppHeader);
             ApiKeyAuthFilter bookStore = new ApiKeyAuthFilter(bookStoreHeader);
 
@@ -77,7 +77,7 @@ public class SecurityConfig {
             bookStore.setAuthenticationManager(
                     authentication -> {
                         String principal = (String) authentication.getPrincipal();
-                        long count = this.getAuthToken(newsAppHeader, principal);
+                        long count = this.getAuthToken(bookStoreHeader, principal);
                         if (count > 0) {
                             authentication.setAuthenticated(true);
                         } else {
