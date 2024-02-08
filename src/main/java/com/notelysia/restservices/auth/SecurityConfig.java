@@ -28,7 +28,6 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -91,13 +90,11 @@ public class SecurityConfig {
             http.authorizeHttpRequests((request -> request
                             .requestMatchers(antMatcher("/news-api/**"), antMatcher("/news-app/**")).authenticated()))
                     .addFilter(newsApp)
-                    .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                    .csrf(AbstractHttpConfigurer::disable);
+                    .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
             http.authorizeHttpRequests((request -> request
                             .requestMatchers(antMatcher("/book-store/**")).authenticated()))
                     .addFilter(bookStore)
-                    .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                    .csrf(AbstractHttpConfigurer::disable);
+                    .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
             http.authorizeHttpRequests((request -> request.
                     //Exclude for Legacy Key Generator
