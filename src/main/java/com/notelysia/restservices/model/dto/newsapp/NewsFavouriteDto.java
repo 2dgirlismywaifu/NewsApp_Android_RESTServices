@@ -1,5 +1,5 @@
 /*
- * Copyright By @2dgirlismywaifu (2023) .
+ * Copyright By @2dgirlismywaifu (2024) .
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -14,37 +14,24 @@
  *  limitations under the License.
  */
 
-package com.notelysia.restservices.model.entity.newsapp;
+package com.notelysia.restservices.model.dto.newsapp;
 
-import jakarta.persistence.*;
+import com.notelysia.restservices.model.entity.newsapp.SyncNewsFavourite;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.Serializable;
+import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name = "sync_subscribe")
-@SecondaryTables({
-        @SecondaryTable(name = "news_source", foreignKey = @ForeignKey(name = "source_id")),
-})
-public class SyncSubscribe implements Serializable {
-    //Instance variables
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
-    @Column(name = "sync_id")
-    private int syncId;
-    @Column(name = "user_id")
-    private int userId;
-    @Column(name = "source_id")
-    private int sourceId;
-    @Column(name = "is_deleted")
-    private int isDeleted;
-    @Column(name = "is_checked")
-    private int isChecked;
+public class NewsFavouriteDto {
+    private String status;
+    private String time;
+    private String message;
+    private String totalResults;
+    private List<SyncNewsFavourite> syncNewsFavourites;
 }

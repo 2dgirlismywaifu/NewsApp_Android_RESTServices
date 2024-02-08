@@ -20,7 +20,9 @@ import com.apptasticsoftware.rssreader.Item;
 import com.apptasticsoftware.rssreader.RssReader;
 import com.notelysia.restservices.config.DecodeString;
 import com.notelysia.restservices.exception.ResourceNotFound;
-import com.notelysia.restservices.model.dto.newsapp.RssDto;
+import com.notelysia.restservices.model.dto.newsapp.NewsSourceDto;
+import com.notelysia.restservices.model.dto.newsapp.RssNews;
+import com.notelysia.restservices.model.dto.newsapp.RssNewsDto;
 import com.notelysia.restservices.model.entity.newsapp.NewsSource;
 import com.notelysia.restservices.service.newsapp.NewsSourceServices;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -35,8 +37,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.stream.Stream;
 
@@ -55,30 +57,36 @@ public class NewsSourceController {
     }
 
     @GetMapping(value = "/guest/news-source")
-    public ResponseEntity<Map<String, List<NewsSource>>> allNewsSource() {
-        Map<String, List<NewsSource>> listRespond = new HashMap<>();
-        listRespond.put("newsSource", this.newsSourceServices.findAllNewsSource());
-        return new ResponseEntity<>(listRespond, HttpStatus.OK);
+    public ResponseEntity<NewsSourceDto> allNewsSource() {
+        List<NewsSource> newsSource = this.newsSourceServices.findAllNewsSource();
+        if (newsSource.isEmpty()) {
+            return new ResponseEntity<>(new NewsSourceDto(HttpStatus.NOT_FOUND.toString(),
+                    "0", "0", null), HttpStatus.NOT_FOUND);
+        } else {
+            NewsSourceDto newsSourceDto = new NewsSourceDto(HttpStatus.OK.toString(),
+                    String.valueOf(System.currentTimeMillis()), String.valueOf(newsSource.size()), newsSource);
+            return new ResponseEntity<>(newsSourceDto, HttpStatus.OK);
+        }
     }
 
     //For user login
     @GetMapping(value = "/account/news-source", params = {"userid"})
-    public ResponseEntity<Map<String, List<NewsSource>>> userNewsSource(
+    public ResponseEntity<NewsSourceDto> userNewsSource(
             @RequestParam(value = "userid") int userid
     ) throws ResourceNotFound {
-        Map<String, List<NewsSource>> respond = new HashMap<>();
         List<NewsSource> newsSource = this.newsSourceServices.findByUserId(userid);
-        if (!newsSource.isEmpty()) {
-            respond.put("newsSource", newsSource.stream().toList());
-            return new ResponseEntity<>(respond, HttpStatus.OK);
+        if (newsSource.isEmpty()) {
+            throw new ResourceNotFound("News Source not found for user id: " + userid);
         } else {
-            throw new ResourceNotFound("User id " + userid + " not found");
+            NewsSourceDto newsSourceDto = new NewsSourceDto(HttpStatus.OK.toString(),
+                    String.valueOf(System.currentTimeMillis()), String.valueOf(newsSource.size()), newsSource);
+            return new ResponseEntity<>(newsSourceDto, HttpStatus.OK);
         }
     }
 
     //Convert RSS to JSON
     @GetMapping("/rss-to-json")
-    public ResponseEntity<Map<String, List<RssDto>>> convertRSS2JSON(
+    public ResponseEntity<RssNewsDto> convertRSS2JSON(
             @RequestParam(value = "userId", required = false) String userId,
             @RequestParam(value = "type") String type,
             @RequestParam(value = "size") String size
@@ -96,8 +104,8 @@ public class NewsSourceController {
             rssUrls = this.newsSourceServices.guestRssUrlByType(this.getDecode(type.getBytes()));
         }
         RssReader rssReader = new RssReader();
-        Map<String, List<RssDto>> respond = new ConcurrentHashMap<>();
-        List<RssDto> rssDtos = new ArrayList<>();
+        List<RssNews> rssNewsList = new ArrayList<>();
+        RssNewsDto rssNewsDto = new RssNewsDto();
         try {
             CountDownLatch latch = new CountDownLatch(1);
             if (rssSynSubscribe != null) {
@@ -117,38 +125,53 @@ public class NewsSourceController {
                 items.addAll(rssFeed.limit(Long.parseLong(size)).toList());
             }
             for (Item item : items) {
-                String title = item.getTitle().get();
-                String description = item.getDescription().get();
-                String urlLink = item.getLink().get();
-                String pubDate = item.getPubDate().get();
-                RssDto rssDto = new RssDto(title, description, urlLink, pubDate);
-                rssDtos.add(rssDto);
+                if (item.getTitle().isPresent() && item.getDescription().isPresent()
+                        && item.getLink().isPresent() && item.getPubDate().isPresent()) {
+                    String title = item.getTitle().get();
+                    String description = item.getDescription().get();
+                    String urlLink = item.getLink().get();
+                    String pubDate = item.getPubDate().get();
+                    RssNews rssNews = new RssNews(title, description, urlLink, pubDate);
+                    rssNewsList.add(rssNews);
+                }
             }
             latch.countDown();
-            respond.put("result", rssDtos);
             latch.await();
         } catch (InterruptedException e) {
             logger.error("Error: " + e, e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return new ResponseEntity<>(respond, HttpStatus.OK);
+
+        if (rssNewsList.isEmpty()) {
+            rssNewsDto.setStatus(HttpStatus.NOT_FOUND.toString());
+            rssNewsDto.setTime(String.valueOf(System.currentTimeMillis()));
+            rssNewsDto.setTotalResults("0");
+            rssNewsDto.setRssNewsList(null);
+            return new ResponseEntity<>(rssNewsDto, HttpStatus.NOT_FOUND);
+        } else {
+            rssNewsDto.setStatus(HttpStatus.OK.toString());
+            rssNewsDto.setTime(String.valueOf(System.currentTimeMillis()));
+            rssNewsDto.setTotalResults(String.valueOf(rssNewsList.size()));
+            rssNewsDto.setRssNewsList(rssNewsList);
+            return new ResponseEntity<>(rssNewsDto, HttpStatus.OK);
+        }
     }
 
     //Search from all rss url type 'breaking news'
     @GetMapping("/search-news")
-    public ResponseEntity<Map<String, List<RssDto>>> searchAllNews(
+    public ResponseEntity<RssNewsDto> searchAllNews(
             @RequestParam(value = "userId", required = false) String userId,
             @RequestParam(value = "type") String type,
             @RequestParam(value = "keyWord") String keyWord,
             @RequestParam(value = "size") String size) {
-        Map<String, List<RssDto>> respond = new ConcurrentHashMap<>();
         Stream<Item> rssFeed;
         List<Item> items = new ArrayList<>();
         List<String> urls;
         List<String> rssSynSubscribe = null;
         RssReader rssReader = new RssReader();
-        List<RssDto> rssDtos = new ArrayList<>();
+        List<RssNews> rssNewsList = new ArrayList<>();
+        RssNewsDto rssNewsDto = new RssNewsDto();
         if (userId != null && !userId.isEmpty()) {
             urls = this.newsSourceServices.findAllRssUrlByType(this.getDecode(type.getBytes()));
             rssSynSubscribe = this.newsSourceServices.
@@ -163,13 +186,13 @@ public class NewsSourceController {
                 if (rssSynSubscribe.isEmpty()) {
                     for (String rssUrl : urls) {
                         rssFeed = rssReader.read(rssUrl).sorted()
-                        .filter(i -> i.getTitle().toString().contains(keyWord));
+                                .filter(i -> i.getTitle().toString().contains(keyWord));
                         items.addAll(rssFeed.limit(Long.parseLong(size)).toList());
                     }
                 } else {
                     for (String rssUrl : rssSynSubscribe) {
                         rssFeed = rssReader.read(rssUrl).sorted()
-                        .filter(i -> i.getTitle().toString().contains(keyWord));
+                                .filter(i -> i.getTitle().toString().contains(keyWord));
                         items.addAll(rssFeed.limit(Long.parseLong(size)).toList());
                     }
                 }
@@ -183,17 +206,29 @@ public class NewsSourceController {
                 String description = item.getDescription().get();
                 String urlLink = item.getLink().get();
                 String pubDate = item.getPubDate().get();
-                RssDto rssDto = new RssDto(title, description, urlLink, pubDate);
-                rssDtos.add(rssDto);
+                RssNews rssNews = new RssNews(title, description, urlLink, pubDate);
+                rssNewsList.add(rssNews);
             }
             latch.countDown();
-            respond.put("result", rssDtos);
             latch.await();
         } catch (InterruptedException e) {
             logger.error("Error: " + e, e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return new ResponseEntity<>(respond, HttpStatus.OK);
+
+        if (rssNewsList.isEmpty()) {
+            rssNewsDto.setStatus(HttpStatus.NOT_FOUND.toString());
+            rssNewsDto.setTime(String.valueOf(System.currentTimeMillis()));
+            rssNewsDto.setTotalResults("0");
+            rssNewsDto.setRssNewsList(null);
+            return new ResponseEntity<>(rssNewsDto, HttpStatus.NOT_FOUND);
+        } else {
+            rssNewsDto.setStatus(HttpStatus.OK.toString());
+            rssNewsDto.setTime(String.valueOf(System.currentTimeMillis()));
+            rssNewsDto.setTotalResults(String.valueOf(rssNewsList.size()));
+            rssNewsDto.setRssNewsList(rssNewsList);
+            return new ResponseEntity<>(rssNewsDto, HttpStatus.OK);
+        }
     }
 }

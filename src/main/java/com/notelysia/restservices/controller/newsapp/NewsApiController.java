@@ -22,6 +22,8 @@ import com.kwabenaberko.newsapilib.models.request.EverythingRequest;
 import com.kwabenaberko.newsapilib.models.request.TopHeadlinesRequest;
 import com.kwabenaberko.newsapilib.models.response.ArticleResponse;
 import com.notelysia.restservices.config.DecodeString;
+import com.notelysia.restservices.model.dto.newsapp.NewsApiArticlesDto;
+import com.notelysia.restservices.model.dto.newsapp.NewsApiCountryDto;
 import com.notelysia.restservices.model.entity.newsapp.NewsAPICountry;
 import com.notelysia.restservices.service.authkey.AuthApiKeyServices;
 import com.notelysia.restservices.service.newsapp.NewsApiServices;
@@ -40,7 +42,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 
 @RestController
@@ -48,12 +49,12 @@ import java.util.concurrent.CountDownLatch;
 @Tag(name = "NewsAPI Country", description = "API for NewsAPI Country List")
 public class NewsApiController {
     private static final Logger logger = LogManager.getLogger(NewsApiController.class);
+    private final Properties props = new Properties();
     DecodeString decodeString = new DecodeString();
     @Autowired
     private NewsApiServices newsApiServices;
     @Autowired
     private AuthApiKeyServices authApiKeyServices;
-    private final Properties props = new Properties();
 
     private NewsApiClient newsApiClient() throws IOException {
         FileInputStream in = new FileInputStream("spring_conf/authkey.properties");
@@ -70,10 +71,22 @@ public class NewsApiController {
 
     @Tag(name = "NewsAPI Country", description = "Get list of all country code")
     @GetMapping(value = "/country/list")
-    public ResponseEntity<Map<String, List<NewsAPICountry>>> allCountryList() {
-        Map<String, List<NewsAPICountry>> respond = new HashMap<>();
-        respond.put("countryList", this.newsApiServices.findAll());
-        return new ResponseEntity<>(respond, HttpStatus.OK);
+    public ResponseEntity<NewsApiCountryDto> allCountryList() {
+        List<NewsAPICountry> countryList = this.newsApiServices.findAll();
+        NewsApiCountryDto newsApiCountryDto = new NewsApiCountryDto();
+        if (countryList.isEmpty()) {
+            newsApiCountryDto.setStatus(HttpStatus.NOT_FOUND.toString());
+            newsApiCountryDto.setTime(String.valueOf(System.currentTimeMillis()));
+            newsApiCountryDto.setTotalResults("0");
+            newsApiCountryDto.setNewsAPICountryList(Collections.emptyList());
+            return new ResponseEntity<>(newsApiCountryDto, HttpStatus.NOT_FOUND);
+        } else {
+            newsApiCountryDto.setStatus(HttpStatus.OK.toString());
+            newsApiCountryDto.setTime(String.valueOf(System.currentTimeMillis()));
+            newsApiCountryDto.setTotalResults(String.valueOf(countryList.size()));
+            newsApiCountryDto.setNewsAPICountryList(countryList);
+            return new ResponseEntity<>(newsApiCountryDto, HttpStatus.OK);
+        }
     }
 
     @Tag(name = "NewsAPI Country", description = "Get country code by country name")
@@ -82,18 +95,28 @@ public class NewsApiController {
             @Parameter(name = "name", description = "Country Name only required if get country code")
             @RequestParam(value = "name") String name) {
         Map<String, String> respond = new HashMap<>();
-        respond.put("countryCode", this.newsApiServices.findByCountryName(this.getDecode(name.getBytes())));
-        return new ResponseEntity<>(respond, HttpStatus.OK);
+        String countryCode = this.newsApiServices.findByCountryName(this.getDecode(name.getBytes()));
+        if (countryCode == null) {
+            respond.put("status", HttpStatus.NOT_FOUND.toString());
+            respond.put("time", String.valueOf(System.currentTimeMillis()));
+            respond.put("countryCode", "Country not found");
+            return new ResponseEntity<>(respond, HttpStatus.NOT_FOUND);
+        } else {
+            respond.put("status", HttpStatus.OK.toString());
+            respond.put("time", String.valueOf(System.currentTimeMillis()));
+            respond.put("countryCode", countryCode);
+            return new ResponseEntity<>(respond, HttpStatus.OK);
+        }
     }
 
     @GetMapping("/top-headlines")
-    public ResponseEntity<Map<String, List<Article>>> getTopHeadlinesNews(
+    public ResponseEntity<NewsApiArticlesDto> getTopHeadlinesNews(
             @RequestParam(value = "keyWord", required = false) String keyWord,
             @RequestParam(value = "country") String country,
             @RequestParam(value = "category", required = false) String category,
             @RequestParam(value = "size", required = false) String size
     ) throws IOException, InterruptedException {
-        Map<String, List<Article>> respond = new ConcurrentHashMap<>();
+        NewsApiArticlesDto newsApiArticles = new NewsApiArticlesDto();
         CountDownLatch latch = new CountDownLatch(1);
         this.newsApiClient().getTopHeadlines(
                 new TopHeadlinesRequest.Builder()
@@ -107,28 +130,36 @@ public class NewsApiController {
                     @Override
                     public void onSuccess(ArticleResponse response) {
                         List<Article> articles = response.getArticles();
-                        respond.put("articles", articles);
+                        newsApiArticles.setStatus(response.getStatus());
+                        //get time millis to check how much time it takes to get the response
+                        newsApiArticles.setTime(String.valueOf(System.currentTimeMillis()));
+                        newsApiArticles.setTotalResults(String.valueOf(response.getTotalResults()));
+                        newsApiArticles.setArticles(articles);
                         latch.countDown();
                     }
 
                     @Override
                     public void onFailure(Throwable throwable) {
+                        newsApiArticles.setStatus(HttpStatus.BAD_REQUEST.toString());
+                        newsApiArticles.setTime(String.valueOf(System.currentTimeMillis()));
+                        newsApiArticles.setTotalResults("0");
+                        newsApiArticles.setArticles(Collections.emptyList());
                         logger.error("NewsAPI Error: " + throwable.getMessage(), throwable.getCause());
                         latch.countDown();
                     }
                 }
         );
         latch.await();
-        return new ResponseEntity<>(respond, HttpStatus.OK);
+        return new ResponseEntity<>(newsApiArticles, HttpStatus.OK);
     }
 
     @GetMapping("/everything")
-    public ResponseEntity<Map<String, List<Article>>> getEverythingNews(
+    public ResponseEntity<NewsApiArticlesDto> getEverythingNews(
             @RequestParam(value = "keyWord", required = false) String keyWord,
             @RequestParam(value = "sortBy", required = false) String sortBy,
             @RequestParam(value = "size", required = false) String size
     ) throws IOException, InterruptedException {
-        Map<String, List<Article>> respond = new ConcurrentHashMap<>();
+        NewsApiArticlesDto newsApiArticles = new NewsApiArticlesDto();
         CountDownLatch latch = new CountDownLatch(1);
         this.newsApiClient().getEverything(
                 new EverythingRequest.Builder()
@@ -141,18 +172,25 @@ public class NewsApiController {
                     @Override
                     public void onSuccess(ArticleResponse response) {
                         List<Article> articles = response.getArticles();
-                        respond.put("articles", articles);
+                        newsApiArticles.setStatus(response.getStatus());
+                        //get time millis to check how much time it takes to get the response
+                        newsApiArticles.setTime(String.valueOf(System.currentTimeMillis()));
+                        newsApiArticles.setTotalResults(String.valueOf(response.getTotalResults()));
+                        newsApiArticles.setArticles(articles);
                         latch.countDown();
                     }
 
                     @Override
                     public void onFailure(Throwable throwable) {
-                        logger.error("NewsAPI Error: " + throwable.getMessage(), throwable.getCause());
+                        newsApiArticles.setStatus(HttpStatus.BAD_REQUEST.toString());
+                        newsApiArticles.setTime(String.valueOf(System.currentTimeMillis()));
+                        newsApiArticles.setTotalResults("0");
+                        newsApiArticles.setArticles(Collections.emptyList());
                         latch.countDown();
                     }
                 }
         );
         latch.await();
-        return new ResponseEntity<>(respond, HttpStatus.OK);
+        return new ResponseEntity<>(newsApiArticles, HttpStatus.OK);
     }
 }

@@ -45,10 +45,12 @@ public interface NewsDetailRepo extends JpaRepository<NewsDetail, Long> {
             "where nd.urlType = ?1 and ns.source_name = 'VNExpress'" +
             "and NOT nd.url = 'not_available'")
     List<String> guestRssUrlByType(String type);
+
     @Query("select nd.url from NewsDetail nd " +
             "inner join NewsSource ns on nd.sourceId = ns.sourceId " +
             "where nd.urlType = ?1 and NOT nd.url = 'not_available'")
     List<String> findAllRssUrlByType(String type);
+
     @Query("select nd.url from NewsDetail nd " +
             "inner join NewsSource ns on nd.sourceId = ns.sourceId " +
             "inner join SyncSubscribe s on ns.sourceId = s.sourceId " +
