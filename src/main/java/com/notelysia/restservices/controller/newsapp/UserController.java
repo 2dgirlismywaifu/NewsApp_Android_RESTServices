@@ -19,6 +19,7 @@ package com.notelysia.restservices.controller.newsapp;
 import com.notelysia.restservices.config.DecodeString;
 import com.notelysia.restservices.config.RandomNumber;
 import com.notelysia.restservices.exception.ResourceNotFound;
+import com.notelysia.restservices.model.dto.newsapp.UserDto;
 import com.notelysia.restservices.model.dto.newsapp.UserNameAndEmailDto;
 import com.notelysia.restservices.model.entity.newsapp.UserInformation;
 import com.notelysia.restservices.model.entity.newsapp.UserLogin;
@@ -51,7 +52,7 @@ public class UserController {
 
     @PostMapping("/register")
     //Create user account
-    public ResponseEntity<HashMap<String, String>> registerUser
+    public ResponseEntity<UserDto> registerUser
             (@RequestParam(name = "fullName") String fullName,
              @RequestParam(name = "email") String email,
              @RequestParam(name = "userToken") String userToken,
@@ -67,15 +68,19 @@ public class UserController {
         this.userInformation = new UserInformation(userIdRandom, fullName, "not_input", this.date, "not_available", 0);
         this.userServices.saveUser(this.userLogin);
         this.userServices.saveInformation(this.userInformation);
-        return ResponseEntity.ok().body(new HashMap<>() {{
-            this.put("userId", String.valueOf(UserController.this.userLogin.getUserId()));
-            this.put("fullName", UserController.this.userInformation.getName());
-            this.put("email", UserController.this.userLogin.getEmail());
-            this.put("nickname", UserController.this.userLogin.getNickname());
-            this.put("verify", UserController.this.userLogin.getVerify());
-            this.put("recovery", UserController.this.userLogin.getRecovery());
-            this.put("status", "success");
-        }});
+
+        UserDto userDto = new UserDto();
+        userDto.setUserId(String.valueOf(this.userLogin.getUserId()));
+        userDto.setEmail(this.userLogin.getEmail());
+        userDto.setNickName(this.userLogin.getNickname());
+        userDto.setVerify(this.userLogin.getVerify());
+        userDto.setFullName(this.userInformation.getName());
+        userDto.setBirthday(this.userInformation.getBirthday());
+        userDto.setGender(this.userInformation.getGender());
+        userDto.setAvatar(this.userInformation.getAvatar());
+        userDto.setStatus("success");
+        userDto.setTime(String.valueOf(System.currentTimeMillis()));
+        return ResponseEntity.ok().body(userDto);
     }
 
     //Verify email from Firebase Authentication, if true, update verify to true
@@ -92,11 +97,11 @@ public class UserController {
 
     //Sign in with user or email account and userToken
     @GetMapping(value = "/sign-in")
-    public ResponseEntity<HashMap<String, String>> signIn(
+    public ResponseEntity<UserDto> signIn(
             @RequestParam(name = "email") String email,
             @RequestParam(name = "userToken") String userToken)
             throws ResourceNotFound {
-        HashMap<String, String> userFound = new HashMap<>();
+        UserDto userDto = new UserDto();
         this.userLogin = this.userServices.findByEmail(this.getDecode(email.getBytes(StandardCharsets.UTF_8)))
                 .orElseThrow(() -> new ResourceNotFound("Failed"));
         this.userInformation = this.userServices.findInformationByUserId(String.valueOf(this.userLogin.getUserId()))
@@ -105,19 +110,22 @@ public class UserController {
         String salt = this.userLogin.getSalt();
         String userTokenCheck = BCrypt.hashpw(this.getDecode(userToken.getBytes()), salt);
         if (userTokenCheck.equals(userTokenHash)) {
-            userFound.put("userId", String.valueOf(this.userLogin.getUserId()));
-            userFound.put("email", this.userLogin.getEmail());
-            userFound.put("nickname", this.userLogin.getNickname());
-            userFound.put("verify", this.userLogin.getVerify());
-            userFound.put("fullName", this.userInformation.getName());
-            userFound.put("birthday", this.userInformation.getBirthday());
-            userFound.put("gender", this.userInformation.getGender());
-            userFound.put("avatar", this.userInformation.getAvatar());
-            userFound.put("status", "success");
-            return ResponseEntity.ok().body(userFound);
+            userDto.setUserId(String.valueOf(this.userLogin.getUserId()));
+            userDto.setEmail(this.userLogin.getEmail());
+            userDto.setNickName(this.userLogin.getNickname());
+            userDto.setVerify(this.userLogin.getVerify());
+            userDto.setFullName(this.userInformation.getName());
+            userDto.setBirthday(this.userInformation.getBirthday());
+            userDto.setGender(this.userInformation.getGender());
+            userDto.setAvatar(this.userInformation.getAvatar());
+            userDto.setStatus("success");
+            userDto.setTime(String.valueOf(System.currentTimeMillis()));
+            return ResponseEntity.ok().body(userDto);
         } else {
-            userFound.put("status", "fail");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(userFound);
+            userDto.setTime(String.valueOf(System.currentTimeMillis()));
+            userDto.setEmail(email);
+            userDto.setStatus("fail");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(userDto);
         }
     }
 
@@ -125,7 +133,7 @@ public class UserController {
     //Why gender and birthday not input? Because it is private information about each user.
     // Firebase do not have function to get the user's gender/birthday
     @GetMapping("/sign-in-by-google")
-    public ResponseEntity<HashMap<String, String>> signInByGoogle
+    public ResponseEntity<UserDto> signInByGoogle
     (@RequestParam(value = "fullName") String fullName,
      @RequestParam(value = "email") String email,
      @RequestParam(value = "userToken") String userToken,
@@ -133,7 +141,7 @@ public class UserController {
      @RequestParam(value = "avatar") String avatar) throws ResourceNotFound {
         //First, check if user already have account or not
         //If not, create new account
-        HashMap<String, String> userFound = new HashMap<>();
+        UserDto userDto = new UserDto();
         Optional<UserLogin> userPassLoginOption = this.userServices.findByEmail(this.getDecode(email.getBytes()));
         if (userPassLoginOption.isPresent()) {
             String userSalt = userPassLoginOption.get().getSalt();
@@ -143,11 +151,16 @@ public class UserController {
                 this.userInformation = this.userServices.findInformationByUserId(
                                 String.valueOf(userPassLoginOption.get().getUserId()))
                         .orElseThrow(() -> new ResourceNotFound("Failed"));
-                userFound.put("userId", String.valueOf(userPassLoginOption.get().getUserId()));
-                userFound.put("email", userPassLoginOption.get().getEmail());
-                userFound.put("userToken", userPassLoginOption.get().getUserToken());
-                userFound.put("nickname", userPassLoginOption.get().getNickname());
-                userFound.put("verify", userPassLoginOption.get().getVerify());
+                userDto.setUserId(String.valueOf(userPassLoginOption.get().getUserId()));
+                userDto.setEmail(userPassLoginOption.get().getEmail());
+                userDto.setNickName(userPassLoginOption.get().getNickname());
+                userDto.setVerify(userPassLoginOption.get().getVerify());
+                userDto.setFullName(this.userInformation.getName());
+                userDto.setBirthday(this.userInformation.getBirthday());
+                userDto.setGender(this.userInformation.getGender());
+                userDto.setAvatar(this.userInformation.getAvatar());
+                userDto.setStatus("success");
+                userDto.setTime(String.valueOf(System.currentTimeMillis()));
             }
         } else {
             //Save the user into database, then sign in into system
@@ -161,20 +174,21 @@ public class UserController {
                     userTokenHash, salt,
                     this.getDecode(nickname.getBytes()),
                     "true", recoveryCode, 0);
-            this.userInformation = new UserInformation(userIdRandom, this.getDecode(fullName.getBytes()), "not_input", "not_input", this.getDecode(avatar.getBytes()),0);
+            this.userInformation = new UserInformation(userIdRandom, this.getDecode(fullName.getBytes()), "not_input", "not_input", this.getDecode(avatar.getBytes()), 0);
             this.userServices.saveUser(this.userLogin);
             this.userServices.saveInformation(this.userInformation);
-            userFound.put("userId", String.valueOf(this.userLogin.getUserId()));
-            userFound.put("email", this.userLogin.getEmail());
-            userFound.put("nickname", this.userLogin.getNickname());
-            userFound.put("verify", this.userLogin.getVerify());
+            userDto.setUserId(String.valueOf(this.userLogin.getUserId()));
+            userDto.setEmail(this.userLogin.getEmail());
+            userDto.setNickName(this.userLogin.getNickname());
+            userDto.setVerify(this.userLogin.getVerify());
+            userDto.setFullName(this.userInformation.getName());
+            userDto.setBirthday(this.userInformation.getBirthday());
+            userDto.setGender(this.userInformation.getGender());
+            userDto.setAvatar(this.userInformation.getAvatar());
+            userDto.setStatus("success");
+            userDto.setTime(String.valueOf(System.currentTimeMillis()));
         }
-        userFound.put("fullName", this.userInformation.getName());
-        userFound.put("birthday", this.userInformation.getBirthday());
-        userFound.put("gender", this.userInformation.getGender());
-        userFound.put("avatar", this.userInformation.getAvatar());
-        userFound.put("status", "success");
-        return ResponseEntity.ok().body(userFound);
+        return ResponseEntity.ok().body(userDto);
     }
 
     //Make sure nickname and email is available to use
@@ -185,12 +199,13 @@ public class UserController {
         HashMap<String, String> resultRespond = new HashMap<>();
         Optional<UserNameAndEmailDto> countNickNameOrEmail = this.userServices.countNickNameOrEmail(this.getDecode(nickname.getBytes(StandardCharsets.UTF_8)),
                 this.getDecode(email.getBytes(StandardCharsets.UTF_8)));
+        resultRespond.put("time", String.valueOf(System.currentTimeMillis()));
         if (countNickNameOrEmail.isPresent()) {
             if (countNickNameOrEmail.get().getTotalEmail() > 0) {
-                resultRespond.put("email", this.getDecode(email.getBytes(StandardCharsets.UTF_8)));
                 resultRespond.put("status", "used");
+                resultRespond.put("email", this.getDecode(email.getBytes(StandardCharsets.UTF_8)));
                 return ResponseEntity.ok().body(resultRespond);
-            }  else if (countNickNameOrEmail.get().getTotalNickName() > 0) {
+            } else if (countNickNameOrEmail.get().getTotalNickName() > 0) {
                 resultRespond.put("nickname", this.getDecode(nickname.getBytes(StandardCharsets.UTF_8)));
                 resultRespond.put("status", "used");
                 return ResponseEntity.ok().body(resultRespond);
@@ -210,19 +225,33 @@ public class UserController {
             @RequestParam(name = "email") String email) throws ResourceNotFound {
         this.userLogin = this.userServices.findByRecovery(email)
                 .orElseThrow(() -> new ResourceNotFound("Failed"));
-        return ResponseEntity.ok().body(new HashMap<>() {{
-            this.put("recovery", UserController.this.userLogin.getRecovery());
-        }});
+        String recoveryCode = this.userLogin.getRecovery();
+        if (recoveryCode != null) {
+            return ResponseEntity.ok().body(new HashMap<>() {{
+                this.put("status", "success");
+                this.put("time", String.valueOf(System.currentTimeMillis()));
+                this.put("recovery", recoveryCode);
+
+            }});
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new HashMap<>() {{
+                this.put("status", "fail");
+                this.put("time", String.valueOf(System.currentTimeMillis()));
+                this.put("recovery", "not-found");
+            }});
+        }
     }
 
     //Generate recovery code from user
     @PostMapping(value = "/generate-recovery", params = {"userId"})
     public ResponseEntity<HashMap<String, String>> generateRecoveryCode(
             @RequestParam(value = "userId") String userId) {
-        String new_recovery_code = java.util.UUID.randomUUID().toString();
-        this.userServices.updateRecovery(new_recovery_code, userId);
+        String newRecoveryCode = java.util.UUID.randomUUID().toString();
+        this.userServices.updateRecovery(newRecoveryCode, userId);
         return ResponseEntity.ok().body(new HashMap<>() {{
-            this.put("recovery", new_recovery_code);
+            this.put("status", "success");
+            this.put("time", String.valueOf(System.currentTimeMillis()));
+            this.put("recovery", newRecoveryCode);
         }});
     }
 
@@ -245,76 +274,86 @@ public class UserController {
         if (userTokenCheck.equals(oldUserTokenHash)) {
             this.userServices.updateUserToken(newUserTokenHash, newSalt, recoveryCode, this.getDecode(email.getBytes(StandardCharsets.UTF_8)));
             return ResponseEntity.ok().body(new HashMap<>() {{
-                this.put("userToken", "changed");
                 this.put("status", "success");
+                this.put("time", String.valueOf(System.currentTimeMillis()));
+                this.put("userToken", "changed");
             }});
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new HashMap<>() {{
-                this.put("userToken", "not-changed");
                 this.put("status", "fail");
+                this.put("time", String.valueOf(System.currentTimeMillis()));
+                this.put("userToken", "not-changed");
             }});
         }
     }
 
     //Update user information
     @PostMapping("/update")
-    public ResponseEntity<HashMap<String, String>> updateUserInformation(
+    public ResponseEntity<UserDto> updateUserInformation(
             @RequestParam(value = "userid") String userid,
             @RequestParam(value = "userName", required = false) String username,
             @RequestParam(value = "fullName", required = false) String fullName,
             @RequestParam(value = "birthday", required = false) String birthday,
             @RequestParam(value = "gender", required = false) String gender,
             @RequestParam(value = "avatar", required = false) String avatar) {
-        HashMap<String, String> resultRespond = new HashMap<>();
+        UserDto userDto = new UserDto();
+        userDto.setTime(String.valueOf(System.currentTimeMillis()));
         if (username != null && !username.isEmpty()) {
             this.userServices.updateNickname(this.getDecode(username.getBytes(StandardCharsets.UTF_8)),
                     this.getDecode(userid.getBytes(StandardCharsets.UTF_8)));
-            resultRespond.put("userName", username);
+            userDto.setStatus("success");
+            userDto.setNickName(this.getDecode(username.getBytes(StandardCharsets.UTF_8)));
         }
 
         if (fullName != null && !fullName.isEmpty()) {
             this.userServices.updateFullName(this.getDecode(fullName.getBytes(StandardCharsets.UTF_8)),
                     this.getDecode(userid.getBytes(StandardCharsets.UTF_8)));
-            resultRespond.put("fullName", fullName);
+            userDto.setStatus("success");
+            userDto.setFullName(this.getDecode(fullName.getBytes(StandardCharsets.UTF_8)));
         }
 
         if (birthday != null && !birthday.isEmpty()) {
             this.userServices.updateBirthday(this.getDecode(birthday.getBytes(StandardCharsets.UTF_8)),
                     this.getDecode(userid.getBytes(StandardCharsets.UTF_8)));
-            resultRespond.put("birthday", birthday);
+            userDto.setStatus("success");
+            userDto.setBirthday(this.getDecode(birthday.getBytes(StandardCharsets.UTF_8)));
         }
 
         if (gender != null && !gender.isEmpty()) {
             this.userServices.updateGender(this.getDecode(gender.getBytes(StandardCharsets.UTF_8)),
                     this.getDecode(userid.getBytes(StandardCharsets.UTF_8)));
-            resultRespond.put("gender", gender);
+            userDto.setStatus("success");
+            userDto.setGender(this.getDecode(gender.getBytes(StandardCharsets.UTF_8)));
         }
 
         if (avatar != null && !avatar.isEmpty()) {
             this.userServices.updateAvatar(this.getDecode(avatar.getBytes(StandardCharsets.UTF_8)),
                     this.getDecode(userid.getBytes(StandardCharsets.UTF_8)));
-            resultRespond.put("avatar", avatar);
+            userDto.setStatus("success");
+            userDto.setAvatar(this.getDecode(avatar.getBytes(StandardCharsets.UTF_8)));
         }
-
-        resultRespond.put("status", "success");
-        return ResponseEntity.ok().body(resultRespond);
+        return ResponseEntity.ok().body(userDto);
     }
 
     //Verify Recovery userToken
     @GetMapping(value = "/verify-recovery-code", params = {"code"})
-    public ResponseEntity<HashMap<String, String>> recoveryAccount(
+    public ResponseEntity<UserDto> recoveryAccount(
             @RequestParam(name = "code") String code) throws ResourceNotFound {
+        UserDto userDto = new UserDto();
         this.userLogin = this.userServices.findByRecovery(this.getDecode(code.getBytes(StandardCharsets.UTF_8)))
                 .orElseThrow(() -> new ResourceNotFound("Failed"));
         this.userInformation = this.userServices.findInformationByUserId(String.valueOf(this.userLogin.getUserId()))
                 .orElseThrow(() -> new ResourceNotFound("Failed"));
-        return ResponseEntity.ok().body(new HashMap<>() {{
-            this.put("userId", String.valueOf(UserController.this.userLogin.getUserId()));
-            this.put("email", UserController.this.userLogin.getEmail());
-            this.put("fullName", UserController.this.userInformation.getName());
-            this.put("nickName", UserController.this.userLogin.getNickname());
-            this.put("verify", UserController.this.userLogin.getVerify());
-            this.put("status", "success");
-        }});
+        userDto.setUserId(String.valueOf(this.userLogin.getUserId()));
+        userDto.setEmail(this.userLogin.getEmail());
+        userDto.setNickName(this.userLogin.getNickname());
+        userDto.setVerify(this.userLogin.getVerify());
+        userDto.setFullName(this.userInformation.getName());
+        userDto.setBirthday(this.userInformation.getBirthday());
+        userDto.setGender(this.userInformation.getGender());
+        userDto.setAvatar(this.userInformation.getAvatar());
+        userDto.setStatus("success");
+        userDto.setTime(String.valueOf(System.currentTimeMillis()));
+        return ResponseEntity.ok().body(userDto);
     }
 }

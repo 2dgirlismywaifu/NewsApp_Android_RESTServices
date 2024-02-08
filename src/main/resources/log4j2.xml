@@ -48,7 +48,7 @@
                 <pattern>%d{yyyy-MM-dd HH:mm} %p %m%n %level %c.%m %ex{full} %n</pattern>
             </PatternLayout>
             <Policies>
-                 <!-- Causes a rollover if the log file is older than the current JVM's start time -->
+                <!-- Causes a rollover if the log file is older than the current JVM's start time -->
                 <OnStartupTriggeringPolicy/>
             </Policies>
         </RollingFile>
@@ -61,7 +61,7 @@
                 <pattern>%d{yyyy-MM-dd HH:mm} %p %m%n %level %c.%m %ex{full} %n</pattern>
             </PatternLayout>
             <Policies>
-                 <!-- Causes a rollover if the log file is older than the current JVM's start time -->
+                <!-- Causes a rollover if the log file is older than the current JVM's start time -->
                 <OnStartupTriggeringPolicy/>
             </Policies>
         </RollingFile>

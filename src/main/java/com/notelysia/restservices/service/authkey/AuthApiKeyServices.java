@@ -20,7 +20,10 @@ import com.notelysia.restservices.model.dto.AuthApiKeyDto;
 
 public interface AuthApiKeyServices {
     long findByHeaderAndAuthToken(String headerName, String authToken);
+
     String findByNewsApiKey(String headerName);
+
     void saveAuthApiKey(AuthApiKeyDto authApiKeyDto);
+
     void disableKey(String headerName, String token);
 }

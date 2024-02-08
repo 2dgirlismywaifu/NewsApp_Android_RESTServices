@@ -18,6 +18,7 @@ package com.notelysia.restservices.controller.newsapp;
 
 import com.notelysia.restservices.config.DecodeString;
 import com.notelysia.restservices.config.RandomNumber;
+import com.notelysia.restservices.model.dto.newsapp.NewsFavouriteDto;
 import com.notelysia.restservices.model.entity.newsapp.SyncNewsFavourite;
 import com.notelysia.restservices.model.entity.newsapp.SyncSubscribe;
 import com.notelysia.restservices.service.newsapp.SyncServices;
@@ -137,15 +138,17 @@ public class UserFavouriteController {
 
     //show favourite news with params: userId in sync_news_favourite
     @GetMapping(value = "/account/show-news-favourite")
-    public ResponseEntity<HashMap<String, List<SyncNewsFavourite>>> userNewsFavouriteShow(
+    public ResponseEntity<NewsFavouriteDto> userNewsFavouriteShow(
             @RequestParam(value = "userId") String userId) {
         this.syncServices.findByUserId(Integer.parseInt(this.getDecode(userId.getBytes())));
         List<SyncNewsFavourite> syncNewsFavourites = this.syncServices.findByUserId(Integer.parseInt(UserFavouriteController.this.getDecode(userId.getBytes())));
-        return new ResponseEntity<>(new HashMap<>() {
-            {
-                this.put("newsFavourite", syncNewsFavourites);
-            }
-        }, org.springframework.http.HttpStatus.OK);
+        String totalResults = String.valueOf(syncNewsFavourites.size());
+        if (syncNewsFavourites.isEmpty()) {
+            return new ResponseEntity<>(new NewsFavouriteDto("not-found", String.valueOf(System.currentTimeMillis()), "No favourite news found", totalResults, null), HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(new NewsFavouriteDto("found", String.valueOf(System.currentTimeMillis()),
+                    "Favourite news found", totalResults, syncNewsFavourites), HttpStatus.OK);
+        }
     }
 
     //Check source news in SYNC_SUBSCRIBE table. use params: userId, source_id. DO NOT USE SYNC_NEWS_FAVOURITE TABLE
@@ -157,13 +160,18 @@ public class UserFavouriteController {
         this.syncSubscribe = this.syncServices.findByUserIdAndSourceId(Integer.parseInt(this.getDecode(userId.getBytes())), this.getDecode(source_id.getBytes()));
         if (this.syncSubscribe == null) {
             respond.put("status", "not-found");
+            respond.put("time", String.valueOf(System.currentTimeMillis()));
+            respond.put("message", "Source NOT found in subscribe list");
             return new ResponseEntity<>(respond, HttpStatus.BAD_REQUEST);
         } else {
+            respond.put("status", "found");
+            respond.put("time", String.valueOf(System.currentTimeMillis()));
+            respond.put("message", "Source found in subscribe list");
+            respond.put("syncId", String.valueOf(UserFavouriteController.this.syncSubscribe.getSyncId()));
             respond.put("userId", String.valueOf(UserFavouriteController.this.syncSubscribe.getUserId()));
             respond.put("sourceId", String.valueOf(UserFavouriteController.this.syncSubscribe.getSourceId()));
             respond.put("isChecked", String.valueOf(UserFavouriteController.this.syncSubscribe.getIsChecked()));
             respond.put("isDeleted", String.valueOf(UserFavouriteController.this.syncSubscribe.getIsDeleted()));
-            respond.put("status", "found");
             return new ResponseEntity<>(respond, HttpStatus.OK);
         }
     }
@@ -176,15 +184,19 @@ public class UserFavouriteController {
         this.syncNewsFavourite = this.syncServices.checkNewsFavouriteOrNot(this.getDecode(userId.getBytes()), this.getDecode(title.getBytes()));
         if (this.syncNewsFavourite == null) {
             respond.put("status", "not-found");
+            respond.put("time", String.valueOf(System.currentTimeMillis()));
+            respond.put("message", "Source NOT found in favourite list");
             return new ResponseEntity<>(respond, HttpStatus.BAD_REQUEST);
         } else {
+            respond.put("status", "found");
+            respond.put("time", String.valueOf(System.currentTimeMillis()));
+            respond.put("message", "Source found in favourite list");
             respond.put("favouriteId", String.valueOf(UserFavouriteController.this.syncNewsFavourite.getFavouriteId()));
             respond.put("userId", String.valueOf(UserFavouriteController.this.syncNewsFavourite.getUserId()));
             respond.put("url", UserFavouriteController.this.syncNewsFavourite.getUrl());
             respond.put("title", UserFavouriteController.this.syncNewsFavourite.getTitle());
             respond.put("imageUrl", UserFavouriteController.this.syncNewsFavourite.getImageUrl());
             respond.put("pubDate", UserFavouriteController.this.syncNewsFavourite.getPubDate());
-            respond.put("status", "found");
             return new ResponseEntity<>(respond, HttpStatus.OK);
         }
     }
