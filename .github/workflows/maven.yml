@@ -32,7 +32,7 @@ jobs:
       with:
         host: ${{ secrets.HOMELAB_HOST }}
         username: ${{ secrets.HOMELAB_USER }}
-        port: 5435
+        port: ${{ secrets.HOMELAB_PORT }}
         key: ${{ secrets.HOMELAB_KEY }}
         source: "target/lib,target/restservices-2.0.jar"
         target: "/home/${{ secrets.HOMELAB_USER }}/Documents/RESTComplied"
