@@ -41,7 +41,7 @@ jobs:
       with:
         host: ${{ secrets.HOMELAB_HOST }}
         username: ${{ secrets.HOMELAB_USER }}
-        port: 5435
+        port: ${{ secrets.HOMELAB_PORT }}
         key: ${{ secrets.HOMELAB_KEY }}
         script: "/home/${{ secrets.HOMELAB_USER }}/Documents/RESTComplied/postconfig.sh"
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
