@@ -19,8 +19,6 @@
     <Properties>
         <Property name="logPath">log</Property>
         <Property name="rollingFileName">system_logging</Property>
-        <Property name="HibernateLog">hibernate_logging</Property>
-        <Property name="HibernateSQLLog">hibernate_sql_logging</Property>
     </Properties>
     <Appenders>
         <Console name="console" target="SYSTEM_OUT">
@@ -35,48 +33,20 @@
                 <pattern>%d{dd-MM-yyyy HH:mm} %level %c.%m %ex{full} %n</pattern>
             </PatternLayout>
             <Policies>
-                <!-- Causes a rollover if the log file is older than the current JVM's start time -->
                 <OnStartupTriggeringPolicy/>
             </Policies>
         </RollingFile>
-
-        <RollingFile name="hibernateFile" fileName="${logPath}/${HibernateLog}.log"
-                     filePattern="${logPath}/${HibernateLog}_%d{MM-dd-yyyy-HH-mm}.log.gz">
-            <PatternLayout>
-                <alwaysWriteExceptions>false</alwaysWriteExceptions>
-                <!--[%highlight{%-5level}] %d{DEFAULT} %c{1}.%M() - %msg%n%throwable{short.lineNumber} -->
-                <pattern>%d{yyyy-MM-dd HH:mm} %p %m%n %level %c.%m %ex{full} %n</pattern>
-            </PatternLayout>
-            <Policies>
-                <!-- Causes a rollover if the log file is older than the current JVM's start time -->
-                <OnStartupTriggeringPolicy/>
-            </Policies>
-        </RollingFile>
-
-        <RollingFile name="hibernateSQLFile" fileName="${logPath}/${HibernateSQLLog}.log"
-                     filePattern="${logPath}/${HibernateSQLLog}_%d{MM-dd-yyyy-HH-mm}.log.gz">
-            <PatternLayout>
-                <alwaysWriteExceptions>false</alwaysWriteExceptions>
-                <!--[%highlight{%-5level}] %d{DEFAULT} %c{1}.%M() - %msg%n%throwable{short.lineNumber} -->
-                <pattern>%d{yyyy-MM-dd HH:mm} %p %m%n %level %c.%m %ex{full} %n</pattern>
-            </PatternLayout>
-            <Policies>
-                <!-- Causes a rollover if the log file is older than the current JVM's start time -->
-                <OnStartupTriggeringPolicy/>
-            </Policies>
-        </RollingFile>
-
     </Appenders>
     <Loggers>
         <!-- Log everything in hibernate -->
         <Logger name="org.hibernate" level="info" additivity="false">
-            <AppenderRef ref="hibernateFile" level="info"/>
+            <AppenderRef ref="rollingFile"/>
         </Logger>
         <!-- Log all SQL statements -->
         <Logger name="org.hibernate.SQL" level="debug" additivity="false">
-            <AppenderRef ref="hibernateSQLFile" level="debug"/>
+            <AppenderRef ref="rollingFile"/>
         </Logger>
-        <Root level="info" additivity="false">
+        <Root level="info">
             <AppenderRef ref="console"/>
             <AppenderRef ref="rollingFile"/>
         </Root>
