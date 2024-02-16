@@ -16,7 +16,7 @@
 
 package com.notelysia.restservices.controller.newsapp;
 
-import com.notelysia.restservices.config.DecodeString;
+import com.notelysia.config.DecodeString;
 import com.notelysia.restservices.model.dto.newsapp.NewsDetailDto;
 import com.notelysia.restservices.model.dto.newsapp.RssList;
 import com.notelysia.restservices.model.dto.newsapp.RssListDto;

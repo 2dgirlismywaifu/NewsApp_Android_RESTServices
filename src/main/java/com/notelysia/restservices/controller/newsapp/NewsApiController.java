@@ -21,7 +21,7 @@ import com.kwabenaberko.newsapilib.models.Article;
 import com.kwabenaberko.newsapilib.models.request.EverythingRequest;
 import com.kwabenaberko.newsapilib.models.request.TopHeadlinesRequest;
 import com.kwabenaberko.newsapilib.models.response.ArticleResponse;
-import com.notelysia.restservices.config.DecodeString;
+import com.notelysia.config.DecodeString;
 import com.notelysia.restservices.model.dto.newsapp.NewsApiArticlesDto;
 import com.notelysia.restservices.model.dto.newsapp.NewsApiCountryDto;
 import com.notelysia.restservices.model.entity.newsapp.NewsAPICountry;

@@ -14,9 +14,9 @@
  *  limitations under the License.
  */
 
-package com.notelysia.restservices.config.database;
+package com.notelysia.config.database;
 
-import com.notelysia.restservices.config.HibernateProperties;
+import com.notelysia.config.HibernateProperties;
 import jakarta.persistence.EntityManagerFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,17 +39,17 @@ import java.util.Properties;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
-        entityManagerFactoryRef = "AuthKeyEntityManagerFactory",
-        transactionManagerRef = "AuthKeyTransactionManager",
-        basePackages = {"com.notelysia.restservices.repository.authkey"})
-public class AuthKeyDataSourceConfig {
-    private static final Logger logger = LogManager.getLogger(AuthKeyDataSourceConfig.class);
+        entityManagerFactoryRef = "AgencyStoreEntityManagerFactory",
+        transactionManagerRef = "AgencyStoreTransactionManager",
+        basePackages = {"com.notelysia.restservices.repository.agencystore"})
+public class AgencyStoreDataSourceConfig {
+    private static final Logger logger = LogManager.getLogger(AgencyStoreDataSourceConfig.class);
     //Create a bean for DataSource
     Properties props = new Properties();
     FileInputStream in;
 
-    @Bean(name = "auth-key-datasource")
-    public DataSource AuthKeySource() {
+    @Bean(name = "agency-store-datasource")
+    public DataSource agencyStoreSource() {
         DataSourceBuilder<?> dataSourceBuilder;
         try {
             this.in = new FileInputStream("spring_conf/db.properties");
@@ -57,9 +57,9 @@ public class AuthKeyDataSourceConfig {
             this.in.close();
             dataSourceBuilder = DataSourceBuilder.create();
             dataSourceBuilder.driverClassName(this.props.getProperty("jdbc.mariadb"));
-            dataSourceBuilder.url(this.props.getProperty("jdbc.auth.url"));
-            dataSourceBuilder.username(this.props.getProperty("jdbc.auth.username"));
-            dataSourceBuilder.password(this.props.getProperty("jdbc.auth.password"));
+            dataSourceBuilder.url(this.props.getProperty("jdbc.third.url"));
+            dataSourceBuilder.username(this.props.getProperty("jdbc.third.username"));
+            dataSourceBuilder.password(this.props.getProperty("jdbc.third.password"));
             return dataSourceBuilder.build();
         } catch (IOException e) {
             logger.error("Error: " + e, e);
@@ -68,20 +68,20 @@ public class AuthKeyDataSourceConfig {
     }
 
 
-    @Bean(name = "AuthKeyEntityManagerFactory")
+    @Bean(name = "AgencyStoreEntityManagerFactory")
     public LocalContainerEntityManagerFactoryBean thirdEntityManagerFactory(EntityManagerFactoryBuilder builder,
-                                                                            @Qualifier("auth-key-datasource")
-                                                                            DataSource AuthKeySource) {
+                                                                            @Qualifier("agency-store-datasource")
+                                                                            DataSource agencyStoreSource) {
         return builder
-                .dataSource(AuthKeySource)
-                .packages("com.notelysia.restservices.model.entity.authkey")
+                .dataSource(agencyStoreSource)
+                .packages("com.notelysia.restservices.model.entity.agencystore")
                 .properties(new HibernateProperties().getMariaDBProperties())
                 .build();
     }
 
-    @Bean(name = "AuthKeyTransactionManager")
+    @Bean(name = "AgencyStoreTransactionManager")
     public PlatformTransactionManager thirdTransactionManager(
-            @Qualifier("AuthKeyEntityManagerFactory") EntityManagerFactory thirdEntityManagerFactory) {
+            @Qualifier("AgencyStoreEntityManagerFactory") EntityManagerFactory thirdEntityManagerFactory) {
         return new JpaTransactionManager(thirdEntityManagerFactory);
     }
 

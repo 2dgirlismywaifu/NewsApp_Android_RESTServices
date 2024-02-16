@@ -16,8 +16,8 @@
 
 package com.notelysia.restservices.controller.newsapp;
 
-import com.notelysia.restservices.config.DecodeString;
-import com.notelysia.restservices.config.RandomNumber;
+import com.notelysia.config.DecodeString;
+import com.notelysia.config.RandomNumber;
 import com.notelysia.restservices.model.dto.newsapp.NewsFavouriteDto;
 import com.notelysia.restservices.model.entity.newsapp.SyncNewsFavourite;
 import com.notelysia.restservices.model.entity.newsapp.SyncSubscribe;
