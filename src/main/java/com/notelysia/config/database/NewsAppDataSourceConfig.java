@@ -14,9 +14,9 @@
  *  limitations under the License.
  */
 
-package com.notelysia.restservices.config.database;
+package com.notelysia.config.database;
 
-import com.notelysia.restservices.config.HibernateProperties;
+import com.notelysia.config.HibernateProperties;
 import jakarta.persistence.EntityManagerFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

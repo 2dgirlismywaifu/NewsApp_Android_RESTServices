@@ -18,8 +18,8 @@ package com.notelysia.restservices.controller.newsapp;
 
 import com.apptasticsoftware.rssreader.Item;
 import com.apptasticsoftware.rssreader.RssReader;
-import com.notelysia.restservices.config.DecodeString;
-import com.notelysia.restservices.exception.ResourceNotFound;
+import com.notelysia.config.DecodeString;
+import com.notelysia.exception.ResourceNotFound;
 import com.notelysia.restservices.model.dto.newsapp.NewsSourceDto;
 import com.notelysia.restservices.model.dto.newsapp.RssNews;
 import com.notelysia.restservices.model.dto.newsapp.RssNewsDto;

@@ -15,7 +15,7 @@
  *
  */
 
-package com.notelysia.restservices.config;
+package com.notelysia.config;
 
 public class RandomNumber {
     //generate random number with length = 6

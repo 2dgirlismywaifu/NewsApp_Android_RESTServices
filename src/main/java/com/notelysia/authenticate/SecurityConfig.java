@@ -15,7 +15,7 @@
  *
  */
 
-package com.notelysia.restservices.auth;
+package com.notelysia.authenticate;
 
 
 import com.notelysia.restservices.service.authkey.AuthApiKeyServices;

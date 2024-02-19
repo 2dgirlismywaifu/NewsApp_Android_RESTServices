@@ -1,3 +1,4 @@
+
 /*
  * Copyright By @2dgirlismywaifu (2023) .
  *
@@ -14,14 +15,19 @@
  *  limitations under the License.
  */
 
-package com.notelysia.restservices.config;
+package com.notelysia.exception;
 
-import java.util.Base64;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-public class DecodeString {
+import java.io.Serial;
 
-    //This class will decode base64 byte[] to normal string
-    public String decodeString(byte[] encodedString) {
-        return new String(Base64.getDecoder().decode(encodedString));
+@ResponseStatus(value = HttpStatus.NOT_FOUND)
+public class ResourceNotFound extends Exception {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    public ResourceNotFound(String message) {
+        super(message);
     }
 }

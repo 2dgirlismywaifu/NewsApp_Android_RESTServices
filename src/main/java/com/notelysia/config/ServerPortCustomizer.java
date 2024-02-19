@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package com.notelysia.restservices.config;
+package com.notelysia.config;
 
 import org.springframework.boot.web.server.ConfigurableWebServerFactory;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;

@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package com.notelysia.restservices.exception;
+package com.notelysia.exception;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
