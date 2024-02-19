@@ -15,7 +15,7 @@
  *
  */
 
-package com.notelysia.restservices.auth;
+package com.notelysia.authenticate;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;

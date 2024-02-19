@@ -14,9 +14,9 @@
  *  limitations under the License.
  */
 
-package com.notelysia.restservices.config.database;
+package com.notelysia.config.database;
 
-import com.notelysia.restservices.config.HibernateProperties;
+import com.notelysia.config.HibernateProperties;
 import jakarta.persistence.EntityManagerFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,17 +39,17 @@ import java.util.Properties;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
-        entityManagerFactoryRef = "AgencyStoreEntityManagerFactory",
-        transactionManagerRef = "AgencyStoreTransactionManager",
-        basePackages = {"com.notelysia.restservices.repository.agencystore"})
-public class AgencyStoreDataSourceConfig {
-    private static final Logger logger = LogManager.getLogger(AgencyStoreDataSourceConfig.class);
+        entityManagerFactoryRef = "BookStoreEntityManagerFactory",
+        transactionManagerRef = "BookStoreTransactionManager",
+        basePackages = {"com.notelysia.restservices.repository.bookstore"})
+public class BookStoreDataSourceConfig {
+    private static final Logger logger = LogManager.getLogger(BookStoreDataSourceConfig.class);
     //Create a bean for DataSource
     Properties props = new Properties();
     FileInputStream in;
 
-    @Bean(name = "agency-store-datasource")
-    public DataSource agencyStoreSource() {
+    @Bean(name = "bookstore-datasource")
+    public DataSource bookStoreSource() {
         DataSourceBuilder<?> dataSourceBuilder;
         try {
             this.in = new FileInputStream("spring_conf/db.properties");
@@ -57,9 +57,9 @@ public class AgencyStoreDataSourceConfig {
             this.in.close();
             dataSourceBuilder = DataSourceBuilder.create();
             dataSourceBuilder.driverClassName(this.props.getProperty("jdbc.mariadb"));
-            dataSourceBuilder.url(this.props.getProperty("jdbc.third.url"));
-            dataSourceBuilder.username(this.props.getProperty("jdbc.third.username"));
-            dataSourceBuilder.password(this.props.getProperty("jdbc.third.password"));
+            dataSourceBuilder.url(this.props.getProperty("jdbc.second.url"));
+            dataSourceBuilder.username(this.props.getProperty("jdbc.second.username"));
+            dataSourceBuilder.password(this.props.getProperty("jdbc.second.password"));
             return dataSourceBuilder.build();
         } catch (IOException e) {
             logger.error("Error: " + e, e);
@@ -68,21 +68,21 @@ public class AgencyStoreDataSourceConfig {
     }
 
 
-    @Bean(name = "AgencyStoreEntityManagerFactory")
-    public LocalContainerEntityManagerFactoryBean thirdEntityManagerFactory(EntityManagerFactoryBuilder builder,
-                                                                            @Qualifier("agency-store-datasource")
-                                                                            DataSource agencyStoreSource) {
+    @Bean(name = "BookStoreEntityManagerFactory")
+    public LocalContainerEntityManagerFactoryBean secondEntityManagerFactory(EntityManagerFactoryBuilder builder,
+                                                                             @Qualifier("bookstore-datasource")
+                                                                             DataSource bookstoreSource) {
         return builder
-                .dataSource(agencyStoreSource)
-                .packages("com.notelysia.restservices.model.entity.agencystore")
+                .dataSource(bookstoreSource)
+                .packages("com.notelysia.restservices.model.entity.bookstore")
                 .properties(new HibernateProperties().getMariaDBProperties())
                 .build();
     }
 
-    @Bean(name = "AgencyStoreTransactionManager")
-    public PlatformTransactionManager thirdTransactionManager(
-            @Qualifier("AgencyStoreEntityManagerFactory") EntityManagerFactory thirdEntityManagerFactory) {
-        return new JpaTransactionManager(thirdEntityManagerFactory);
+    @Bean(name = "BookStoreTransactionManager")
+    public PlatformTransactionManager secondTransactionManager(
+            @Qualifier("BookStoreEntityManagerFactory") EntityManagerFactory secondEntityManagerFactory) {
+        return new JpaTransactionManager(secondEntityManagerFactory);
     }
 
 

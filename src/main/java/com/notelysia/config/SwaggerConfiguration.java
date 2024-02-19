@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package com.notelysia.restservices.config;
+package com.notelysia.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;

@@ -16,9 +16,9 @@
 
 package com.notelysia.restservices.controller.newsapp;
 
-import com.notelysia.restservices.config.DecodeString;
-import com.notelysia.restservices.config.RandomNumber;
-import com.notelysia.restservices.exception.ResourceNotFound;
+import com.notelysia.config.DecodeString;
+import com.notelysia.config.RandomNumber;
+import com.notelysia.exception.ResourceNotFound;
 import com.notelysia.restservices.model.dto.newsapp.UserDto;
 import com.notelysia.restservices.model.dto.newsapp.UserNameAndEmailDto;
 import com.notelysia.restservices.model.entity.newsapp.UserInformation;
