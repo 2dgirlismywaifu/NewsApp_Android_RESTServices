@@ -54,11 +54,14 @@ jobs:
         embed-color: ${{ job.status == 'success' && '3066993' || '15158332' }}
         username: "2dgirlismywaifu"
         avatar-url: ${{ secrets.AVATAR_URL }}
-        content: |
-          **Workflow**: Java CI with Maven (push)
-          **Status**: ${{ job.status }}
-          **Repository**: <https://github.com/2dgirlismywaifu/MY-REST-Services|2dgirlismywaifu/MY-REST-Services>
-          **Commit**: <https://github.com/2dgirlismywaifu/MY-REST-Services/commit/${{ github.sha }}|${{ github.sha }}>
-          **Branch**: <https://github.com/2dgirlismywaifu/MY-REST-Services/tree/${{ github.ref_name }}|${{ github.ref_name }}>
-          **Time**: ${{ github.event.head_commit.timestamp }}
+        content: 'Build Status: ${{ job.status }}'
+        embeds: |
+          
+            {
+              "title": "Java CI with Maven (push)",
+              "description": "**Workflow**: Java CI with Maven (push)\n**Status**: ${{ job.status }}\n**Repository**: 2dgirlismywaifu/MY-REST-Services\n**Commit**: ${{ github.sha }}\n**Branch**: [${{ github.ref_name }}]\n**Time**: ${{ github.event.head_commit.timestamp }}",
+              "color": ${{ job.status == 'success' && 3066993 || 15158332 }},
+              "url": "https://github.com/2dgirlismywaifu/MY-REST-Services"
+            }
+          
           
