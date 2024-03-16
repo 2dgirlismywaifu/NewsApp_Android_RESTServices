@@ -51,13 +51,14 @@ jobs:
       uses: tsickert/discord-webhook@v5.3.0
       with:
         webhook-url: ${{ secrets.WEBHOOK_URL }}
+        embed-color: ${{ job.status == 'success' && '3066993' || '15158332' }}
         username: "2dgirlismywaifu"
         avatar-url: ${{ secrets.AVATAR_URL }}
         content: |
           **Workflow**: Java CI with Maven (push)
           **Status**: ${{ job.status }}
-          **Repository**: 2dgirlismywaifu/MY-REST-Services
-          **Commit**: ${{ github.sha }}
-          **Branch**: ${{ github.ref_name }}
+          **Repository**: <https://github.com/2dgirlismywaifu/MY-REST-Services|2dgirlismywaifu/MY-REST-Services>
+          **Commit**: <https://github.com/2dgirlismywaifu/MY-REST-Services/commit/${{ github.sha }}|${{ github.sha }}>
+          **Branch**: <https://github.com/2dgirlismywaifu/MY-REST-Services/tree/${{ github.ref_name }}|${{ github.ref_name }}>
           **Time**: ${{ github.event.head_commit.timestamp }}
           
