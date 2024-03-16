@@ -85,3 +85,12 @@ jobs:
       uses: github/codeql-action/analyze@v3
       with:
         category: "/language:${{matrix.language}}"
+    - name: GitHub Actions Discord Webhook
+      uses: 2dgirlismywaifu/actions-discord-webhook@main
+      with:
+        # The Discord webhook url
+        webhook_url: ${{ secrets.WEBHOOK_URL }}
+        # The build status
+        status: ${{ job.status }}
+        webhook-url: ${{ secrets.WEBHOOK_URL }}
+      if: always()
