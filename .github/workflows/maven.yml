@@ -52,6 +52,12 @@ jobs:
       with:
         webhook-url: ${{ secrets.WEBHOOK_URL }}
         username: "2dgirlismywaifu"
-        avatar_url: ${{ secrets.AVATAR_URL }}
-        content: ${{ job.status }}
+        avatar-url: ${{ secrets.AVATAR_URL }}
+        content: |
+          **Workflow**: Java CI with Maven (push)
+          **Status**: ${{ job.status }}
+          **Repository**: 2dgirlismywaifu/MY-REST-Services
+          **Commit**: ${{ github.sha }}
+          **Branch**: ${{ github.ref_name }}
+          **Time**: ${{ github.event.head_commit.timestamp }}
           
