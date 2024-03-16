@@ -47,21 +47,14 @@ jobs:
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     - name: Update dependency graph
       uses: advanced-security/maven-dependency-submission-action@v4.0.0
-    - name: Discord Webhook Action Build Status
-      uses: tsickert/discord-webhook@v5.3.0
+    - name: GitHub Actions Discord Webhook
+      uses: 2dgirlismywaifu/actions-discord-webhook@main
       with:
+        # The Discord webhook url
+        webhook_url: ${{ secrets.WEBHOOK_URL }}
+        # The build status
+        status: ${{ job.status }}
         webhook-url: ${{ secrets.WEBHOOK_URL }}
-        embed-color: ${{ job.status == 'success' && '3066993' || '15158332' }}
-        username: "2dgirlismywaifu"
-        avatar-url: ${{ secrets.AVATAR_URL }}
-        content: 'Build Status: ${{ job.status }}'
-        embeds: |
-          
-            {
-              "title": "Java CI with Maven (push)",
-              "description": "**Workflow**: Java CI with Maven (push)\n**Status**: ${{ job.status }}\n**Repository**: 2dgirlismywaifu/MY-REST-Services\n**Commit**: ${{ github.sha }}\n**Branch**: [${{ github.ref_name }}]\n**Time**: ${{ github.event.head_commit.timestamp }}",
-              "color": ${{ job.status == 'success' && 3066993 || 15158332 }},
-              "url": "https://github.com/2dgirlismywaifu/MY-REST-Services"
-            }
+      if: always()
           
           
