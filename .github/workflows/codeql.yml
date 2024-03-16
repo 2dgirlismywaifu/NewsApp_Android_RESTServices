@@ -85,3 +85,12 @@ jobs:
       uses: github/codeql-action/analyze@v3
       with:
         category: "/language:${{matrix.language}}"
+    - name: GitHub Actions Discord Webhook
+    # You may pin to the exact commit or the version.
+    # uses: nebularg/actions-discord-webhook@633ae6b03882743988dbc992eb147818ca96a93e
+      uses: nebularg/actions-discord-webhook@v1.0.0
+      with:
+        # The Discord webhook url
+        webhook_url: https://discord.com/api/webhooks/1218651145015267568/cQfg2bvecKcDqaxSacOrZGxG-mIPOM9s0Yq4XkuItYJzUAzqoOky97CgbOvHIPIJvrRE
+        # The build status
+        status: ${{ job.status }}
