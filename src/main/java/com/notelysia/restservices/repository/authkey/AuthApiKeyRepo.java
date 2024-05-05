@@ -23,16 +23,20 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
 public interface AuthApiKeyRepo extends JpaRepository<AuthApiKey, Long> {
-    @Query("select count(authKey) from AuthApiKey authKey " +
-            "where authKey.headerName = ?1 and authKey.token = ?2 and authKey.isEnable = 1")
-    long findByHeader(String headerName, String authToken);
+  @Query(
+      "select count(authKey) from AuthApiKey authKey "
+          + "where authKey.headerName = ?1 and authKey.token = ?2 and authKey.isEnable = 1")
+  long findByHeader(String headerName, String authToken);
 
-    @Query("select authKey.token from AuthApiKey authKey " +
-            "where authKey.headerName = ?1 and authKey.isEnable = 1")
-    String findByNewsApiKey(String headerName);
+  @Query(
+      "select authKey.token from AuthApiKey authKey "
+          + "where authKey.headerName = ?1 and authKey.isEnable = 1")
+  String findByNewsApiKey(String headerName);
 
-    @Query("update AuthApiKey authKey set authKey.isEnable = 0 where authKey.headerName = ?1 and authKey.token = ?2")
-    @Modifying
-    @Transactional
-    void disableKey(String headerName, String token);
+  @Query(
+      "update AuthApiKey authKey set authKey.isEnable = 0 where authKey.headerName = ?1 and"
+          + " authKey.token = ?2")
+  @Modifying
+  @Transactional
+  void disableKey(String headerName, String token);
 }

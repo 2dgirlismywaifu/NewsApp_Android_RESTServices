@@ -21,55 +21,65 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Base64;
+import java.util.Properties;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Base64;
-import java.util.Properties;
-
 @Configuration
 public class SwaggerConfiguration {
-    private static final Logger logger = LogManager.getLogger(SwaggerConfiguration.class);
-    Properties props = new Properties();
-    FileInputStream in;
+  private static final Logger logger = LogManager.getLogger(SwaggerConfiguration.class);
+  Properties props = new Properties();
+  FileInputStream in;
 
-    @Bean
-    public OpenAPI customOpenAPI() {
+  @Bean
+  public OpenAPI customOpenAPI() {
 
-        try {
-            this.in = new FileInputStream("spring_conf/authkey.properties");
-            this.props.load(this.in);
-            this.in.close();
-            Components components = new Components();
-            SecurityRequirement securityRequirement = new SecurityRequirement();
-            components.addSecuritySchemes("News-App-Header", new SecurityScheme()
-                    .type(SecurityScheme.Type.APIKEY)
-                    .in(SecurityScheme.In.HEADER)
-                    .name(new String(Base64.getDecoder().decode(this.props.getProperty("auth-token-header-news-app")))));
-            components.addSecuritySchemes("BookStore-Header", new SecurityScheme()
-                    .type(SecurityScheme.Type.APIKEY)
-                    .in(SecurityScheme.In.HEADER)
-                    .name(new String(Base64.getDecoder().decode(this.props.getProperty("auth-token-header-bookstore")))));
-            securityRequirement.addList("News-App-Header");
-            securityRequirement.addList("BookStore-Header");
-            return new OpenAPI()
-                    //Edit footer, change /v3/api-docs
-                    .externalDocs(new io.swagger.v3.oas.models.ExternalDocumentation()
-                            .description("My Open Source REST Services")
-                            .url("https://github.com/2dgirlismywaifu/My-REST-Services"))
-                    .info(new Info().title("My-REST-Services").version("2.1.0"))
-                    //HTTP or HTTPS
-                    // Components section defines Security Scheme
-                    .components(components)
-                    // AddSecurityItem section applies created scheme globally
-                    .addSecurityItem(securityRequirement);
-        } catch (IOException e) {
-            logger.error("Error : " + e, e);
-            return null;
-        }
+    try {
+      this.in = new FileInputStream("spring_conf/authkey.properties");
+      this.props.load(this.in);
+      this.in.close();
+      Components components = new Components();
+      SecurityRequirement securityRequirement = new SecurityRequirement();
+      components.addSecuritySchemes(
+          "News-App-Header",
+          new SecurityScheme()
+              .type(SecurityScheme.Type.APIKEY)
+              .in(SecurityScheme.In.HEADER)
+              .name(
+                  new String(
+                      Base64.getDecoder()
+                          .decode(this.props.getProperty("auth-token-header-news-app")))));
+      components.addSecuritySchemes(
+          "BookStore-Header",
+          new SecurityScheme()
+              .type(SecurityScheme.Type.APIKEY)
+              .in(SecurityScheme.In.HEADER)
+              .name(
+                  new String(
+                      Base64.getDecoder()
+                          .decode(this.props.getProperty("auth-token-header-bookstore")))));
+      securityRequirement.addList("News-App-Header");
+      securityRequirement.addList("BookStore-Header");
+      return new OpenAPI()
+          // Edit footer, change /v3/api-docs
+          .externalDocs(
+              new io.swagger.v3.oas.models.ExternalDocumentation()
+                  .description("My Open Source REST Services")
+                  .url("https://github.com/2dgirlismywaifu/My-REST-Services"))
+          .info(new Info().title("My-REST-Services").version("2.1.0"))
+          // HTTP or HTTPS
+          // Components section defines Security Scheme
+          .components(components)
+          // AddSecurityItem section applies created scheme globally
+          .addSecurityItem(securityRequirement);
+    } catch (IOException e) {
+      logger.error("Error : " + e, e);
+      return null;
     }
+  }
 }

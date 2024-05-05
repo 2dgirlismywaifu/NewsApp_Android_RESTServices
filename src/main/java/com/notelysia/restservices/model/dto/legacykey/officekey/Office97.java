@@ -19,9 +19,7 @@ package com.notelysia.restservices.model.dto.legacykey.officekey;
 import lombok.Getter;
 
 public class Office97 {
-    String XXXXKey = new XXXXKey().generateOffice97Key();
-    String XXXXXXXKey = new XXXXXXXKey().generateKey();
-    @Getter
-    String office97Key = this.XXXXKey + "-" + this.XXXXXXXKey;
-
+  String XXXXKey = new XXXXKey().generateOffice97Key();
+  String XXXXXXXKey = new XXXXXXXKey().generateKey();
+  @Getter String office97Key = this.XXXXKey + "-" + this.XXXXXXXKey;
 }

@@ -17,12 +17,11 @@
 package com.notelysia.restservices.model.entity.newsapp;
 
 import jakarta.persistence.*;
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.io.Serializable;
 
 @Getter
 @Setter
@@ -31,13 +30,15 @@ import java.io.Serializable;
 @Entity
 @Table(name = "newstype_image")
 public class NewsTypeImage implements Serializable {
-    //Instance variables
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
-    @Column(name = "id")
-    private int id;
-    @Column(name = "url_type")
-    private String urlType;
-    @Column(name = "url_image")
-    private String urlImage;
+  // Instance variables
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Id
+  @Column(name = "id")
+  private int id;
+
+  @Column(name = "url_type")
+  private String urlType;
+
+  @Column(name = "url_image")
+  private String urlImage;
 }

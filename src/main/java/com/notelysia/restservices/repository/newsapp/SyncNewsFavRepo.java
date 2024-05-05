@@ -17,34 +17,39 @@
 package com.notelysia.restservices.repository.newsapp;
 
 import com.notelysia.restservices.model.entity.newsapp.SyncNewsFavourite;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Repository
 public interface SyncNewsFavRepo extends JpaRepository<SyncNewsFavourite, Integer> {
-    //Delete news favourite by user_id, url, title, image_url, source_name
-    @Transactional
-    @Modifying
-    @Query("update SyncNewsFavourite s set s.isDeleted = 1 WHERE s.userId = ?1 AND " +
-            "s.favouriteId = ?2")
-    void deleteNewsFavourite(String userId, String favouriteId);
+  // Delete news favourite by user_id, url, title, image_url, source_name
+  @Transactional
+  @Modifying
+  @Query(
+      "update SyncNewsFavourite s set s.isDeleted = 1 WHERE s.userId = ?1 AND "
+          + "s.favouriteId = ?2")
+  void deleteNewsFavourite(String userId, String favouriteId);
 
-    //Get news favourite by user_id
-    @Query("SELECT s FROM SyncNewsFavourite s WHERE s.userId = ?1 and s.isDeleted = 0")
-    List<SyncNewsFavourite> findByUserId(int userId);
+  // Get news favourite by user_id
+  @Query("SELECT s FROM SyncNewsFavourite s WHERE s.userId = ?1 and s.isDeleted = 0")
+  List<SyncNewsFavourite> findByUserId(int userId);
 
-    @Query("SELECT count(s) FROM SyncNewsFavourite s WHERE s.userId = ?1 and s.url = ?2 and s.isDeleted = 0")
-    long findByNewsFavourite(String userId, String url);
+  @Query(
+      "SELECT count(s) FROM SyncNewsFavourite s WHERE s.userId = ?1 and s.url = ?2 and s.isDeleted"
+          + " = 0")
+  long findByNewsFavourite(String userId, String url);
 
-    @Query("SELECT s.favouriteId FROM SyncNewsFavourite s WHERE s.userId = ?1 and s.title = ?2 and s.isDeleted = 0")
-    String findFavoriteId(String userId, String title);
+  @Query(
+      "SELECT s.favouriteId FROM SyncNewsFavourite s WHERE s.userId = ?1 and s.title = ?2 and"
+          + " s.isDeleted = 0")
+  String findFavoriteId(String userId, String title);
 
-    //Check news is favourite or not by userId, title
-    @Query("SELECT s FROM SyncNewsFavourite s WHERE s.userId = ?1 and s.title = ?2 and s.isDeleted = 0")
-    SyncNewsFavourite checkNewsFavouriteOrNot(String userId, String title);
+  // Check news is favourite or not by userId, title
+  @Query(
+      "SELECT s FROM SyncNewsFavourite s WHERE s.userId = ?1 and s.title = ?2 and s.isDeleted = 0")
+  SyncNewsFavourite checkNewsFavouriteOrNot(String userId, String title);
 }

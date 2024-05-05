@@ -18,6 +18,10 @@ package com.notelysia.config.database;
 
 import com.notelysia.config.HibernateProperties;
 import jakarta.persistence.EntityManagerFactory;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
+import javax.sql.DataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -31,59 +35,51 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import javax.sql.DataSource;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Properties;
-
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
-        entityManagerFactoryRef = "BookStoreEntityManagerFactory",
-        transactionManagerRef = "BookStoreTransactionManager",
-        basePackages = {"com.notelysia.restservices.repository.bookstore"})
+    entityManagerFactoryRef = "BookStoreEntityManagerFactory",
+    transactionManagerRef = "BookStoreTransactionManager",
+    basePackages = {"com.notelysia.restservices.repository.bookstore"})
 public class BookStoreDataSourceConfig {
-    private static final Logger logger = LogManager.getLogger(BookStoreDataSourceConfig.class);
-    //Create a bean for DataSource
-    Properties props = new Properties();
-    FileInputStream in;
+  private static final Logger logger = LogManager.getLogger(BookStoreDataSourceConfig.class);
+  // Create a bean for DataSource
+  Properties props = new Properties();
+  FileInputStream in;
 
-    @Bean(name = "bookstore-datasource")
-    public DataSource bookStoreSource() {
-        DataSourceBuilder<?> dataSourceBuilder;
-        try {
-            this.in = new FileInputStream("spring_conf/db.properties");
-            this.props.load(this.in);
-            this.in.close();
-            dataSourceBuilder = DataSourceBuilder.create();
-            dataSourceBuilder.driverClassName(this.props.getProperty("jdbc.mariadb"));
-            dataSourceBuilder.url(this.props.getProperty("jdbc.second.url"));
-            dataSourceBuilder.username(this.props.getProperty("jdbc.second.username"));
-            dataSourceBuilder.password(this.props.getProperty("jdbc.second.password"));
-            return dataSourceBuilder.build();
-        } catch (IOException e) {
-            logger.error("Error: " + e, e);
-            return null;
-        }
+  @Bean(name = "bookstore-datasource")
+  public DataSource bookStoreSource() {
+    DataSourceBuilder<?> dataSourceBuilder;
+    try {
+      this.in = new FileInputStream("spring_conf/db.properties");
+      this.props.load(this.in);
+      this.in.close();
+      dataSourceBuilder = DataSourceBuilder.create();
+      dataSourceBuilder.driverClassName(this.props.getProperty("jdbc.mariadb"));
+      dataSourceBuilder.url(this.props.getProperty("jdbc.second.url"));
+      dataSourceBuilder.username(this.props.getProperty("jdbc.second.username"));
+      dataSourceBuilder.password(this.props.getProperty("jdbc.second.password"));
+      return dataSourceBuilder.build();
+    } catch (IOException e) {
+      logger.error("Error: " + e, e);
+      return null;
     }
+  }
 
+  @Bean(name = "BookStoreEntityManagerFactory")
+  public LocalContainerEntityManagerFactoryBean secondEntityManagerFactory(
+      EntityManagerFactoryBuilder builder,
+      @Qualifier("bookstore-datasource") DataSource bookstoreSource) {
+    return builder
+        .dataSource(bookstoreSource)
+        .packages("com.notelysia.restservices.model.entity.bookstore")
+        .properties(new HibernateProperties().getMariaDBProperties())
+        .build();
+  }
 
-    @Bean(name = "BookStoreEntityManagerFactory")
-    public LocalContainerEntityManagerFactoryBean secondEntityManagerFactory(EntityManagerFactoryBuilder builder,
-                                                                             @Qualifier("bookstore-datasource")
-                                                                             DataSource bookstoreSource) {
-        return builder
-                .dataSource(bookstoreSource)
-                .packages("com.notelysia.restservices.model.entity.bookstore")
-                .properties(new HibernateProperties().getMariaDBProperties())
-                .build();
-    }
-
-    @Bean(name = "BookStoreTransactionManager")
-    public PlatformTransactionManager secondTransactionManager(
-            @Qualifier("BookStoreEntityManagerFactory") EntityManagerFactory secondEntityManagerFactory) {
-        return new JpaTransactionManager(secondEntityManagerFactory);
-    }
-
-
+  @Bean(name = "BookStoreTransactionManager")
+  public PlatformTransactionManager secondTransactionManager(
+      @Qualifier("BookStoreEntityManagerFactory") EntityManagerFactory secondEntityManagerFactory) {
+    return new JpaTransactionManager(secondEntityManagerFactory);
+  }
 }

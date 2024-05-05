@@ -25,20 +25,20 @@ import org.springframework.security.web.authentication.preauth.AbstractPreAuthen
  */
 public class ApiKeyAuthFilter extends AbstractPreAuthenticatedProcessingFilter {
 
-    private final String headerName;
+  private final String headerName;
 
-    public ApiKeyAuthFilter(final String headerName) {
-        this.headerName = headerName;
-    }
+  public ApiKeyAuthFilter(final String headerName) {
+    this.headerName = headerName;
+  }
 
-    @Override
-    protected Object getPreAuthenticatedPrincipal(HttpServletRequest request) {
-        return request.getHeader(this.headerName);
-    }
+  @Override
+  protected Object getPreAuthenticatedPrincipal(HttpServletRequest request) {
+    return request.getHeader(this.headerName);
+  }
 
-    @Override
-    protected Object getPreAuthenticatedCredentials(HttpServletRequest request) {
-        // No creds when using API key
-        return null;
-    }
+  @Override
+  protected Object getPreAuthenticatedCredentials(HttpServletRequest request) {
+    // No creds when using API key
+    return null;
+  }
 }

@@ -16,27 +16,26 @@
 
 package com.notelysia.restservices.model.entity.newsapp.CompositeKey;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.io.Serializable;
 import java.util.Objects;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
 public class NewsDetailPK implements Serializable {
-    private int id;
-    private int sourceId;
+  private int id;
+  private int sourceId;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof NewsDetailPK that)) return false;
-        return this.getId() == that.getId() && this.getSourceId() == that.getSourceId();
-    }
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof NewsDetailPK that)) return false;
+    return this.getId() == that.getId() && this.getSourceId() == that.getSourceId();
+  }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.getId(), this.getSourceId());
-    }
+  @Override
+  public int hashCode() {
+    return Objects.hash(this.getId(), this.getSourceId());
+  }
 }

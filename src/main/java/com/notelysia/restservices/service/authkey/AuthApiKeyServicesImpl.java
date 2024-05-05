@@ -8,31 +8,30 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AuthApiKeyServicesImpl implements AuthApiKeyServices {
-    @Autowired
-    private AuthApiKeyRepo authApiKeyRepo;
+  @Autowired private AuthApiKeyRepo authApiKeyRepo;
 
-    @Override
-    public long findByHeaderAndAuthToken(String headerName, String authToken) {
-        return this.authApiKeyRepo.findByHeader(headerName, authToken);
-    }
+  @Override
+  public long findByHeaderAndAuthToken(String headerName, String authToken) {
+    return this.authApiKeyRepo.findByHeader(headerName, authToken);
+  }
 
-    @Override
-    public String findByNewsApiKey(String headerName) {
-        return this.authApiKeyRepo.findByNewsApiKey(headerName);
-    }
+  @Override
+  public String findByNewsApiKey(String headerName) {
+    return this.authApiKeyRepo.findByNewsApiKey(headerName);
+  }
 
-    @Override
-    public void saveAuthApiKey(AuthApiKeyDto authApiKeyDto) {
-        AuthApiKey authApiKey = new AuthApiKey();
-        authApiKey.setId(authApiKeyDto.getId());
-        authApiKey.setHeaderName(authApiKeyDto.getHeaderName());
-        authApiKey.setToken(authApiKey.getToken());
-        authApiKey.setIsEnable(1);
-        this.authApiKeyRepo.save(authApiKey);
-    }
+  @Override
+  public void saveAuthApiKey(AuthApiKeyDto authApiKeyDto) {
+    AuthApiKey authApiKey = new AuthApiKey();
+    authApiKey.setId(authApiKeyDto.getId());
+    authApiKey.setHeaderName(authApiKeyDto.getHeaderName());
+    authApiKey.setToken(authApiKey.getToken());
+    authApiKey.setIsEnable(1);
+    this.authApiKeyRepo.save(authApiKey);
+  }
 
-    @Override
-    public void disableKey(String headerName, String token) {
-        this.authApiKeyRepo.disableKey(headerName, token);
-    }
+  @Override
+  public void disableKey(String headerName, String token) {
+    this.authApiKeyRepo.disableKey(headerName, token);
+  }
 }

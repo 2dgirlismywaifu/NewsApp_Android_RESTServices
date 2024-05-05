@@ -19,5 +19,4 @@ package com.notelysia.restservices.service.bookstore;
 import com.notelysia.restservices.model.entity.bookstore.Bill;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface BillRepo extends JpaRepository<Bill, Long> {
-}
+public interface BillRepo extends JpaRepository<Bill, Long> {}

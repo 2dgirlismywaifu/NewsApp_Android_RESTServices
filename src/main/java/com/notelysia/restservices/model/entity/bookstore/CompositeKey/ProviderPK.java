@@ -16,30 +16,29 @@
 
 package com.notelysia.restservices.model.entity.bookstore.CompositeKey;
 
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.io.Serializable;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProviderPK implements Serializable {
-    private String id;
-    private String bookId;
+  private String id;
+  private String bookId;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ProviderPK that)) return false;
-        return this.getId().equals(that.getId()) && this.getBookId().equals(that.getBookId());
-    }
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof ProviderPK that)) return false;
+    return this.getId().equals(that.getId()) && this.getBookId().equals(that.getBookId());
+  }
 
-    @Override
-    public int hashCode() {
-        return java.util.Objects.hash(this.getId(), this.getBookId());
-    }
+  @Override
+  public int hashCode() {
+    return java.util.Objects.hash(this.getId(), this.getBookId());
+  }
 }

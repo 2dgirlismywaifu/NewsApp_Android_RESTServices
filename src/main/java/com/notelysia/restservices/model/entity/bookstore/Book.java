@@ -20,12 +20,11 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.io.Serializable;
 
 @Entity
 @Table(name = "Book")
@@ -34,23 +33,31 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Book implements Serializable {
-    @Id
-    @Column(name = "book_id")
-    private String bookId;
-    @Column(name = "book_name")
-    private String name;
-    @Column(name = "type")
-    private String type;
-    @Column(name = "author")
-    private String author;
-    @Column(name = "date_publish")
-    private String datepub;
-    @Column(name = "publisher")
-    private String publisher;
-    @Column(name = "date_import")
-    private String date;
-    @Column(name = "price")
-    private String price;
-    @Column(name = "amount")
-    private String amount;
+  @Id
+  @Column(name = "book_id")
+  private String bookId;
+
+  @Column(name = "book_name")
+  private String name;
+
+  @Column(name = "type")
+  private String type;
+
+  @Column(name = "author")
+  private String author;
+
+  @Column(name = "date_publish")
+  private String datepub;
+
+  @Column(name = "publisher")
+  private String publisher;
+
+  @Column(name = "date_import")
+  private String date;
+
+  @Column(name = "price")
+  private String price;
+
+  @Column(name = "amount")
+  private String amount;
 }

@@ -18,12 +18,11 @@ package com.notelysia.restservices.model.entity.bookstore;
 
 import com.notelysia.restservices.model.entity.bookstore.CompositeKey.LoginPK;
 import jakarta.persistence.*;
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.io.Serializable;
 
 @Getter
 @Setter
@@ -33,18 +32,23 @@ import java.io.Serializable;
 @Table(name = "Login")
 @IdClass(LoginPK.class)
 public class Login implements Serializable {
-    @Id
-    @Column(name = "employee_id")
-    private String id;
-    @Id
-    @Column(name = "user_name")
-    private String username;
-    @Column(name = "password")
-    private String password;
-    @Column(name = "acc_level")
-    private int accLevel;
-    @Column(name = "recKey")
-    private String recKey;
-    @Column(name = "salt")
-    private String salt;
+  @Id
+  @Column(name = "employee_id")
+  private String id;
+
+  @Id
+  @Column(name = "user_name")
+  private String username;
+
+  @Column(name = "password")
+  private String password;
+
+  @Column(name = "acc_level")
+  private int accLevel;
+
+  @Column(name = "recKey")
+  private String recKey;
+
+  @Column(name = "salt")
+  private String salt;
 }

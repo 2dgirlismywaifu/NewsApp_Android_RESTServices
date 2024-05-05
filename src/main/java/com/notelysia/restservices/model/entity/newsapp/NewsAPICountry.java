@@ -17,12 +17,11 @@
 package com.notelysia.restservices.model.entity.newsapp;
 
 import jakarta.persistence.*;
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.io.Serializable;
 
 @Getter
 @Setter
@@ -31,13 +30,15 @@ import java.io.Serializable;
 @Entity
 @Table(name = "newsapi_country")
 public class NewsAPICountry implements Serializable {
-    //53 Countries only used, no China
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
-    @Column(name = "country_id")
-    private int countryId;
-    @Column(name = "country_code", nullable = false)
-    private String countryCode;
-    @Column(name = "country_name", nullable = false)
-    private String countryName;
+  // 53 Countries only used, no China
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Id
+  @Column(name = "country_id")
+  private int countryId;
+
+  @Column(name = "country_code", nullable = false)
+  private String countryCode;
+
+  @Column(name = "country_name", nullable = false)
+  private String countryName;
 }

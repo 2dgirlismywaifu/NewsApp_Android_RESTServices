@@ -17,21 +17,20 @@
 package com.notelysia.restservices.model.dto.newsapp;
 
 import com.notelysia.restservices.model.entity.newsapp.SyncNewsFavourite;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class NewsFavouriteDto {
-    private String status;
-    private String time;
-    private String message;
-    private String totalResults;
-    private List<SyncNewsFavourite> syncNewsFavourites;
+  private String status;
+  private String time;
+  private String message;
+  private String totalResults;
+  private List<SyncNewsFavourite> syncNewsFavourites;
 }

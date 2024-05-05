@@ -26,6 +26,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserNameAndEmailDto {
-    private Long totalNickName;
-    private Long totalEmail;
+  private Long totalNickName;
+  private Long totalEmail;
 }

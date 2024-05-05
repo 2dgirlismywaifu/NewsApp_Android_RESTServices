@@ -19,10 +19,10 @@ package com.notelysia.restservices.model.dto.legacykey.officekey;
 import java.util.Random;
 
 public class XXXKey {
-    //generates a random number with 3 digits
-    public String generateOffice95Key() {
-        Random rand = new Random();
-        int num = rand.nextInt(900) + 100;
-        return String.valueOf(num);
-    }
+  // generates a random number with 3 digits
+  public String generateOffice95Key() {
+    Random rand = new Random();
+    int num = rand.nextInt(900) + 100;
+    return String.valueOf(num);
+  }
 }

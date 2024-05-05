@@ -16,20 +16,18 @@
 
 package com.notelysia.restservices.model.dto.legacykey.winrtm;
 
-
 public class WindowsRTMKey {
-    String XXX95Key = new XXXKey().generateWin95Key();
-    String XXXNTKey = new XXXKey().generateWinNTKey();
-    String XXXXXXXKey = new XXXXXXXKey().generateWin95AndNTRTMKey();
-    String windows95RTMKey = this.XXX95Key + "-" + this.XXXXXXXKey;
-    String windowsNTRTMKey = this.XXXNTKey + "-" + this.XXXXXXXKey;
+  String XXX95Key = new XXXKey().generateWin95Key();
+  String XXXNTKey = new XXXKey().generateWinNTKey();
+  String XXXXXXXKey = new XXXXXXXKey().generateWin95AndNTRTMKey();
+  String windows95RTMKey = this.XXX95Key + "-" + this.XXXXXXXKey;
+  String windowsNTRTMKey = this.XXXNTKey + "-" + this.XXXXXXXKey;
 
-    public String getWindows95Key() {
-        return this.windows95RTMKey;
-    }
+  public String getWindows95Key() {
+    return this.windows95RTMKey;
+  }
 
-    public String getWindowsNTKey() {
-        return this.windowsNTRTMKey;
-    }
-
+  public String getWindowsNTKey() {
+    return this.windowsNTRTMKey;
+  }
 }

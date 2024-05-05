@@ -19,5 +19,4 @@ package com.notelysia.restservices.repository.newsapp;
 import com.notelysia.restservices.model.entity.newsapp.NewsTypeImage;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface NewsTypeImgRepo extends JpaRepository<NewsTypeImage, Long> {
-}
+public interface NewsTypeImgRepo extends JpaRepository<NewsTypeImage, Long> {}

@@ -17,12 +17,11 @@
 package com.notelysia.restservices.model.entity.newsapp;
 
 import jakarta.persistence.*;
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.io.Serializable;
 
 @Getter
 @Setter
@@ -31,19 +30,24 @@ import java.io.Serializable;
 @Entity
 @Table(name = "user_information")
 public class UserInformation implements Serializable {
-    //Instance variables
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
-    @Column(name = "user_id")
-    private int userId;
-    @Column(name = "name")
-    private String name;
-    @Column(name = "birthday")
-    private String birthday;
-    @Column(name = "gender")
-    private String gender;
-    @Column(name = "avatar")
-    private String avatar;
-    @Column(name = "is_deleted")
-    private int isDeleted;
+  // Instance variables
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Id
+  @Column(name = "user_id")
+  private int userId;
+
+  @Column(name = "name")
+  private String name;
+
+  @Column(name = "birthday")
+  private String birthday;
+
+  @Column(name = "gender")
+  private String gender;
+
+  @Column(name = "avatar")
+  private String avatar;
+
+  @Column(name = "is_deleted")
+  private int isDeleted;
 }

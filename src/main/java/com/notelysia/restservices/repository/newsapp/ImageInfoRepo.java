@@ -20,6 +20,6 @@ import com.notelysia.restservices.model.entity.newsapp.ImageInformation;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ImageInfoRepo extends JpaRepository<ImageInformation, Long> {
-    //This repo will use in the future.
-    //All image url are query from NewsSourceRepo
+  // This repo will use in the future.
+  // All image url are query from NewsSourceRepo
 }

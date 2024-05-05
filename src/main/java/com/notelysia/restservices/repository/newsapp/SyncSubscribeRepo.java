@@ -25,13 +25,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public interface SyncSubscribeRepo extends JpaRepository<SyncSubscribe, Long> {
-    //Delete subscribe by user_id and source_id
-    @Transactional
-    @Modifying
-    @Query("update SyncSubscribe s set s.isDeleted = 1 WHERE s.userId = ?1 AND s.sourceId = ?2")
-    void deleteByUserIdAndSourceId(int userId, String sourceId);
+  // Delete subscribe by user_id and source_id
+  @Transactional
+  @Modifying
+  @Query("update SyncSubscribe s set s.isDeleted = 1 WHERE s.userId = ?1 AND s.sourceId = ?2")
+  void deleteByUserIdAndSourceId(int userId, String sourceId);
 
-    //Get subscribe by user_id and source_id
-    @Query("SELECT s FROM SyncSubscribe s WHERE s.userId = ?1 AND s.sourceId = ?2 and s.isDeleted = 0")
-    SyncSubscribe findByUserIdAndSourceId(int userId, String sourceId);
+  // Get subscribe by user_id and source_id
+  @Query(
+      "SELECT s FROM SyncSubscribe s WHERE s.userId = ?1 AND s.sourceId = ?2 and s.isDeleted = 0")
+  SyncSubscribe findByUserIdAndSourceId(int userId, String sourceId);
 }

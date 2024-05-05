@@ -20,6 +20,7 @@ import com.notelysia.restservices.model.dto.legacykey.winoem.WindowsOEMKey;
 import com.notelysia.restservices.model.dto.legacykey.winrtm.WindowsRTMKey;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.HashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.ResponseEntity;
@@ -28,37 +29,38 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-
 @RestController
 @RequestMapping("/legacy-key-generator")
 @Tag(name = "Legacy Windows Key", description = "Legacy Windows Key Generator")
 public class WindowsKeyController {
-    private static final Logger logger = LogManager.getLogger(WindowsKeyController.class);
-    WindowsOEMKey winOEMKey = new WindowsOEMKey();
-    WindowsRTMKey winRTMKey = new WindowsRTMKey();
+  private static final Logger logger = LogManager.getLogger(WindowsKeyController.class);
+  WindowsOEMKey winOEMKey = new WindowsOEMKey();
+  WindowsRTMKey winRTMKey = new WindowsRTMKey();
 
-    @GetMapping(value = "/win", params = {"os"})
-    public ResponseEntity<HashMap<String, String>> getWinKey(
-            @Parameter(name = "os", description = "You must enter version Windows (95 or nt4)")
-            @RequestParam(value = "os") String os) {
-        HashMap<String, String> respond = new HashMap<>();
-        switch (os) {
-            case "95" -> {
-                respond.put("Windows 95 OEM", this.winOEMKey.getWindows95Key());
-                respond.put("Windows 95 Retail", this.winRTMKey.getWindows95Key());
-                return ResponseEntity.ok(respond);
-            }
-            case "nt4" -> {
-                respond.put("Windows NT 4 OEM", this.winOEMKey.getWindowsNTKey());
-                respond.put("Windows NT 4 Retail", this.winRTMKey.getWindowsNTKey());
-            }
-            default -> {
-                respond.put("key", "Invalid OS: " + os);
-                logger.error("Invalid OS: " + os);
-                return ResponseEntity.ok(respond);
-            }
-        }
+  @GetMapping(
+      value = "/win",
+      params = {"os"})
+  public ResponseEntity<HashMap<String, String>> getWinKey(
+      @Parameter(name = "os", description = "You must enter version Windows (95 or nt4)")
+          @RequestParam(value = "os")
+          String os) {
+    HashMap<String, String> respond = new HashMap<>();
+    switch (os) {
+      case "95" -> {
+        respond.put("Windows 95 OEM", this.winOEMKey.getWindows95Key());
+        respond.put("Windows 95 Retail", this.winRTMKey.getWindows95Key());
         return ResponseEntity.ok(respond);
+      }
+      case "nt4" -> {
+        respond.put("Windows NT 4 OEM", this.winOEMKey.getWindowsNTKey());
+        respond.put("Windows NT 4 Retail", this.winRTMKey.getWindowsNTKey());
+      }
+      default -> {
+        respond.put("key", "Invalid OS: " + os);
+        logger.error("Invalid OS: " + os);
+        return ResponseEntity.ok(respond);
+      }
     }
+    return ResponseEntity.ok(respond);
+  }
 }

@@ -19,11 +19,11 @@ package com.notelysia.restservices.model.dto.legacykey.winoem;
 import java.util.Random;
 
 public class XXXKey {
-    //Generate random number with 3 digits. Start from 001 to 366
-    public String generateKey() {
-        Random rand = new Random();
-        int upperbound = 366;
-        int int_random = rand.nextInt(upperbound) + 1;
-        return String.format("%03d", int_random);
-    }
+  // Generate random number with 3 digits. Start from 001 to 366
+  public String generateKey() {
+    Random rand = new Random();
+    int upperbound = 366;
+    int int_random = rand.nextInt(upperbound) + 1;
+    return String.format("%03d", int_random);
+  }
 }

@@ -29,20 +29,19 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @SpringBootApplication(exclude = {UserDetailsServiceAutoConfiguration.class})
 @EnableWebMvc
 public class MyRestApplication {
-    public static void main(String[] args) {
+  public static void main(String[] args) {
 
-        SpringApplication app = new SpringApplication(MyRestApplication.class);
-        app.run(args);
-    }
+    SpringApplication app = new SpringApplication(MyRestApplication.class);
+    app.run(args);
+  }
 
-    @Bean
-    public WebMvcConfigurer customConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
-                configurer.defaultContentType(MediaType.APPLICATION_JSON);
-            }
-        };
-    }
-
+  @Bean
+  public WebMvcConfigurer customConfigurer() {
+    return new WebMvcConfigurer() {
+      @Override
+      public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+        configurer.defaultContentType(MediaType.APPLICATION_JSON);
+      }
+    };
+  }
 }

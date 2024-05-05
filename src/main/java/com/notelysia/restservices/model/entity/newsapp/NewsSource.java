@@ -17,12 +17,11 @@
 package com.notelysia.restservices.model.entity.newsapp;
 
 import jakarta.persistence.*;
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.io.Serializable;
 
 @Getter
 @Setter
@@ -31,22 +30,30 @@ import java.io.Serializable;
 @Entity
 @Table(name = "news_source")
 @SecondaryTables({
-        @SecondaryTable(name = "image_information", pkJoinColumns = @PrimaryKeyJoinColumn(name = "source_id")),
-        @SecondaryTable(name = "sync_subscribe", pkJoinColumns = @PrimaryKeyJoinColumn(name = "source_id")),
-        @SecondaryTable(name = "news_detail", pkJoinColumns = @PrimaryKeyJoinColumn(name = "source_id")),
+  @SecondaryTable(
+      name = "image_information",
+      pkJoinColumns = @PrimaryKeyJoinColumn(name = "source_id")),
+  @SecondaryTable(
+      name = "sync_subscribe",
+      pkJoinColumns = @PrimaryKeyJoinColumn(name = "source_id")),
+  @SecondaryTable(name = "news_detail", pkJoinColumns = @PrimaryKeyJoinColumn(name = "source_id")),
 })
 public class NewsSource implements Serializable {
-    //Instance variables
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
-    @Column(name = "source_id")
-    private int sourceId;
-    @Column(name = "source_name")
-    private String source_name;
-    @Column(name = "urlmain")
-    private String urlMain;
-    @Column(name = "information", length = 4000)
-    private String information;
-    @Column(name = "image", table = "IMAGE_INFORMATION")
-    private String image;
+  // Instance variables
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Id
+  @Column(name = "source_id")
+  private int sourceId;
+
+  @Column(name = "source_name")
+  private String source_name;
+
+  @Column(name = "urlmain")
+  private String urlMain;
+
+  @Column(name = "information", length = 4000)
+  private String information;
+
+  @Column(name = "image", table = "IMAGE_INFORMATION")
+  private String image;
 }

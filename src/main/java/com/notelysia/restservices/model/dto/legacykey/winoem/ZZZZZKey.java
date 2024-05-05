@@ -19,10 +19,10 @@ package com.notelysia.restservices.model.dto.legacykey.winoem;
 import java.util.Random;
 
 public class ZZZZZKey {
-    //Generate random number with 5 digits
-    public String generateKey() {
-        Random rnd = new Random();
-        int number = rnd.nextInt(99999) + 1;
-        return String.format("%05d", number);
-    }
+  // Generate random number with 5 digits
+  public String generateKey() {
+    Random rnd = new Random();
+    int number = rnd.nextInt(99999) + 1;
+    return String.format("%05d", number);
+  }
 }

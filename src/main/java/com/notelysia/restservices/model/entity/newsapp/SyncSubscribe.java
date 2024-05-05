@@ -17,12 +17,11 @@
 package com.notelysia.restservices.model.entity.newsapp;
 
 import jakarta.persistence.*;
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.io.Serializable;
 
 @Getter
 @Setter
@@ -31,20 +30,24 @@ import java.io.Serializable;
 @Entity
 @Table(name = "sync_subscribe")
 @SecondaryTables({
-        @SecondaryTable(name = "news_source", foreignKey = @ForeignKey(name = "source_id")),
+  @SecondaryTable(name = "news_source", foreignKey = @ForeignKey(name = "source_id")),
 })
 public class SyncSubscribe implements Serializable {
-    //Instance variables
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
-    @Column(name = "sync_id")
-    private int syncId;
-    @Column(name = "user_id")
-    private int userId;
-    @Column(name = "source_id")
-    private int sourceId;
-    @Column(name = "is_deleted")
-    private int isDeleted;
-    @Column(name = "is_checked")
-    private int isChecked;
+  // Instance variables
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Id
+  @Column(name = "sync_id")
+  private int syncId;
+
+  @Column(name = "user_id")
+  private int userId;
+
+  @Column(name = "source_id")
+  private int sourceId;
+
+  @Column(name = "is_deleted")
+  private int isDeleted;
+
+  @Column(name = "is_checked")
+  private int isChecked;
 }

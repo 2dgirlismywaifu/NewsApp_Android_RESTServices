@@ -26,7 +26,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RssList {
-    private String urlType;
-    private String url;
-    private String urlImage;
+  private String urlType;
+  private String url;
+  private String urlImage;
 }

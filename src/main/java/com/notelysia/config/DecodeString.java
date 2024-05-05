@@ -20,8 +20,8 @@ import java.util.Base64;
 
 public class DecodeString {
 
-    //This class will decode base64 byte[] to normal string
-    public String decodeString(byte[] encodedString) {
-        return new String(Base64.getDecoder().decode(encodedString));
-    }
+  // This class will decode base64 byte[] to normal string
+  public String decodeString(byte[] encodedString) {
+    return new String(Base64.getDecoder().decode(encodedString));
+  }
 }
