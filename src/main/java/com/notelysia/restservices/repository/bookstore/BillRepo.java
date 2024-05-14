@@ -16,5 +16,4 @@
 
 package com.notelysia.restservices.repository.bookstore;
 
-public interface BillRepo {
-}
+public interface BillRepo {}

@@ -17,20 +17,19 @@
 package com.notelysia.restservices.model.dto.newsapp;
 
 import com.kwabenaberko.newsapilib.models.Article;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class NewsApiArticlesDto {
-    private String status;
-    private String time;
-    private String totalResults;
-    private List<Article> articles;
+  private String status;
+  private String time;
+  private String totalResults;
+  private List<Article> articles;
 }

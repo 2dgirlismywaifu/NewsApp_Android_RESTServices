@@ -22,8 +22,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AuthApiKeyDto {
-    private int id;
-    private String headerName;
-    private String token;
-    private int isEnable;
+  private int id;
+  private String headerName;
+  private String token;
+  private int isEnable;
 }

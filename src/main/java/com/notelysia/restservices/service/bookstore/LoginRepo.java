@@ -19,5 +19,4 @@ package com.notelysia.restservices.service.bookstore;
 import com.notelysia.restservices.model.entity.bookstore.Login;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface LoginRepo extends JpaRepository<Login, Long> {
-}
+public interface LoginRepo extends JpaRepository<Login, Long> {}

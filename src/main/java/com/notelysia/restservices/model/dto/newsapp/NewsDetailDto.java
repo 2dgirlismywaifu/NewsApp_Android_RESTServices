@@ -17,21 +17,19 @@
 package com.notelysia.restservices.model.dto.newsapp;
 
 import com.notelysia.restservices.model.entity.newsapp.NewsDetail;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class NewsDetailDto {
-    private String status;
-    private String time;
-    private String totalResults;
-    private List<NewsDetail> newsDetailList;
+  private String status;
+  private String time;
+  private String totalResults;
+  private List<NewsDetail> newsDetailList;
 }

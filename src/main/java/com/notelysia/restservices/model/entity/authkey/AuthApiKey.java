@@ -17,12 +17,11 @@
 package com.notelysia.restservices.model.entity.authkey;
 
 import jakarta.persistence.*;
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.io.Serializable;
 
 @Getter
 @Setter
@@ -31,14 +30,17 @@ import java.io.Serializable;
 @Entity
 @Table(name = "authentication_api")
 public class AuthApiKey implements Serializable {
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
-    @Column(name = "id")
-    private int id;
-    @Column(name = "header_name")
-    private String headerName;
-    @Column(name = "token")
-    private String token;
-    @Column(name = "is_enable")
-    private int isEnable;
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Id
+  @Column(name = "id")
+  private int id;
+
+  @Column(name = "header_name")
+  private String headerName;
+
+  @Column(name = "token")
+  private String token;
+
+  @Column(name = "is_enable")
+  private int isEnable;
 }

@@ -25,31 +25,35 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public interface UserInfoRepo extends JpaRepository<UserInformation, Long> {
-    //Update fullname user
-    @Transactional
-    @Modifying
-    @Query("UPDATE UserInformation userInformation " +
-            "SET userInformation.name = ?1 WHERE userInformation.userId = ?2 and userInformation.isDeleted = 0")
-    void updateFullName(String fullName, String user_id);
+  // Update fullname user
+  @Transactional
+  @Modifying
+  @Query(
+      "UPDATE UserInformation userInformation SET userInformation.name = ?1 WHERE"
+          + " userInformation.userId = ?2 and userInformation.isDeleted = 0")
+  void updateFullName(String fullName, String user_id);
 
-    //Update birthday user
-    @Transactional
-    @Modifying
-    @Query("UPDATE UserInformation userInformation " +
-            "SET userInformation.birthday = ?1 WHERE userInformation.userId = ?2 and userInformation.isDeleted = 0")
-    void updateBirthday(String birthday, String userId);
+  // Update birthday user
+  @Transactional
+  @Modifying
+  @Query(
+      "UPDATE UserInformation userInformation SET userInformation.birthday = ?1 WHERE"
+          + " userInformation.userId = ?2 and userInformation.isDeleted = 0")
+  void updateBirthday(String birthday, String userId);
 
-    //Update gender user
-    @Transactional
-    @Modifying
-    @Query("UPDATE UserInformation userInformation " +
-            "SET userInformation.gender = ?1 WHERE userInformation.userId = ?2 and userInformation.isDeleted = 0")
-    void updateGender(String gender, String userId);
+  // Update gender user
+  @Transactional
+  @Modifying
+  @Query(
+      "UPDATE UserInformation userInformation SET userInformation.gender = ?1 WHERE"
+          + " userInformation.userId = ?2 and userInformation.isDeleted = 0")
+  void updateGender(String gender, String userId);
 
-    //Update avatar user
-    @Transactional
-    @Modifying
-    @Query("UPDATE UserInformation userInformation " +
-            "SET userInformation.avatar = ?1 WHERE userInformation.userId = ?2 and userInformation.isDeleted = 0")
-    void updateAvatar(String avatar, String userId);
+  // Update avatar user
+  @Transactional
+  @Modifying
+  @Query(
+      "UPDATE UserInformation userInformation SET userInformation.avatar = ?1 WHERE"
+          + " userInformation.userId = ?2 and userInformation.isDeleted = 0")
+  void updateAvatar(String avatar, String userId);
 }

@@ -21,7 +21,6 @@ import lombok.Getter;
 @Getter
 public class NKey {
 
-    //It always is 00 in Windows 95 OEM Key
-    public final String NNKeyReturn = "0";
-
+  // It always is 00 in Windows 95 OEM Key
+  public final String NNKeyReturn = "0";
 }

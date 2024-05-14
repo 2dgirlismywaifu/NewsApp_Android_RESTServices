@@ -19,5 +19,4 @@ package com.notelysia.restservices.service.bookstore;
 import com.notelysia.restservices.model.entity.bookstore.Provider;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ProviderRepo extends JpaRepository<Provider, Long> {
-}
+public interface ProviderRepo extends JpaRepository<Provider, Long> {}

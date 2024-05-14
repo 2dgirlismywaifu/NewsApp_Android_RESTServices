@@ -18,12 +18,11 @@ package com.notelysia.restservices.model.entity.newsapp;
 
 import com.notelysia.restservices.model.entity.newsapp.CompositeKey.ImageInfoPK;
 import jakarta.persistence.*;
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.io.Serializable;
 
 @Getter
 @Setter
@@ -33,14 +32,16 @@ import java.io.Serializable;
 @Table(name = "image_information")
 @IdClass(ImageInfoPK.class)
 public class ImageInformation implements Serializable {
-    //Instance variables
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
-    @Column(name = "image_id")
-    private int imageId;
-    @Id
-    @Column(name = "source_id")
-    private int sourceId;
-    @Column(name = "image", nullable = false)
-    private String image;
+  // Instance variables
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Id
+  @Column(name = "image_id")
+  private int imageId;
+
+  @Id
+  @Column(name = "source_id")
+  private int sourceId;
+
+  @Column(name = "image", nullable = false)
+  private String image;
 }

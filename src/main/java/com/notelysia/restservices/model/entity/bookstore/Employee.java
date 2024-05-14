@@ -20,12 +20,11 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.io.Serializable;
 
 @Entity
 @Table(name = "Employee")
@@ -34,17 +33,22 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Employee implements Serializable {
-    @Id
-    @Column(name = "employee_id")
-    private String id;
-    @Column(name = "employee_name")
-    private String name;
-    @Column(name = "phone")
-    private String phone;
-    @Column(name = "email")
-    private String email;
-    @Column(name = "address")
-    private String address;
-    @Column(name = "position")
-    private String position;
+  @Id
+  @Column(name = "employee_id")
+  private String id;
+
+  @Column(name = "employee_name")
+  private String name;
+
+  @Column(name = "phone")
+  private String phone;
+
+  @Column(name = "email")
+  private String email;
+
+  @Column(name = "address")
+  private String address;
+
+  @Column(name = "position")
+  private String position;
 }

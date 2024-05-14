@@ -23,7 +23,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface NewsApiRepo extends JpaRepository<NewsAPICountry, Long> {
-    @Query("Select newsapi.countryCode from NewsAPICountry newsapi " +
-            "where newsapi.countryName = ?1")
-    String findByCountry(String country);
+  @Query(
+      "Select newsapi.countryCode from NewsAPICountry newsapi " + "where newsapi.countryName = ?1")
+  String findByCountry(String country);
 }

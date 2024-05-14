@@ -20,21 +20,21 @@ import java.util.Random;
 
 public class XXXXKey {
 
-    //generate random number with 4 digits. Start from 0001 to 9991. 
-    //The last digit much be 3rd digit + 1 or 2. 
-    //When the result is > 9, it overflows to 0 or 1
+  // generate random number with 4 digits. Start from 0001 to 9991.
+  // The last digit much be 3rd digit + 1 or 2.
+  // When the result is > 9, it overflows to 0 or 1
 
-    public String generateOffice97Key() {
-        Random rand = new Random();
-        int firstThreeDigits = rand.nextInt(999 - 1 + 1) + 1;
-        int thirdDigit = firstThreeDigits % 10;
-        int fourthDigit = thirdDigit + rand.nextInt(2) + 1;
-        if (fourthDigit > 9) {
-            fourthDigit -= 10;
-            fourthDigit = rand.nextInt(2);
-        }
-        int randomNumber = Integer.parseInt(String.format("%03d", firstThreeDigits)) * 10 + fourthDigit;
-        String formattedRandomNumber = String.format("%04d", randomNumber);
-        return String.valueOf(formattedRandomNumber);
+  public String generateOffice97Key() {
+    Random rand = new Random();
+    int firstThreeDigits = rand.nextInt(999 - 1 + 1) + 1;
+    int thirdDigit = firstThreeDigits % 10;
+    int fourthDigit = thirdDigit + rand.nextInt(2) + 1;
+    if (fourthDigit > 9) {
+      fourthDigit -= 10;
+      fourthDigit = rand.nextInt(2);
     }
+    int randomNumber = Integer.parseInt(String.format("%03d", firstThreeDigits)) * 10 + fourthDigit;
+    String formattedRandomNumber = String.format("%04d", randomNumber);
+    return String.valueOf(formattedRandomNumber);
+  }
 }

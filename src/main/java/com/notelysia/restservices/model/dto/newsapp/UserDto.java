@@ -26,14 +26,14 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDto {
-    private String status;
-    private String time;
-    private String userId;
-    private String email;
-    private String nickName;
-    private String verify;
-    private String fullName;
-    private String birthday;
-    private String gender;
-    private String avatar;
+  private String status;
+  private String time;
+  private String userId;
+  private String email;
+  private String nickName;
+  private String verify;
+  private String fullName;
+  private String birthday;
+  private String gender;
+  private String avatar;
 }

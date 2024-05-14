@@ -17,12 +17,11 @@
 package com.notelysia.restservices.model.entity.newsapp;
 
 import jakarta.persistence.*;
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.io.Serializable;
 
 @Getter
 @Setter
@@ -31,21 +30,27 @@ import java.io.Serializable;
 @Entity
 @Table(name = "sync_news_favourite")
 public class SyncNewsFavourite implements Serializable {
-    //Instance variables
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
-    @Column(name = "favourite_id")
-    private int favouriteId;
-    @Column(name = "user_id")
-    private int userId;
-    @Column(name = "url")
-    private String url;
-    @Column(name = "title")
-    private String title;
-    @Column(name = "image_url")
-    private String imageUrl;
-    @Column(name = "pubdate")
-    private String pubDate;
-    @Column(name = "is_deleted")
-    private int isDeleted;
+  // Instance variables
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Id
+  @Column(name = "favourite_id")
+  private int favouriteId;
+
+  @Column(name = "user_id")
+  private int userId;
+
+  @Column(name = "url")
+  private String url;
+
+  @Column(name = "title")
+  private String title;
+
+  @Column(name = "image_url")
+  private String imageUrl;
+
+  @Column(name = "pubdate")
+  private String pubDate;
+
+  @Column(name = "is_deleted")
+  private int isDeleted;
 }

@@ -18,12 +18,11 @@ package com.notelysia.restservices.model.entity.newsapp;
 
 import com.notelysia.restservices.model.entity.newsapp.CompositeKey.NewsDetailPK;
 import jakarta.persistence.*;
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.io.Serializable;
 
 @Getter
 @Setter
@@ -33,16 +32,19 @@ import java.io.Serializable;
 @IdClass(NewsDetailPK.class)
 @Table(name = "news_detail")
 public class NewsDetail implements Serializable {
-    //Instance variables
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
-    @Column(name = "id")
-    private int id;
-    @Id
-    @Column(name = "source_id")
-    private int sourceId;
-    @Column(name = "url_type")
-    private String urlType;
-    @Column(name = "url", nullable = false)
-    private String url;
+  // Instance variables
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Id
+  @Column(name = "id")
+  private int id;
+
+  @Id
+  @Column(name = "source_id")
+  private int sourceId;
+
+  @Column(name = "url_type")
+  private String urlType;
+
+  @Column(name = "url", nullable = false)
+  private String url;
 }

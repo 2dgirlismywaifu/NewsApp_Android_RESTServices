@@ -16,20 +16,22 @@
 
 package com.notelysia.restservices.model.dto.legacykey.winoem;
 
-
 import lombok.Getter;
 
 public class WindowsOEMKey {
 
-    String XXXKey = new XXXKey().generateKey();
-    String YY95 = new YYKey().generateWin95Key();
-    String YYNT = new YYKey().generateWinNTKey();
-    String NNKey = new NKey().getNNKeyReturn();
-    String SSSSSKey = new SSSSSSKey().generateKey();
-    String ZZZZZKey = new ZZZZZKey().generateKey();
-    @Getter
-    String Windows95Key = this.XXXKey + this.YY95 + "-OEM-" + this.NNKey + this.SSSSSKey + "-" + this.ZZZZZKey;
-    @Getter
-    String WindowsNTKey = this.XXXKey + this.YYNT + "-OEM-" + this.NNKey + this.SSSSSKey + "-" + this.ZZZZZKey;
+  String XXXKey = new XXXKey().generateKey();
+  String YY95 = new YYKey().generateWin95Key();
+  String YYNT = new YYKey().generateWinNTKey();
+  String NNKey = new NKey().getNNKeyReturn();
+  String SSSSSKey = new SSSSSSKey().generateKey();
+  String ZZZZZKey = new ZZZZZKey().generateKey();
 
+  @Getter
+  String Windows95Key =
+      this.XXXKey + this.YY95 + "-OEM-" + this.NNKey + this.SSSSSKey + "-" + this.ZZZZZKey;
+
+  @Getter
+  String WindowsNTKey =
+      this.XXXKey + this.YYNT + "-OEM-" + this.NNKey + this.SSSSSKey + "-" + this.ZZZZZKey;
 }

@@ -18,12 +18,11 @@ package com.notelysia.restservices.model.entity.bookstore;
 
 import com.notelysia.restservices.model.entity.bookstore.CompositeKey.BillDetailPK;
 import jakarta.persistence.*;
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.io.Serializable;
 
 @Entity
 @Table(name = "BillDetail")
@@ -33,16 +32,20 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BillDetail implements Serializable {
-    @Id
-    @Column(name = "bill_id")
-    private String billId;
-    @Id
-    @Column(name = "book_id")
-    private String bookId;
-    @Column(name = "price")
-    private String price;
-    @Column(name = "amount")
-    private String amount;
-    @Column(name = "total")
-    private String total;
+  @Id
+  @Column(name = "bill_id")
+  private String billId;
+
+  @Id
+  @Column(name = "book_id")
+  private String bookId;
+
+  @Column(name = "price")
+  private String price;
+
+  @Column(name = "amount")
+  private String amount;
+
+  @Column(name = "total")
+  private String total;
 }

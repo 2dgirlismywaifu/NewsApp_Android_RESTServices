@@ -26,8 +26,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RssNews {
-    private String title;
-    private String description;
-    private String link;
-    private String pubDate;
+  private String title;
+  private String description;
+  private String link;
+  private String pubDate;
 }
